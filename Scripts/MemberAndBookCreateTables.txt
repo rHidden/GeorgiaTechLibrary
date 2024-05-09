@@ -1,0 +1,41 @@
+-- Create table script for Member entity
+CREATE TABLE Member (
+    SSN INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    PhoneNumber VARCHAR(20),
+    Street VARCHAR(100),
+    StreetNumber VARCHAR(10),
+    City VARCHAR(50),
+    Zipcode VARCHAR(10),
+    CardNumber VARCHAR(20),
+    ExpiryDate VARCHAR(10),
+    Photo VARCHAR(MAX),
+    Type VARCHAR(50)
+);
+
+-- Insert sample data for Member
+INSERT INTO Member (SSN, FirstName, LastName, PhoneNumber, Street, StreetNumber, City, Zipcode, CardNumber, ExpiryDate, Photo, Type)
+VALUES
+(123456789, 'John', 'Doe', '123-456-7890', 'Main St', '123', 'Atlanta', '30332', '1234567890123456', '12/26', '/photos/johndoe.jpg', 'Student'),
+(987654321, 'Jane', 'Smith', '987-654-3210', 'Oak Ave', '456', 'Atlanta', '30332', '9876543210987654', '11/25', '/photos/janesmith.jpg', 'Faculty'),
+(234567890, 'Alice', 'Johnson', '234-567-8901', 'Pine St', '789', 'Atlanta', '30332', '2345678901234567', '10/24', '/photos/alicejohnson.jpg', 'Alumni'),
+(345678901, 'Bob', 'Brown', '345-678-9012', 'Cedar St', '1011', 'Atlanta', '30332', '3456789012345678', '09/23', '/photos/bobbrown.jpg', 'Student'),
+(456789012, 'Emily', 'Davis', '456-789-0123', 'Elm St', '1213', 'Atlanta', '30332', '4567890123456789', '08/22', '/photos/emilydavis.jpg', 'Staff');
+
+-- Create table script for Book entity
+CREATE TABLE Book (
+    ISBN INT PRIMARY KEY,
+    CanLoan BIT,
+    Description VARCHAR(MAX),
+    SubjectArea VARCHAR(50)
+);
+
+-- Insert sample data for Books
+INSERT INTO Book (ISBN, CanLoan, Description, SubjectArea)
+VALUES
+(123456, 1, 'Introduction to Programming', 'Computer Science'),
+(234567, 1, 'Data Structures and Algorithms', 'Computer Science'),
+(345678, 1, 'Chemistry: The Central Science', 'Chemistry'),
+(456789, 1, 'To Kill a Mockingbird', 'Literature'),
+(567890, 1, 'Fundamentals of Economics', 'Economics');
