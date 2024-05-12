@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Scripts\" />
+    <Folder Include="Scripts\DDL\" />
   </ItemGroup>
 
 </Project>
