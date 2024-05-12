@@ -6,17 +6,24 @@
         public DateTime LoanDate { get; set; }
         public DateTime ReturnDate { get; set; }
         public List<BookInstance> BookInstances { get; set; }
-        public List<User> Users { get; set; }
+        public User User { get; set; }
+        public LoanType Type { get; set; }
 
         public Loan() { }
 
-        public Loan(int id, DateTime loanDate, DateTime returnDate, List<BookInstance> bookInstances, List<User> users)
+        public Loan(int id, DateTime loanDate, DateTime returnDate, List<BookInstance> bookInstances, User user)
         {
             Id = id;
             LoanDate = loanDate;
             ReturnDate = returnDate;
             BookInstances = bookInstances;
-            Users = users;
+            User = user;
         }
+    }
+
+    public enum LoanType
+    {
+        Book,
+        DigitalItem
     }
 }

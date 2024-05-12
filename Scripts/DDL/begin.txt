@@ -1,0 +1,83 @@
+CREATE TABLE Library (
+    Name VARCHAR(50) PRIMARY KEY,
+    Street VARCHAR(50),
+    StreetNumber VARCHAR(50),
+    City VARCHAR(50),
+    Zipcode VARCHAR(50)
+);
+
+CREATE TABLE Book (
+    ISBN INT PRIMARY KEY,
+    CanLoan BIT,
+    Description VARCHAR(MAX),
+    SubjectArea VARCHAR(50)
+);
+
+CREATE TABLE BookInstance (
+    Id INT PRIMARY KEY,
+    BookISBN INT,
+    LibraryName VARCHAR(50),
+    IsLoaned BIT,
+    FOREIGN KEY (BookISBN) REFERENCES Book(ISBN),
+    FOREIGN KEY (LibraryName) REFERENCES Library(Name)
+);
+
+CREATE TABLE [User] (
+    SSN VARCHAR(15) PRIMARY KEY,
+    PhoneNumber VARCHAR(50),
+    Street VARCHAR(50),
+    StreetNumber VARCHAR(50),
+    City VARCHAR(50),
+    Zipcode VARCHAR(50),
+    LastName VARCHAR(50),
+    FirstName VARCHAR(50),
+    LibraryName VARCHAR(50),
+    FOREIGN KEY (LibraryName) REFERENCES Library(Name)
+);
+
+CREATE TABLE DigitalItem (
+    Id INT PRIMARY KEY,
+    Author VARCHAR(50),
+    Size VARCHAR(50),
+    Format VARCHAR(50),
+    Type VARCHAR(50),
+    Length VARCHAR(50),
+    Quality VARCHAR(50),
+    Resolution VARCHAR(50)
+);
+
+CREATE TABLE DigitalItemLibrary (
+    DigitalItemId INT,
+    LibraryName VARCHAR(50),
+    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id),
+    FOREIGN KEY (LibraryName) REFERENCES Library(Name)
+);
+
+CREATE TABLE Loan (
+    Id INT PRIMARY KEY,
+    BookInstanceId INT,
+    DigitalItemId INT,
+	UserSSN VARCHAR(15),
+    LoanDate DATE,
+    DueDate DATE,
+    ReturnDate DATE,
+    FOREIGN KEY (BookInstanceId) REFERENCES BookInstance(Id),
+    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id),
+	FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
+);
+
+CREATE TABLE Staff (
+    UserSSN VARCHAR(15),
+    Role VARCHAR(50),
+    LibrarianNumber VARCHAR(50),
+    FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
+);
+
+CREATE TABLE Member (
+    UserSSN VARCHAR(15),
+    CardNumber VARCHAR(50),
+    ExpiryDate DATE,
+    Photo VARCHAR(50),
+    Type VARCHAR(50),
+    FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
+);

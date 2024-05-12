@@ -79,7 +79,7 @@ namespace GeorgiaTechLibrary.Repositories
                     {
                         var book = new Book
                         {
-                            ISBN = reader.GetInt32(reader.GetOrdinal("ISBN")),
+                            ISBN = reader.GetString(reader.GetOrdinal("ISBN")),
                             CanLoan = reader.GetBoolean(reader.GetOrdinal("CanLoan")),
                             Description = reader.GetString(reader.GetOrdinal("Description")),
                             SubjectArea = reader.GetString(reader.GetOrdinal("SubjectArea")),
@@ -112,7 +112,7 @@ namespace GeorgiaTechLibrary.Repositories
                     {
                         var book = new Book
                         {
-                            ISBN = reader.GetInt32(reader.GetOrdinal("ISBN")),
+                            ISBN = reader.GetString(reader.GetOrdinal("ISBN")),
                             CanLoan = reader.GetBoolean(reader.GetOrdinal("CanLoan")),
                             Description = reader.GetString(reader.GetOrdinal("Description")),
                             SubjectArea = reader.GetString(reader.GetOrdinal("SubjectArea")),

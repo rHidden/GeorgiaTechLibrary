@@ -15,19 +15,15 @@ namespace GeorgiaTechLibrary.Repositories
         {
             using var con = _connectionFactory.CreateConnection();
             await con.OpenAsync();
-            var sql = @"INSERT INTO Member (SSN, FirstName, LastName, PhoneNumber, Street, StreetNumber, City, Zipcode, CardNumber, ExpiryDate, Photo, Type) VALUES
-                    (@SSN, @FirstName, @LastName, @Street, @StreetNumber, @City, @Zipcode, @CardNumber, @ExpiryDate, @Photo, @Type)";
+            var sql = @"INSERT INTO Member (SSN, FirstName, LastName, PhoneNumber, CardNumber, ExpiryDate, Photo, Type) VALUES
+                    (@SSN, @FirstName, @LastName, @CardNumber, @ExpiryDate, @Photo, @Type)";
             using (SqlCommand command = new SqlCommand(sql, con))
             {
                 command.Parameters.AddWithValue("@SSN", member.SSN);
                 command.Parameters.AddWithValue("@FirstName", member.FirstName);
                 command.Parameters.AddWithValue("@LastName", member.LastName);
-                command.Parameters.AddWithValue("@PhoneNumber", member.StreetNumber);
-                command.Parameters.AddWithValue("@Street", member.Street);
-                command.Parameters.AddWithValue("@StreetNumber", member.StreetNumber);
-                command.Parameters.AddWithValue("@City", member.City);
-                command.Parameters.AddWithValue("@Zipcode", member.Zipcode);
-                command.Parameters.AddWithValue("@CardNumber", member.CardNumber);
+                command.Parameters.AddWithValue("@PhoneNum", member.PhoneNum);
+                command.Parameters.AddWithValue("@CardNum", member.CardNum);
                 command.Parameters.AddWithValue("@ExpiryDate", member.ExpiryDate);
                 command.Parameters.AddWithValue("@Photo", member.Photo);
                 command.Parameters.AddWithValue("@Type", member.Type);
@@ -89,17 +85,13 @@ namespace GeorgiaTechLibrary.Repositories
                         {
                             var member = new Member
                             {
-                                SSN = reader.GetInt32(reader.GetOrdinal("SSN")),
+                                SSN = reader.GetString(reader.GetOrdinal("SSN")),
                                 FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                                 LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                                PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                                Street = reader.GetString(reader.GetOrdinal("Street")),
-                                StreetNumber = reader.GetString(reader.GetOrdinal("StreetNumber")),
-                                City = reader.GetString(reader.GetOrdinal("City")),
-                                Zipcode = reader.GetString(reader.GetOrdinal("Zipcode")),
-                                CardNumber = reader.GetString(reader.GetOrdinal("CardNumber")),
-                                ExpiryDate = reader.GetString(reader.GetOrdinal("ExpiryDate")),
-                                Photo = reader.GetString(reader.GetOrdinal("Photo")),
+                                PhoneNum = reader.GetString(reader.GetOrdinal("PhoneNum")),
+                                CardNum = reader.GetString(reader.GetOrdinal("CardNum")),
+                                //ExpiryDate = reader.GetString(reader.GetOrdinal("ExpiryDate")), - TODO convert to date
+                                //Photo = reader.GetString(reader.GetOrdinal("Photo")), - TODO convert to bytes
                                 Type = reader.GetString(reader.GetOrdinal("Type")),
                         };
                             await Console.Out.WriteLineAsync($"Info: Member with SSN {SSN} was found.");
@@ -135,17 +127,13 @@ namespace GeorgiaTechLibrary.Repositories
                     {
                         var member = new Member
                         {
-                            SSN = reader.GetInt32(reader.GetOrdinal("SSN")),
+                            SSN = reader.GetString(reader.GetOrdinal("SSN")),
                             FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                            Street = reader.GetString(reader.GetOrdinal("Street")),
-                            StreetNumber = reader.GetString(reader.GetOrdinal("StreetNumber")),
-                            City = reader.GetString(reader.GetOrdinal("City")),
-                            Zipcode = reader.GetString(reader.GetOrdinal("Zipcode")),
-                            CardNumber = reader.GetString(reader.GetOrdinal("CardNumber")),
-                            ExpiryDate = reader.GetString(reader.GetOrdinal("ExpiryDate")),
-                            Photo = reader.GetString(reader.GetOrdinal("Photo")),
+                            PhoneNum = reader.GetString(reader.GetOrdinal("PhoneNum")),
+                            CardNum = reader.GetString(reader.GetOrdinal("CardNum")),
+                            //ExpiryDate = reader.GetString(reader.GetOrdinal("ExpiryDate")), - TODO convert to date
+                            //Photo = reader.GetString(reader.GetOrdinal("Photo")), - TODO convert to bytes
                             Type = reader.GetString(reader.GetOrdinal("Type")),
                         };
 
@@ -172,7 +160,7 @@ namespace GeorgiaTechLibrary.Repositories
             await con.OpenAsync();
 
             using var transaction = con.BeginTransaction();
-            var sql = @"UPDATE Member SET @FirstName, @LastName, @Street, @StreetNumber, @City, @Zipcode, @CardNumber, @ExpiryDate, @Photo, @Type WHERE SSN = @SSN";
+            var sql = @"UPDATE Member SET @FirstName, @LastName, @CardNumber, @ExpiryDate, @Photo, @Type WHERE SSN = @SSN";
 
             using (SqlCommand command = new SqlCommand(sql, con, transaction))
             {
@@ -182,12 +170,8 @@ namespace GeorgiaTechLibrary.Repositories
                     command.Parameters.AddWithValue("@SSN", member.SSN);
                     command.Parameters.AddWithValue("@FirstName", member.FirstName);
                     command.Parameters.AddWithValue("@LastName", member.LastName);
-                    command.Parameters.AddWithValue("@PhoneNumber", member.StreetNumber);
-                    command.Parameters.AddWithValue("@Street", member.Street);
-                    command.Parameters.AddWithValue("@StreetNumber", member.StreetNumber);
-                    command.Parameters.AddWithValue("@City", member.City);
-                    command.Parameters.AddWithValue("@Zipcode", member.Zipcode);
-                    command.Parameters.AddWithValue("@CardNumber", member.CardNumber);
+                    command.Parameters.AddWithValue("@PhoneNum", member.PhoneNum);
+                    command.Parameters.AddWithValue("@CardNum", member.CardNum);
                     command.Parameters.AddWithValue("@ExpiryDate", member.ExpiryDate);
                     command.Parameters.AddWithValue("@Photo", member.Photo);
                     command.Parameters.AddWithValue("@Type", member.Type);
