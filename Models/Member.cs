@@ -1,20 +1,21 @@
 ﻿namespace GeorgiaTechLibrary.Models
 {
-    public class Member
+    public class Member : User
     {
-        public int SSN { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Street { get; set; }
-        public string StreetNumber { get; set; }
-        public string City { get; set; }
-        public string Zipcode { get; set; }
-        //Member specific
-        public string CardNumber { get; set; }
-        public string ExpiryDate { get; set; }
-        public string Photo { get; set; }
+        public string CardNum { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public byte[] Photo { get; set; }
         public string Type { get; set; }
 
+        public Member() { }
+
+        public Member(string ssn, string firstName, string lastName, string phoneNum, string cardNum, DateTime expiryDate, byte[] photo, string type, Address userAddress)
+            : base(ssn, firstName, lastName, phoneNum, userAddress)
+        {
+            CardNum = cardNum;
+            ExpiryDate = expiryDate;
+            Photo = photo;
+            Type = type;
+        }
     }
 }
