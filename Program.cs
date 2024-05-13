@@ -1,3 +1,5 @@
+using DbContextNamespace;
+using GeorgiaTechLibrary.DbContext;
 using GeorgiaTechLibrary.Repositories;
 using GeorgiaTechLibrary.Repositories.RepositoryInterfaces;
 using GeorgiaTechLibrary.Services;
@@ -21,10 +23,17 @@ builder.Services.AddCors(options =>
 });
 
 // Dependency Injection
-builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddDbContext<GTLDbContext>();
+//services
 builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddTransient<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IMemberService, MemberService>();
+//repos
 builder.Services.AddTransient<IBookRepository, BookRepository>();
+builder.Services.AddTransient<ILibraryRepository, LibraryRepository>();
+builder.Services.AddTransient<ILoanRepository, LoanRepository>();
+builder.Services.AddTransient<IMemberRepository, MemberRepository>();
+builder.Services.AddTransient<IStaffRepository, StaffRepository>();
+
 builder.Services.AddScoped<IDatabaseConnectionFactory, DatabaseConnectionFactory>(_ => new DatabaseConnectionFactory(builder.Configuration.GetConnectionString("Default")));
 
 var app = builder.Build();

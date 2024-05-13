@@ -5,9 +5,9 @@ namespace GeorgiaTechLibrary.Services.ServiceInterfaces
     public interface IMemberService
     {
         Task<Member> CreateMember(Member member);
-        Task DeleteMember(int SSN);
+        Task DeleteMember(string SSN);
         Task UpdateMember(Member member);
-        Task<Member> GetMember(int SSN);
+        Task<Member> GetMember(string SSN);
         Task<List<Member>> ListMembers();
 
     }

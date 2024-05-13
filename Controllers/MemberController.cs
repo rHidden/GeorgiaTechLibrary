@@ -17,7 +17,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMember(int SSN)
+        public async Task<IActionResult> GetMember(string SSN)
         {
             var member = await _memberService.GetMember(SSN);
             return Ok(member);
@@ -51,7 +51,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeleteMember(int SSN)
+        public IActionResult DeleteMember(string SSN)
         {
             _memberService.DeleteMember(SSN);
             return Ok();

@@ -1,201 +1,143 @@
-﻿using GeorgiaTechLibrary.Models;
+﻿using DbContextNamespace;
+using GeorgiaTechLibrary.DTOs;
+using GeorgiaTechLibrary.Models;
 using GeorgiaTechLibrary.Repositories.RepositoryInterfaces;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GeorgiaTechLibrary.Repositories
 {
-    public class MemberRepository : IMemberRepository { 
-        private readonly IDatabaseConnectionFactory _connectionFactory;
-        public MemberRepository(IDatabaseConnectionFactory databaseConnectionFactory)
+    public class MemberRepository : IMemberRepository
+    {
+        private readonly GTLDbContext _context;
+
+        public MemberRepository(GTLDbContext context)
         {
-            _connectionFactory = databaseConnectionFactory;
+            _context = context;
         }
+
         public async Task<Member> CreateMember(Member member)
         {
-            using var con = _connectionFactory.CreateConnection();
-            await con.OpenAsync();
-            var sql = @"INSERT INTO Member (SSN, FirstName, LastName, PhoneNumber, CardNumber, ExpiryDate, Photo, Type) VALUES
-                    (@SSN, @FirstName, @LastName, @CardNumber, @ExpiryDate, @Photo, @Type)";
-            using (SqlCommand command = new SqlCommand(sql, con))
-            {
-                command.Parameters.AddWithValue("@SSN", member.SSN);
-                command.Parameters.AddWithValue("@FirstName", member.FirstName);
-                command.Parameters.AddWithValue("@LastName", member.LastName);
-                command.Parameters.AddWithValue("@PhoneNum", member.PhoneNum);
-                command.Parameters.AddWithValue("@CardNum", member.CardNum);
-                command.Parameters.AddWithValue("@ExpiryDate", member.ExpiryDate);
-                command.Parameters.AddWithValue("@Photo", member.Photo);
-                command.Parameters.AddWithValue("@Type", member.Type);
+            using var transaction = _context.Database.BeginTransaction();
 
-                await command.ExecuteNonQueryAsync();
-            };
-            return member;
-        }
-
-
-        public async Task DeleteMember(int SSN)
-        {
-            using var con = _connectionFactory.CreateConnection();
-            await con.OpenAsync();
-
-            using var transaction = con.BeginTransaction();
-            var sql = @"DELETE FROM Member WHERE SSN = @SSN";
-
-            using (SqlCommand command = new SqlCommand(sql, con, transaction))
-            {
-                try
-                {
-                    command.Parameters.AddWithValue("@SSN", SSN);
-                    var affectedRows = await command.ExecuteNonQueryAsync();
-
-                    if (affectedRows > 0)
-                    {
-                        transaction.Commit();
-                        await Console.Out.WriteLineAsync($"Info: Member with SSN {SSN} was successfully deleted.");
-                    }
-                    else
-                    {
-                        transaction.Rollback();
-                        await Console.Out.WriteLineAsync($"Warning: No Member found with SSN: {SSN} - no changes were made.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    await Console.Out.WriteLineAsync($"Error: Failed to delete Member with SSN: {SSN}. Error: {ex.Message}");
-                }
-            }
-        }
-
-        public async Task<Member> GetMember(int SSN)
-        {
             try
             {
-                using var con = _connectionFactory.CreateConnection();
-                await con.OpenAsync();
-                var sql = @"SELECT * FROM Member WHERE SSN = @SSN";
-                using (SqlCommand command = new SqlCommand(sql, con))
+                var userDTO = new UserDTO
                 {
-                    command.Parameters.AddWithValue("@SSN", SSN);
-
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            var member = new Member
-                            {
-                                SSN = reader.GetString(reader.GetOrdinal("SSN")),
-                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                                PhoneNum = reader.GetString(reader.GetOrdinal("PhoneNum")),
-                                CardNum = reader.GetString(reader.GetOrdinal("CardNum")),
-                                //ExpiryDate = reader.GetString(reader.GetOrdinal("ExpiryDate")), - TODO convert to date
-                                //Photo = reader.GetString(reader.GetOrdinal("Photo")), - TODO convert to bytes
-                                Type = reader.GetString(reader.GetOrdinal("Type")),
-                        };
-                            await Console.Out.WriteLineAsync($"Info: Member with SSN {SSN} was found.");
-                            return member;
-                        }
-                        else
-                        {
-                            await Console.Out.WriteLineAsync($"Warning: Member with SSN {SSN} was not found.");
-                            return null;
-                        }
-                    }
+                    SSN = member.SSN,
+                    FirstName = member.FirstName,
+                    LastName = member.LastName,
+                    PhoneNumber = member.PhoneNum,
+                    // Map other properties of User here
                 };
-            }
-            catch(Exception ex) {
-                throw new Exception("Error retrieving data", ex);
-            }
 
+                _context.Users.Add(userDTO);
+
+                var memberDTO = new MemberDTO
+                {
+                    UserSSN = member.SSN,
+                    CardNumber = member.CardNum,
+                    ExpiryDate = member.ExpiryDate,
+                    Photo = member.Photo,
+                    Type = member.Type
+                };
+
+                _context.Members.Add(memberDTO);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return member;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Failed to create member.", ex);
+            }
+        }
+
+        public async Task DeleteMember(string SSN)
+        {
+            var member = await _context.Members.FindAsync(SSN);
+            if (member != null)
+            {
+                _context.Members.Remove(member);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<Member> GetMember(string SSN)
+        {
+            var memberDTO = await _context.Members.FindAsync(SSN);
+            if (memberDTO != null)
+            {
+                return MapMemberDTOToMember(memberDTO);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<List<Member>> ListMembers()
         {
-            using var con = _connectionFactory.CreateConnection();
-            await con.OpenAsync();
-            var sql = @"SELECT * FROM Member";
-
-            using (SqlCommand command = new SqlCommand(sql, con))
-            {
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    var members = new List<Member>();
-
-                    while (await reader.ReadAsync())
-                    {
-                        var member = new Member
-                        {
-                            SSN = reader.GetString(reader.GetOrdinal("SSN")),
-                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            PhoneNum = reader.GetString(reader.GetOrdinal("PhoneNum")),
-                            CardNum = reader.GetString(reader.GetOrdinal("CardNum")),
-                            //ExpiryDate = reader.GetString(reader.GetOrdinal("ExpiryDate")), - TODO convert to date
-                            //Photo = reader.GetString(reader.GetOrdinal("Photo")), - TODO convert to bytes
-                            Type = reader.GetString(reader.GetOrdinal("Type")),
-                        };
-
-                        members.Add(member);
-                    }
-
-                    if (members.Count > 0)
-                    {
-                        await Console.Out.WriteLineAsync($"Info: Found {members.Count} members.");
-                    }
-                    else
-                    {
-                        await Console.Out.WriteLineAsync("Warning: No members were found.");
-                    }
-
-                    return members;
-                }
-            }
+            var memberDTOs = await _context.Members.ToListAsync();
+            return memberDTOs.Select(dto => MapMemberDTOToMember(dto)).ToList();
         }
 
         public async Task UpdateMember(Member member)
         {
-            using var con = _connectionFactory.CreateConnection();
-            await con.OpenAsync();
+            using var transaction = _context.Database.BeginTransaction();
 
-            using var transaction = con.BeginTransaction();
-            var sql = @"UPDATE Member SET @FirstName, @LastName, @CardNumber, @ExpiryDate, @Photo, @Type WHERE SSN = @SSN";
-
-            using (SqlCommand command = new SqlCommand(sql, con, transaction))
+            try
             {
-                try
+                var userDTO = await _context.Users.FindAsync(member.SSN);
+                if (userDTO != null)
                 {
-                    // Prevention against SQL injection
-                    command.Parameters.AddWithValue("@SSN", member.SSN);
-                    command.Parameters.AddWithValue("@FirstName", member.FirstName);
-                    command.Parameters.AddWithValue("@LastName", member.LastName);
-                    command.Parameters.AddWithValue("@PhoneNum", member.PhoneNum);
-                    command.Parameters.AddWithValue("@CardNum", member.CardNum);
-                    command.Parameters.AddWithValue("@ExpiryDate", member.ExpiryDate);
-                    command.Parameters.AddWithValue("@Photo", member.Photo);
-                    command.Parameters.AddWithValue("@Type", member.Type);
-
-                    var affectedRows = await command.ExecuteNonQueryAsync();
-
-                    if (affectedRows > 0)
-                    {
-                        transaction.Commit();
-                        await Console.Out.WriteLineAsync($"Info: Member with SSN: {member.SSN} was successfully updated.");
-                    }
-                    else
-                    {
-                        transaction.Rollback();
-                        await Console.Out.WriteLineAsync($"Warning: Member with SSN: {member.SSN} was not found - no changes were made.");
-                    }
+                    userDTO.FirstName = member.FirstName;
+                    userDTO.LastName = member.LastName;
+                    userDTO.PhoneNumber = member.PhoneNum;
+                    // Address?
                 }
-                catch (Exception ex)
+
+                var memberDTO = await _context.Members.FindAsync(member.SSN);
+                if (memberDTO != null)
                 {
-                    transaction.Rollback();
-                    await Console.Out.WriteLineAsync($"Error: Failed to update Member with SSN {member.SSN}. Error: {ex.Message}");
-                    throw;
+                    memberDTO.CardNumber = member.CardNum;
+                    memberDTO.ExpiryDate = member.ExpiryDate;
+                    memberDTO.Photo = member.Photo;
+                    memberDTO.Type = member.Type;
                 }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Failed to update member.", ex);
+            }
+        }
+
+        // Method to map MemberDTO to Member
+        private Member MapMemberDTOToMember(MemberDTO memberDTO)
+        {
+            var userDTO = _context.Users.FirstOrDefault(u => u.SSN == memberDTO.UserSSN);
+
+            return new Member
+            {
+                SSN = userDTO.SSN,
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
+                PhoneNum = userDTO.PhoneNumber,
+                CardNum = memberDTO.CardNumber,
+                ExpiryDate = memberDTO.ExpiryDate,
+                Photo = memberDTO.Photo,
+                Type = memberDTO.Type
+                // Address?
+            };
         }
     }
 }

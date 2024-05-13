@@ -5,9 +5,9 @@ namespace GeorgiaTechLibrary.Repositories.RepositoryInterfaces
     public interface IMemberRepository
     {
         Task<Member> CreateMember(Member member);
-        Task<Member> GetMember(int SSN);
+        Task<Member> GetMember(string SSN);
         Task UpdateMember(Member member);
-        Task DeleteMember(int SSN);
+        Task DeleteMember(string SSN);
         Task<List<Member>> ListMembers();
     }
 }

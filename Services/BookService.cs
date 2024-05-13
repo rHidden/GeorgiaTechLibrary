@@ -22,14 +22,14 @@ namespace GeorgiaTechLibrary.Services
             return createdBook;
         }
 
-        public async Task DeleteBook(int id)
+        public async Task DeleteBook(string ISBN)
         {
-            await _bookRepository.DeleteBook(id);
+            await _bookRepository.DeleteBook(ISBN);
         }
 
-        public async Task<Book> GetBook(int Id)
+        public async Task<Book> GetBook(string ISBN)
         {
-            var book = await _bookRepository.GetBook(Id);
+            var book = await _bookRepository.GetBook(ISBN);
             return book;
         }
 

@@ -15,9 +15,9 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBookAsync(int id)
+        public async Task<IActionResult> GetBookAsync(string ISBN)
         {
-            Book book = await _bookService.GetBook(id);
+            Book book = await _bookService.GetBook(ISBN);
             if (book == null)
             {
                 return NotFound();
@@ -54,9 +54,9 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeleteBook(int id)
+        public IActionResult DeleteBook(string ISBN)
         {
-            _bookService.DeleteBook(id);
+            _bookService.DeleteBook(ISBN);
             return Ok();
         }
     }

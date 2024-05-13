@@ -5,9 +5,9 @@ namespace GeorgiaTechLibrary.Repositories.RepositoryInterfaces
     public interface IBookRepository
     {
         Task<Book> CreateBook(Book book);
-        Task<Book> GetBook(int ISBN);
+        Task<Book> GetBook(string ISBN);
         Task UpdateBook(Book book);
-        Task DeleteBook(int ISBN);
+        Task DeleteBook(string ISBN);
         Task<List<Book>> ListBooks();
     }
 }

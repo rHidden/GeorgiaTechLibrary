@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace GeorgiaTechLibrary.Repositories.RepositoryInterfaces
+namespace GeorgiaTechLibrary.DbContext
 {
     public interface IDatabaseConnectionFactory
     {
