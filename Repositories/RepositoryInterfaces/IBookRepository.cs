@@ -7,7 +7,7 @@ namespace GeorgiaTechLibrary.Repositories.RepositoryInterfaces
         Task<Book> CreateBook(Book book);
         Task<Book> GetBook(string ISBN);
         Task UpdateBook(Book book);
-        Task DeleteBook(string ISBN);
+        Task<Book> DeleteBook(string ISBN);
         Task<List<Book>> ListBooks();
     }
 }

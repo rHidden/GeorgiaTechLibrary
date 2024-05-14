@@ -31,21 +31,20 @@ namespace GeorgiaTechLibrary.Repositories
             return book;
         }
 
-        public async Task DeleteBook(string ISBN)
+        public async Task<Book> DeleteBook(string ISBN)
         {
-            try
+            var foundBook = await _context.Book.FirstAsync(x => x.ISBN == ISBN);
+
+            if (foundBook == null)
             {
-                var bookEntity = await _context.Book.FindAsync(ISBN);
-                if (bookEntity != null)
-                {
-                    _context.Book.Remove(bookEntity);
-                    await _context.SaveChangesAsync();
-                }
+                return null;
             }
-            catch (Exception e)
-            {
-                throw new Exception("Error deleting book", e);
-            }
+
+            _context.Book?.Remove(foundBook);
+
+            await _context.SaveChangesAsync();
+
+            return MapBookDTOToBook(foundBook);
         }
 
         public async Task<Book> GetBook(string ISBN)

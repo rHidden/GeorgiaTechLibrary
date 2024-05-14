@@ -56,8 +56,8 @@ namespace GeorgiaTechLibrary.Controllers
         [HttpDelete]
         public IActionResult DeleteBook(string ISBN)
         {
-            _bookService.DeleteBook(ISBN);
-            return Ok();
+            var deletedBook = _bookService.DeleteBook(ISBN);
+            return Ok(deletedBook);
         }
     }
 }
