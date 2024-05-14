@@ -33,6 +33,8 @@ builder.Services.AddTransient<ILibraryRepository, LibraryRepository>();
 builder.Services.AddTransient<ILoanRepository, LoanRepository>();
 builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 builder.Services.AddTransient<IStaffRepository, StaffRepository>();
+//automappers
+builder.Services.AddAutoMapper();
 
 builder.Services.AddScoped<IDatabaseConnectionFactory, DatabaseConnectionFactory>(_ => new DatabaseConnectionFactory(builder.Configuration.GetConnectionString("Default")));
 
