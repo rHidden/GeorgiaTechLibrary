@@ -26,9 +26,9 @@ namespace DbContextNamespace
             modelBuilder.Entity<LibraryDTO>().HasKey(l => l.Name);
             modelBuilder.Entity<BookInstanceDTO>().HasKey(bi => bi.Id);
             modelBuilder.Entity<UserDTO>().HasKey(u => u.SSN);
-            modelBuilder.Entity<LoanDTO>().HasKey(u => u.LoanId);
-            modelBuilder.Entity<StaffDTO>().HasKey(s => s.UserSSN);
-            modelBuilder.Entity<MemberDTO>().HasKey(m => m.UserSSN);
+            modelBuilder.Entity<LoanDTO>().HasKey(u => u.Id);
+            modelBuilder.Entity<StaffDTO>().HasNoKey();
+            modelBuilder.Entity<MemberDTO>().HasNoKey();
 
             modelBuilder.Entity<DigitalItemLibraryDTO>().HasNoKey();
         }

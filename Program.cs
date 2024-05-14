@@ -1,4 +1,5 @@
 using DbContextNamespace;
+using GeorgiaTechLibrary.Automappers;
 using GeorgiaTechLibrary.DbContext;
 using GeorgiaTechLibrary.Repositories;
 using GeorgiaTechLibrary.Repositories.RepositoryInterfaces;
@@ -34,7 +35,7 @@ builder.Services.AddTransient<ILoanRepository, LoanRepository>();
 builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 builder.Services.AddTransient<IStaffRepository, StaffRepository>();
 //automappers
-builder.Services.AddAutoMapper();
+builder.Services.AddAutoMapper(typeof(AddressProfile), typeof(BookInstanceProfile), typeof(BookProfile), typeof(LibraryProfile), typeof(LoanProfile), typeof(MemberProfile), typeof(StaffProfile), typeof(UserProfile));
 
 builder.Services.AddScoped<IDatabaseConnectionFactory, DatabaseConnectionFactory>(_ => new DatabaseConnectionFactory(builder.Configuration.GetConnectionString("Default")));
 
