@@ -13,6 +13,11 @@ namespace GeorgiaTechLibrary.Services
         {
             _memberRepository = memberRepository;
         }
+        public async Task<Member> GetMember(string SSN)
+        {
+            return await _memberRepository.GetMember(SSN);
+        }
+
         public async Task<List<Member>> ListMembers()
         {
             return await _memberRepository.ListMembers();
@@ -22,21 +27,15 @@ namespace GeorgiaTechLibrary.Services
         {
             return await _memberRepository.CreateMember(member);
         }
+        public async Task UpdateMember(Member member)
+        {
+            await _memberRepository.UpdateMember(member);
+        }
 
         public async Task DeleteMember(string SSN)
         {
             await _memberRepository.DeleteMember(SSN);
 
-        }
-
-        public async Task<Member> GetMember(string SSN)
-        {
-            return await _memberRepository.GetMember(SSN);
-        }
-
-        public async Task UpdateMember(Member member)
-        {
-            await _memberRepository.UpdateMember(member);
         }
     }
 }

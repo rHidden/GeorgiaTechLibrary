@@ -18,7 +18,11 @@ namespace GeorgiaTechLibrary.Repositories
             _context = context;
         }
 
-        public async Task<Staff> GetStaff(int SSN)
+        public async Task<Staff> GetStaff(string SSN)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<List<Staff>> ListStaff()
         {
             throw new NotImplementedException();
         }
@@ -31,20 +35,9 @@ namespace GeorgiaTechLibrary.Repositories
         public async Task UpdateStaff(Staff staff)
         {
             throw new NotImplementedException();
-        }
+        }   
 
-        public async Task DeleteStaff(int SSN)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Staff>> ListStaff()
-        {
-            throw new NotImplementedException();
-        }
-
-        // Method to map StaffDTO to Staff
-        private Staff MapStaffDTOToStaff(StaffDTO staffDTO)
+        public async Task DeleteStaff(string SSN)
         {
             throw new NotImplementedException();
         }

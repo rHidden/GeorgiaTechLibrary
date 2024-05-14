@@ -3,12 +3,6 @@ using GeorgiaTechLibrary.DTOs;
 using GeorgiaTechLibrary.Models;
 using GeorgiaTechLibrary.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.IO;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
 
 namespace GeorgiaTechLibrary.Repositories
 {
@@ -19,6 +13,25 @@ namespace GeorgiaTechLibrary.Repositories
         public MemberRepository(GTLDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<Member> GetMember(string SSN)
+        {
+            var memberDTO = await _context.Member.FindAsync(SSN);
+            if (memberDTO != null)
+            {
+                return MapMemberDTOToMember(memberDTO);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<Member>> ListMembers()
+        {
+            var memberDTOs = await _context.Member.ToListAsync();
+            return memberDTOs.Select(dto => MapMemberDTOToMember(dto)).ToList();
         }
 
         public async Task<Member> CreateMember(Member member)
@@ -67,54 +80,6 @@ namespace GeorgiaTechLibrary.Repositories
         }
 
 
-        public async Task DeleteMember(string SSN)
-        {
-            using var transaction = _context.Database.BeginTransaction();
-
-            try
-            {
-                var member = await _context.Member.FindAsync(SSN);
-                var user = await _context.User.FindAsync(SSN);
-                if (member != null && user != null)
-                {
-                    _context.Member.Remove(member);
-                    await _context.SaveChangesAsync();
-                    _context.User.Remove(user);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                else
-                {
-                    throw new Exception("User not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw new Exception("Failed to delete member.", ex);
-            }
-        }
-
-
-        public async Task<Member> GetMember(string SSN)
-        {
-            var memberDTO = await _context.Member.FindAsync(SSN);
-            if (memberDTO != null)
-            {
-                return MapMemberDTOToMember(memberDTO);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<List<Member>> ListMembers()
-        {
-            var memberDTOs = await _context.Member.ToListAsync();
-            return memberDTOs.Select(dto => MapMemberDTOToMember(dto)).ToList();
-        }
-
         public async Task UpdateMember(Member member)
         {
             using var transaction = _context.Database.BeginTransaction();
@@ -149,6 +114,34 @@ namespace GeorgiaTechLibrary.Repositories
             {
                 await transaction.RollbackAsync();
                 throw new Exception("Failed to update member.", ex);
+            }
+        }
+
+        public async Task DeleteMember(string SSN)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                var member = await _context.Member.FindAsync(SSN);
+                var user = await _context.User.FindAsync(SSN);
+                if (member != null && user != null)
+                {
+                    _context.Member.Remove(member);
+                    await _context.SaveChangesAsync();
+                    _context.User.Remove(user);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                else
+                {
+                    throw new Exception("User not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Failed to delete member.", ex);
             }
         }
 

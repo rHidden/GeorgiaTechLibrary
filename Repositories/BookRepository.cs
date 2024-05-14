@@ -15,38 +15,6 @@ namespace GeorgiaTechLibrary.Repositories
             _context = context;
         }
 
-        public async Task<Book> CreateBook(Book book)
-        {
-            var bookEntity = new BookDTO
-            {
-                ISBN = book.ISBN,
-                Description = book.Description,
-                SubjectArea = book.SubjectArea,
-                CanLoan = book.CanLoan
-            };
-
-            _context.Book.Add(bookEntity);
-            await _context.SaveChangesAsync();
-
-            return book;
-        }
-
-        public async Task<Book> DeleteBook(string ISBN)
-        {
-            var foundBook = await _context.Book.FirstAsync(x => x.ISBN == ISBN);
-
-            if (foundBook == null)
-            {
-                return null;
-            }
-
-            _context.Book?.Remove(foundBook);
-
-            await _context.SaveChangesAsync();
-
-            return MapBookDTOToBook(foundBook);
-        }
-
         public async Task<Book> GetBook(string ISBN)
         {
             var bookEntity = await _context.Book.FindAsync(ISBN);
@@ -66,6 +34,22 @@ namespace GeorgiaTechLibrary.Repositories
             return bookDTOs.Select(dto => MapBookDTOToBook(dto)).ToList();
         }
 
+        public async Task<Book> CreateBook(Book book)
+        {
+            var bookEntity = new BookDTO
+            {
+                ISBN = book.ISBN,
+                Description = book.Description,
+                SubjectArea = book.SubjectArea,
+                CanLoan = book.CanLoan
+            };
+
+            _context.Book.Add(bookEntity);
+            await _context.SaveChangesAsync();
+
+            return book;
+        }
+
         public async Task UpdateBook(Book book)
         {
             try
@@ -82,6 +66,22 @@ namespace GeorgiaTechLibrary.Repositories
             {
                 throw new Exception("Concurrency conflict occurred while updating the book.", ex);
             }
+        }
+
+        public async Task<Book> DeleteBook(string ISBN)
+        {
+            var foundBook = await _context.Book.FirstAsync(x => x.ISBN == ISBN);
+
+            if (foundBook == null)
+            {
+                return null;
+            }
+
+            _context.Book?.Remove(foundBook);
+
+            await _context.SaveChangesAsync();
+
+            return MapBookDTOToBook(foundBook);
         }
 
 

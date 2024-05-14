@@ -1,13 +1,14 @@
 ﻿using GeorgiaTechLibrary.Models;
 
-namespace GeorgiaTechLibrary.Repositories.RepositoryInterfaces
+namespace GeorgiaTechLibrary.Services.ServiceInterfaces
 {
-    public interface IStaffRepository
+    public interface IStaffService
     {
         Task<Staff> GetStaff(string SSN);
         Task<List<Staff>> ListStaff();
         Task<Staff> CreateStaff(Staff staff);
         Task UpdateStaff(Staff staff);
         Task DeleteStaff(string SSN);
+
     }
 }

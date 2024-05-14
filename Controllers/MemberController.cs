@@ -17,6 +17,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
+        [Route("{SSN}")]
         public async Task<IActionResult> GetMember(string SSN)
         {
             var member = await _memberService.GetMember(SSN);
@@ -24,8 +25,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
-        [Route("list")]
-        public async Task<IActionResult> ListMembersAsync()
+        public async Task<IActionResult> ListMembers()
         {
             List<Member> members = await _memberService.ListMembers();
             if (!members.Any())
@@ -36,7 +36,6 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
         public async Task<IActionResult> CreateMember(Member member)
         {
             var createdMember = await _memberService.CreateMember(member);

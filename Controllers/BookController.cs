@@ -15,6 +15,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
+        [Route("{ISBN}")]
         public async Task<IActionResult> GetBookAsync(string ISBN)
         {
             Book book = await _bookService.GetBook(ISBN);
@@ -26,7 +27,6 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
-        [Route("list")]
         public async Task<IActionResult> ListBooksAsync()
         {
             List<Book> books = await _bookService.ListBooks();
@@ -39,7 +39,6 @@ namespace GeorgiaTechLibrary.Controllers
 
 
         [HttpPost]
-        [Route("create")]
         public async Task<IActionResult> CreateBook(Book book)
         {
             var createdBook = await _bookService.CreateBook(book);

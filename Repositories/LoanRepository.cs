@@ -14,16 +14,6 @@ namespace GeorgiaTechLibrary.Repositories
             _context = context;
         }
 
-        public Task<Loan> CreateLoan(Loan loan)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteLoan(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Loan> GetLoan(int id)
         {
             throw new NotImplementedException();
@@ -34,18 +24,19 @@ namespace GeorgiaTechLibrary.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<Loan> CreateLoan(Loan loan)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task UpdateLoan(Loan loan)
         {
             throw new NotImplementedException();
         }
 
-        private Loan MapLoanDTOToLoan(LoanDTO loanDTO)
+        public Task DeleteLoan(int id)
         {
-            return new Loan
-            {
-                Id = loanDTO.LoanId,
-                //TODO
-            };
+            throw new NotImplementedException();
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class DigitalItemDTO
     {
-        public int Id { get; set; }
+        public int Id { get; set; } 
         public string Author { get; set; }
         public string Size { get; set; }
         public string Format { get; set; }

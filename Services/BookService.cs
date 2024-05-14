@@ -11,6 +11,11 @@ namespace GeorgiaTechLibrary.Services
         {
             _bookRepository = bookRepository;
         }
+        public async Task<Book> GetBook(string ISBN)
+        {
+            var book = await _bookRepository.GetBook(ISBN);
+            return book;
+        }
         public async Task<List<Book>> ListBooks()
         {
             var books = await _bookRepository.ListBooks();
@@ -21,21 +26,15 @@ namespace GeorgiaTechLibrary.Services
             var createdBook = await _bookRepository.CreateBook(book);
             return createdBook;
         }
-
+        public async Task UpdateBook(Book book)
+        {
+            await _bookRepository.UpdateBook(book);
+        }
         public async Task<Book> DeleteBook(string ISBN)
         {
             return await _bookRepository.DeleteBook(ISBN);
         }
 
-        public async Task<Book> GetBook(string ISBN)
-        {
-            var book = await _bookRepository.GetBook(ISBN);
-            return book;
-        }
 
-        public async Task UpdateBook(Book book)
-        {
-            await _bookRepository.UpdateBook(book);
-        }
     }
 }
