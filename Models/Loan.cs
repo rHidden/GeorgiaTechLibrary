@@ -5,18 +5,18 @@
         public int Id { get; set; }
         public DateTime LoanDate { get; set; }
         public DateTime ReturnDate { get; set; }
-        public List<BookInstance> BookInstances { get; set; }
+        public BookInstance LoanBookInstance { get; set; }
         public User User { get; set; }
         public LoanType Type { get; set; }
 
         public Loan() { }
 
-        public Loan(int id, DateTime loanDate, DateTime returnDate, List<BookInstance> bookInstances, User user)
+        public Loan(int id, DateTime loanDate, DateTime returnDate, BookInstance loanBookInstance, User user)
         {
             Id = id;
             LoanDate = loanDate;
             ReturnDate = returnDate;
-            BookInstances = bookInstances;
+            LoanBookInstance = loanBookInstance;
             User = user;
         }
     }
