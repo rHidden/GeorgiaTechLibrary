@@ -20,16 +20,15 @@ namespace DataAccess.DAO
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity("", b => b.Property).Property(b => b.ISBN).IsRequired();
-            //modelBuilder.Entity<DigitalItem>().HasKey(d => d.Id);
-            //modelBuilder.Entity<Library>().HasMany(l => l.Items).HasKey(l => l.Name);
-            //modelBuilder.Entity<BookInstance>().HasKey(bi => bi.Id);
-            //modelBuilder.Entity<User>().HasKey(u => u.SSN);
-            //modelBuilder.Entity<Loan>().HasKey(u => u.Id);
-            //modelBuilder.Entity<Staff>().HasKey(s => s.SSN);
-            //modelBuilder.Entity<Member>().HasKey(m => m.SSN);
-
-            //modelBuilder.Entity<DigitalItemLibrary>().HasNoKey();
+            modelBuilder.Entity<Book>().HasKey(b => b.ISBN);
+            modelBuilder.Entity<DigitalItem>().HasKey(d => d.Id);
+            modelBuilder.Entity<Library>().HasKey(l => l.Name);
+            modelBuilder.Entity<BookInstance>().HasKey(bi => bi.Id);
+            modelBuilder.Entity<User>().HasKey(u => u.SSN);
+            modelBuilder.Entity<Loan>().HasKey(u => u.Id);
+            modelBuilder.Entity<Staff>().HasKey(s => s.SSN);
+            modelBuilder.Entity<Member>().HasKey(m => m.SSN);
+            modelBuilder.Entity<Address>().HasNoKey();
         }
 
         public DbSet<Book> Book { get; set; }
