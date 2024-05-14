@@ -6,7 +6,6 @@
         public string Description { get; set; }
         public string SubjectArea { get; set; }
         public bool CanLoan { get; set; }
-        public List<BookInstance> BookInstances { get; set; }
 
         public Book() { }
 
@@ -16,7 +15,6 @@
             Description = description;
             SubjectArea = subjectArea;
             CanLoan = canLoan;
-            BookInstances = bookInstances;
         }
     }
 }

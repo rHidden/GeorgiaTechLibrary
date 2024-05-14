@@ -29,6 +29,7 @@ namespace DbContextNamespace
             modelBuilder.Entity<LoanDTO>().HasKey(u => u.Id);
             modelBuilder.Entity<StaffDTO>().HasNoKey();
             modelBuilder.Entity<MemberDTO>().HasNoKey();
+            modelBuilder.Entity<AddressDTO>().HasNoKey();
 
             modelBuilder.Entity<DigitalItemLibraryDTO>().HasNoKey();
         }
