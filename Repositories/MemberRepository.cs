@@ -23,7 +23,7 @@ namespace GeorgiaTechLibrary.Repositories
             var memberDTO = await _context.Member.FindAsync(SSN);
             if (memberDTO != null)
             {
-                return MapMemberDTOToMember(memberDTO);
+                return _mapper.Map<Member>(memberDTO);
             }
             else
             {
@@ -34,7 +34,7 @@ namespace GeorgiaTechLibrary.Repositories
         public async Task<List<Member>> ListMembers()
         {
             var memberDTOs = await _context.Member.ToListAsync();
-            return memberDTOs.Select(dto => MapMemberDTOToMember(dto)).ToList();
+            return memberDTOs.Select(dto => _mapper.Map<Member>(dto)).ToList();
         }
 
         public async Task<Member> CreateMember(Member member)
@@ -111,26 +111,6 @@ namespace GeorgiaTechLibrary.Repositories
             }
         }
 
-
-        public async Task<Member> GetMember(string SSN)
-        {
-            var memberDTO = await _context.Member.FindAsync(SSN);
-            if (memberDTO != null)
-            {
-                return _mapper.Map<Member>(memberDTO);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<List<Member>> ListMembers()
-        {
-            var memberDTOs = await _context.Member.ToListAsync();
-            return memberDTOs.Select(dto => _mapper.Map<Member>(dto)).ToList();
-        }
-
         public async Task UpdateMember(Member member)
         {
             using var transaction = _context.Database.BeginTransaction();
@@ -170,62 +150,6 @@ namespace GeorgiaTechLibrary.Repositories
                 await transaction.RollbackAsync();
                 throw new Exception("Failed to update member.", ex);
             }
-        }
-
-        public async Task DeleteMember(string SSN)
-        {
-            using var transaction = _context.Database.BeginTransaction();
-
-            try
-            {
-                var member = await _context.Member.FindAsync(SSN);
-                var user = await _context.User.FindAsync(SSN);
-                if (member != null && user != null)
-                {
-                    _context.Member.Remove(member);
-                    await _context.SaveChangesAsync();
-                    _context.User.Remove(user);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                else
-                {
-                    throw new Exception("User not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw new Exception("Failed to delete member.", ex);
-            }
-        }
-
-        private Member MapMemberDTOToMember(MemberDTO memberDTO)
-        {
-            var userDTO = _context.User.FirstOrDefault(u => u.SSN == memberDTO.UserSSN);
-            if (userDTO == null)
-            {
-                throw new Exception("User not found");
-            }
-
-            return new Member
-            {
-                SSN = userDTO.SSN,
-                FirstName = userDTO.FirstName,
-                LastName = userDTO.LastName,
-                PhoneNum = userDTO.PhoneNumber,
-                CardNum = memberDTO.CardNumber,
-                ExpiryDate = memberDTO.ExpiryDate,
-                Photo = memberDTO.Photo,
-                Type = memberDTO.Type,
-                UserAddress = new Address
-                {
-                    Street = userDTO.Street,
-                    StreetNum = userDTO.StreetNumber,
-                    ZipCode = userDTO.Zipcode,
-                    City = userDTO.City,
-                }
-            };
         }
     }
 }
