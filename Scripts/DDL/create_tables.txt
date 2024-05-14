@@ -7,7 +7,7 @@ CREATE TABLE Library (
 );
 
 CREATE TABLE Book (
-    ISBN INT PRIMARY KEY,
+    ISBN VARCHAR(50) PRIMARY KEY,
     CanLoan BIT,
     Description VARCHAR(MAX),
     SubjectArea VARCHAR(50)
@@ -15,7 +15,7 @@ CREATE TABLE Book (
 
 CREATE TABLE BookInstance (
     Id INT PRIMARY KEY,
-    BookISBN INT,
+    BookISBN VARCHAR(50),
     LibraryName VARCHAR(50),
     IsLoaned BIT,
     FOREIGN KEY (BookISBN) REFERENCES Book(ISBN),

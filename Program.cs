@@ -22,8 +22,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Dependency Injection
 builder.Services.AddDbContext<GTLDbContext>();
+// Dependency Injection
 //services
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IMemberService, MemberService>();

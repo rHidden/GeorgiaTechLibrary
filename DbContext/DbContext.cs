@@ -33,14 +33,14 @@ namespace DbContextNamespace
             modelBuilder.Entity<DigitalItemLibraryDTO>().HasNoKey();
         }
 
-        public DbSet<BookDTO> Books { get; set; }
-        public DbSet<BookInstanceDTO> BookInstances { get; set; }
-        public DbSet<DigitalItemDTO> DigitalItems { get; set; }
-        public DbSet<DigitalItemLibraryDTO> DigitalItemLibraries { get; set; }
-        public DbSet<LibraryDTO> Libraries { get; set; }
-        public DbSet<LoanDTO> Loans { get; set; }
-        public DbSet<MemberDTO> Members { get; set; }
+        public DbSet<BookDTO> Book { get; set; }
+        public DbSet<BookInstanceDTO> BookInstance { get; set; }
+        public DbSet<DigitalItemDTO> DigitalItem { get; set; }
+        public DbSet<DigitalItemLibraryDTO> DigitalItemLibrary { get; set; }
+        public DbSet<LibraryDTO> Library { get; set; }
+        public DbSet<LoanDTO> Loan { get; set; }
+        public DbSet<MemberDTO> Member { get; set; }
         public DbSet<StaffDTO> Staff { get; set; }
-        public DbSet<UserDTO> Users { get; set; }
+        public DbSet<UserDTO> User { get; set; }
     }
 }

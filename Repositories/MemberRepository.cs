@@ -5,6 +5,9 @@ using GeorgiaTechLibrary.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+using System.IO;
+using System.Reflection.Emit;
 using System.Threading.Tasks;
 
 namespace GeorgiaTechLibrary.Repositories
@@ -30,21 +33,26 @@ namespace GeorgiaTechLibrary.Repositories
                     FirstName = member.FirstName,
                     LastName = member.LastName,
                     PhoneNumber = member.PhoneNum,
-                    // Map other properties of User here
+                    Street = member.UserAddress.Street,
+                    StreetNumber = member.UserAddress.StreetNum,
+                    Zipcode = member.UserAddress.ZipCode,
+                    City = member.UserAddress.City,
                 };
 
-                _context.Users.Add(userDTO);
+                _context.User.Add(userDTO);
+
+                await _context.SaveChangesAsync();
 
                 var memberDTO = new MemberDTO
                 {
-                    UserSSN = member.SSN,
+                    UserSSN = userDTO.SSN,
                     CardNumber = member.CardNum,
                     ExpiryDate = member.ExpiryDate,
                     Photo = member.Photo,
                     Type = member.Type
                 };
 
-                _context.Members.Add(memberDTO);
+                _context.Member.Add(memberDTO);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -58,19 +66,39 @@ namespace GeorgiaTechLibrary.Repositories
             }
         }
 
+
         public async Task DeleteMember(string SSN)
         {
-            var member = await _context.Members.FindAsync(SSN);
-            if (member != null)
+            using var transaction = _context.Database.BeginTransaction();
+
+            try
             {
-                _context.Members.Remove(member);
-                await _context.SaveChangesAsync();
+                var member = await _context.Member.FindAsync(SSN);
+                var user = await _context.User.FindAsync(SSN);
+                if (member != null && user != null)
+                {
+                    _context.Member.Remove(member);
+                    await _context.SaveChangesAsync();
+                    _context.User.Remove(user);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                else
+                {
+                    throw new Exception("User not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Failed to delete member.", ex);
             }
         }
 
+
         public async Task<Member> GetMember(string SSN)
         {
-            var memberDTO = await _context.Members.FindAsync(SSN);
+            var memberDTO = await _context.Member.FindAsync(SSN);
             if (memberDTO != null)
             {
                 return MapMemberDTOToMember(memberDTO);
@@ -83,7 +111,7 @@ namespace GeorgiaTechLibrary.Repositories
 
         public async Task<List<Member>> ListMembers()
         {
-            var memberDTOs = await _context.Members.ToListAsync();
+            var memberDTOs = await _context.Member.ToListAsync();
             return memberDTOs.Select(dto => MapMemberDTOToMember(dto)).ToList();
         }
 
@@ -93,16 +121,19 @@ namespace GeorgiaTechLibrary.Repositories
 
             try
             {
-                var userDTO = await _context.Users.FindAsync(member.SSN);
+                var userDTO = await _context.User.FindAsync(member.SSN);
                 if (userDTO != null)
                 {
                     userDTO.FirstName = member.FirstName;
                     userDTO.LastName = member.LastName;
                     userDTO.PhoneNumber = member.PhoneNum;
-                    // Address?
+                    userDTO.Street = member.UserAddress.Street;
+                    userDTO.StreetNumber = member.UserAddress.StreetNum;
+                    userDTO.Zipcode = member.UserAddress.ZipCode;
+                    userDTO.City = member.UserAddress.City;
                 }
 
-                var memberDTO = await _context.Members.FindAsync(member.SSN);
+                var memberDTO = await _context.Member.FindAsync(member.SSN);
                 if (memberDTO != null)
                 {
                     memberDTO.CardNumber = member.CardNum;
@@ -121,10 +152,13 @@ namespace GeorgiaTechLibrary.Repositories
             }
         }
 
-        // Method to map MemberDTO to Member
         private Member MapMemberDTOToMember(MemberDTO memberDTO)
         {
-            var userDTO = _context.Users.FirstOrDefault(u => u.SSN == memberDTO.UserSSN);
+            var userDTO = _context.User.FirstOrDefault(u => u.SSN == memberDTO.UserSSN);
+            if (userDTO == null)
+            {
+                throw new Exception("User not found");
+            }
 
             return new Member
             {
@@ -135,8 +169,14 @@ namespace GeorgiaTechLibrary.Repositories
                 CardNum = memberDTO.CardNumber,
                 ExpiryDate = memberDTO.ExpiryDate,
                 Photo = memberDTO.Photo,
-                Type = memberDTO.Type
-                // Address?
+                Type = memberDTO.Type,
+                UserAddress = new Address
+                {
+                    Street = userDTO.Street,
+                    StreetNum = userDTO.StreetNumber,
+                    ZipCode = userDTO.Zipcode,
+                    City = userDTO.City,
+                }
             };
         }
     }

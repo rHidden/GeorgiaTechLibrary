@@ -25,7 +25,7 @@ namespace GeorgiaTechLibrary.Repositories
                 CanLoan = book.CanLoan
             };
 
-            _context.Books.Add(bookEntity);
+            _context.Book.Add(bookEntity);
             await _context.SaveChangesAsync();
 
             return book;
@@ -33,26 +33,27 @@ namespace GeorgiaTechLibrary.Repositories
 
         public async Task DeleteBook(string ISBN)
         {
-            var bookEntity = await _context.Books.FindAsync(ISBN);
-            if (bookEntity != null)
+            try
             {
-                _context.Books.Remove(bookEntity);
-                await _context.SaveChangesAsync();
+                var bookEntity = await _context.Book.FindAsync(ISBN);
+                if (bookEntity != null)
+                {
+                    _context.Book.Remove(bookEntity);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error deleting book", e);
             }
         }
 
         public async Task<Book> GetBook(string ISBN)
         {
-            var bookEntity = await _context.Books.FindAsync(ISBN);
+            var bookEntity = await _context.Book.FindAsync(ISBN);
             if (bookEntity != null)
             {
-                return new Book
-                {
-                    ISBN = bookEntity.ISBN,
-                    Description = bookEntity.Description,
-                    SubjectArea = bookEntity.SubjectArea,
-                    CanLoan = bookEntity.CanLoan
-                };
+                return MapBookDTOToBook(bookEntity);
             }
             else
             {
@@ -62,22 +63,28 @@ namespace GeorgiaTechLibrary.Repositories
 
         public async Task<List<Book>> ListBooks()
         {
-            var bookDTOs = await _context.Books.ToListAsync();
+            var bookDTOs = await _context.Book.ToListAsync();
             return bookDTOs.Select(dto => MapBookDTOToBook(dto)).ToList();
         }
 
         public async Task UpdateBook(Book book)
         {
-            var bookEntity = await _context.Books.FindAsync(book.ISBN);
-            if (bookEntity != null)
+            try
             {
-                bookEntity.Description = book.Description;
-                bookEntity.SubjectArea = book.SubjectArea;
-                bookEntity.CanLoan = book.CanLoan;
+                var bookEntity = await _context.Book.FindAsync(book.ISBN);
+                if (bookEntity != null)
+                {
+                    _context.Entry(bookEntity).CurrentValues.SetValues(book); // Update entity properties
 
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new Exception("Concurrency conflict occurred while updating the book.", ex);
             }
         }
+
 
         // Method to map BookDTO to Book
         private Book MapBookDTOToBook(BookDTO bookDTO)
