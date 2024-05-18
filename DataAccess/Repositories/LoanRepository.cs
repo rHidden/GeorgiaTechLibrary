@@ -1,4 +1,5 @@
 ﻿using DataAccess.DAO;
+using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Models;
 using DataAccess.Repositories.RepositoryInterfaces;
 
@@ -6,11 +7,10 @@ namespace DataAccess.Repositories
 {
     public class LoanRepository : ILoanRepository
     {
-        private readonly GTLDbContext _context;
-
-        public LoanRepository(GTLDbContext context)
+        private readonly IDatabaseConnectionFactory _connectionFactory;
+        public LoanRepository(IDatabaseConnectionFactory databaseConnectionFactory)
         {
-            _context = context;
+            _connectionFactory = databaseConnectionFactory;
         }
 
         public Task<Loan> GetLoan(int id)

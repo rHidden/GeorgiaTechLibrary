@@ -22,11 +22,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<GTLDbContext>();
 // Dependency Injection
 //services
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ILibraryService, LibraryService>(); 
+builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddScoped<IStaffService, StaffService>();
 //repos
 builder.Services.AddTransient<IBookRepository, BookRepository>();
 builder.Services.AddTransient<ILibraryRepository, LibraryRepository>();

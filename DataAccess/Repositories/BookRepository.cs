@@ -1,78 +1,189 @@
-﻿using DataAccess.DAO;
+﻿using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Models;
 using DataAccess.Repositories.RepositoryInterfaces;
-using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace DataAccess.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        private readonly GTLDbContext _context;
+        private readonly IDatabaseConnectionFactory _connectionFactory;
 
-        public BookRepository(GTLDbContext context)
+        public BookRepository(IDatabaseConnectionFactory databaseConnectionFactory)
         {
-            _context = context;
+            _connectionFactory = databaseConnectionFactory;
+        }
+
+        private void AddParameter(DbCommand command, string name, object value)
+        {
+            var param = command.CreateParameter();
+            param.ParameterName = name;
+            param.Value = value ?? DBNull.Value;
+            command.Parameters.Add(param);
         }
 
         public async Task<Book> GetBook(string ISBN)
         {
-            var bookEntity = await _context.Book.FindAsync(ISBN);
-            if (bookEntity != null)
+            try
             {
-                return bookEntity;
+                using (var connection = _connectionFactory.CreateConnection())
+                {
+                    await connection.OpenAsync();
+                    var command = connection.CreateCommand();
+                    command.CommandText = "SELECT * FROM Book WHERE ISBN = @ISBN";
+                    AddParameter(command, "@ISBN", ISBN);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new Book
+                            {
+                                ISBN = reader["ISBN"].ToString(),
+                                CanLoan = (bool)reader["CanLoan"],
+                                Description = reader["Description"].ToString(),
+                                SubjectArea = reader["SubjectArea"].ToString()
+                            };
+                        }
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                Console.WriteLine($"Error retrieving book: {ex.Message}");
             }
+            return null;
         }
 
         public async Task<List<Book>> ListBooks()
         {
-            var bookDTOs = await _context.Book.ToListAsync();
-            return bookDTOs.ToList();
+            var books = new List<Book>();
+            try
+            {
+                using (var connection = _connectionFactory.CreateConnection())
+                {
+                    await connection.OpenAsync();
+                    var command = connection.CreateCommand();
+                    command.CommandText = "SELECT * FROM Book";
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            books.Add(new Book
+                            {
+                                ISBN = reader["ISBN"].ToString(),
+                                CanLoan = (bool)reader["CanLoan"],
+                                Description = reader["Description"].ToString(),
+                                SubjectArea = reader["SubjectArea"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error listing books: {ex.Message}");
+            }
+            return books;
         }
 
         public async Task<Book> CreateBook(Book book)
         {
-            _context.Book.Add(book);
-            await _context.SaveChangesAsync();
+            try
+            {
+                using (var connection = _connectionFactory.CreateConnection())
+                {
+                    await connection.OpenAsync();
+                    var command = connection.CreateCommand();
+                    command.CommandText = "INSERT INTO Book (ISBN, CanLoan, Description, SubjectArea) VALUES (@ISBN, @CanLoan, @Description, @SubjectArea)";
 
-            return book;
+                    AddParameter(command, "@ISBN", book.ISBN);
+                    AddParameter(command, "@CanLoan", book.CanLoan);
+                    AddParameter(command, "@Description", book.Description);
+                    AddParameter(command, "@SubjectArea", book.SubjectArea);
+
+                    await command.ExecuteNonQueryAsync();
+                    return book;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating book: {ex.Message}");
+            }
+            return null;
         }
 
         public async Task UpdateBook(Book book)
         {
             try
             {
-                var bookEntity = await _context.Book.FindAsync(book.ISBN);
-                if (bookEntity != null)
+                using (var connection = _connectionFactory.CreateConnection())
                 {
-                    _context.Entry(bookEntity).CurrentValues.SetValues(book); // Update entity properties
+                    await connection.OpenAsync();
+                    var command = connection.CreateCommand();
 
-                    await _context.SaveChangesAsync();
+                    var updateFields = new List<string>();
+                    if (book.CanLoan != null)
+                    {
+                        updateFields.Add("CanLoan = @CanLoan");
+                        AddParameter(command, "@CanLoan", book.CanLoan);
+                    }
+
+                    if (!string.IsNullOrEmpty(book.Description))
+                    {
+                        updateFields.Add("Description = @Description");
+                        AddParameter(command, "@Description", book.Description);
+                    }
+
+                    if (!string.IsNullOrEmpty(book.SubjectArea))
+                    {
+                        updateFields.Add("SubjectArea = @SubjectArea");
+                        AddParameter(command, "@SubjectArea", book.SubjectArea);
+                    }
+
+                    if (updateFields.Count == 0)
+                    {
+                        Console.WriteLine("No fields to update");
+                        return;
+                    }
+
+                    command.CommandText = $"UPDATE Book SET {string.Join(", ", updateFields)} WHERE ISBN = @ISBN";
+                    AddParameter(command, "@ISBN", book.ISBN);
+
+                    await command.ExecuteNonQueryAsync();
                 }
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (Exception ex)
             {
-                throw new Exception("Concurrency conflict occurred while updating the book.", ex);
+                Console.WriteLine($"Error updating book: {ex.Message}");
             }
         }
 
         public async Task<Book> DeleteBook(string ISBN)
         {
-            var foundBook = await _context.Book.FirstAsync(x => x.ISBN == ISBN);
-
-            if (foundBook == null)
+            try
             {
-                return null;
+                using (var connection = _connectionFactory.CreateConnection())
+                {
+                    await connection.OpenAsync();
+                    var command = connection.CreateCommand();
+                    command.CommandText = "DELETE FROM Book WHERE ISBN = @ISBN";
+
+                    AddParameter(command, "@ISBN", ISBN);
+
+                    var book = await GetBook(ISBN);
+
+                    await command.ExecuteNonQueryAsync();
+                    return book;
+                }
             }
-
-            _context.Book?.Remove(foundBook);
-
-            await _context.SaveChangesAsync();
-
-            return foundBook;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting book: {ex.Message}");
+            }
+            return null;
         }
     }
+
 }

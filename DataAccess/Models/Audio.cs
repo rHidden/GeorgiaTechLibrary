@@ -8,7 +8,7 @@ namespace DataAccess.Models
 {
     public class Audio : DigitalItem
     {
-        public int Length { get; set; }
+        public int? Length { get; set; }
 
         public Audio() { }
 

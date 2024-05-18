@@ -1,4 +1,5 @@
 ﻿using DataAccess.DAO;
+using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Models;
 using DataAccess.Repositories.RepositoryInterfaces;
 
@@ -6,11 +7,10 @@ namespace DataAccess.Repositories
 {
     public class StaffRepository : IStaffRepository
     {
-        private readonly GTLDbContext _context;
-
-        public StaffRepository(GTLDbContext context)
+        private readonly IDatabaseConnectionFactory _connectionFactory;
+        public StaffRepository(IDatabaseConnectionFactory databaseConnectionFactory)
         {
-            _context = context;
+            _connectionFactory = databaseConnectionFactory;
         }
 
         public async Task<Staff> GetStaff(string SSN)

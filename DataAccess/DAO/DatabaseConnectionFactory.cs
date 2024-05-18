@@ -1,6 +1,5 @@
 ﻿using DataAccess.DAO.DAOIntefaces;
 using Microsoft.Data.SqlClient;
-using System.Data;
 
 namespace DataAccess.DAO
 {

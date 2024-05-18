@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public Book? Book { get; set; }
-        public bool IsLoaned { get; set; }
+        public bool? IsLoaned { get; set; }
 
         public BookInstance() { }
 

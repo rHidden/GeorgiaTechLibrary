@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Models
 {
-    public abstract class DigitalItem : Item
+    public class DigitalItem : Item
     {
         public int Id { get; set; }
         public string? Format { get; set; }
-        public double Size { get; set; }
+        public double? Size { get; set; }
 
         public DigitalItem() : base() { }
 
