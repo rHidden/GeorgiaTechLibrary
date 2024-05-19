@@ -8,13 +8,13 @@ namespace DataAccess.Models
 {
     public class Resolution
     {
-        public string? Width { get; set; }
+        public int Width { get; set; }
 
-        public string? Height { get; set; }
+        public int Height { get; set; }
 
         public Resolution() { }
 
-        public Resolution(string width, string height)
+        public Resolution(int width, int height)
         {
             Width = width; Height = height;
         }
