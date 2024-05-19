@@ -1,10 +1,9 @@
-using DbContextNamespace;
-using GeorgiaTechLibrary.Automappers;
-using GeorgiaTechLibrary.DbContext;
-using GeorgiaTechLibrary.Repositories;
-using GeorgiaTechLibrary.Repositories.RepositoryInterfaces;
+using DataAccess.DAO;
+using DataAccess.Repositories;
+using DataAccess.Repositories.RepositoryInterfaces;
 using GeorgiaTechLibrary.Services;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
+using DataAccess.DAO.DAOIntefaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,19 +22,19 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<GTLDbContext>();
 // Dependency Injection
 //services
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ILibraryService, LibraryService>(); 
+builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddScoped<IStaffService, StaffService>();
 //repos
 builder.Services.AddTransient<IBookRepository, BookRepository>();
 builder.Services.AddTransient<ILibraryRepository, LibraryRepository>();
 builder.Services.AddTransient<ILoanRepository, LoanRepository>();
 builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 builder.Services.AddTransient<IStaffRepository, StaffRepository>();
-//automappers
-builder.Services.AddAutoMapper(typeof(AddressProfile), typeof(BookInstanceProfile), typeof(BookProfile), typeof(LibraryProfile), typeof(LoanProfile), typeof(MemberProfile), typeof(StaffProfile), typeof(UserProfile));
 
 builder.Services.AddScoped<IDatabaseConnectionFactory, DatabaseConnectionFactory>(_ => new DatabaseConnectionFactory(builder.Configuration.GetConnectionString("Default")));
 
