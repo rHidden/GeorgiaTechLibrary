@@ -13,22 +13,19 @@ namespace GeorgiaTechLibrary.Services
         }
         public async Task<Book> GetBook(string ISBN)
         {
-            var book = await _bookRepository.GetBook(ISBN);
-            return book;
+            return await _bookRepository.GetBook(ISBN);
         }
         public async Task<List<Book>> ListBooks()
         {
-            var books = await _bookRepository.ListBooks();
-            return books;
+            return await _bookRepository.ListBooks();
         }
         public async Task<Book> CreateBook(Book book)
         {
-            var createdBook = await _bookRepository.CreateBook(book);
-            return createdBook;
+            return await _bookRepository.CreateBook(book);
         }
-        public async Task UpdateBook(Book book)
+        public async Task<Book> UpdateBook(Book book)
         {
-            await _bookRepository.UpdateBook(book);
+            return await _bookRepository.UpdateBook(book);
         }
         public async Task<Book> DeleteBook(string ISBN)
         {

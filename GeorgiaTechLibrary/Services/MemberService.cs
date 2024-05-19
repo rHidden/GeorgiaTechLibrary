@@ -27,14 +27,14 @@ namespace GeorgiaTechLibrary.Services
         {
             return await _memberRepository.CreateMember(member);
         }
-        public async Task UpdateMember(Member member)
+        public async Task<Member> UpdateMember(Member member)
         {
-            await _memberRepository.UpdateMember(member);
+            return await _memberRepository.UpdateMember(member);
         }
 
-        public async Task DeleteMember(string SSN)
+        public async Task<Member> DeleteMember(string SSN)
         {
-            await _memberRepository.DeleteMember(SSN);
+            return await _memberRepository.DeleteMember(SSN);
 
         }
     }

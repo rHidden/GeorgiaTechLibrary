@@ -29,14 +29,14 @@ namespace GeorgiaTechLibrary.Services
             return await _staffRepository.CreateStaff(staff);
         }
 
-        public async Task UpdateStaff(Staff staff)
+        public async Task<Staff> UpdateStaff(Staff staff)
         {
-            await _staffRepository.UpdateStaff(staff);
+            return await _staffRepository.UpdateStaff(staff);
         }
 
-        public async Task DeleteStaff(string SSN)
+        public async Task<Staff> DeleteStaff(string SSN)
         {
-            await _staffRepository.DeleteStaff(SSN);
+            return await _staffRepository.DeleteStaff(SSN);
 
         }
     }

@@ -204,7 +204,7 @@ namespace DataAccess.Repositories
             return null;
         }
 
-        public async Task UpdateLibrary(Library library)
+        public async Task<Library> UpdateLibrary(Library library)
         {
             try
             {
@@ -244,25 +244,37 @@ namespace DataAccess.Repositories
                     if (updateFields.Count == 0)
                     {
                         Console.WriteLine("No fields to update");
-                        return;
+                        return null;
                     }
 
                     command.CommandText = $"UPDATE Library SET {string.Join(", ", updateFields)} WHERE Name = @Name";
                     AddParameter(command, "@Name", library.Name);
 
                     await command.ExecuteNonQueryAsync();
+
+                    return await GetLibrary(library.Name);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error updating library: {ex.Message}");
+                return null;
             }
         }
 
-        public async Task DeleteLibrary(string libraryName)
+
+        public async Task<Library> DeleteLibrary(string libraryName)
         {
             try
             {
+                var library = await GetLibrary(libraryName);
+
+                if (library == null)
+                {
+                    Console.WriteLine("Library not found");
+                    return null;
+                }
+
                 using (var connection = _connectionFactory.CreateConnection())
                 {
                     await connection.OpenAsync();
@@ -273,11 +285,15 @@ namespace DataAccess.Repositories
 
                     await command.ExecuteNonQueryAsync();
                 }
+
+                return library;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error deleting library: {ex.Message}");
+                return null;
             }
         }
+
     }
 }

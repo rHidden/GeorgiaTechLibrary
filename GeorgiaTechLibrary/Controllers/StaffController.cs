@@ -43,17 +43,17 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
-        public IActionResult UpdateStaff(Staff staff)
+        public async Task<IActionResult> UpdateStaff(Staff staff)
         {
-            _staffService.UpdateStaff(staff);
-            return Ok();
+            var updatedStaff = await _staffService.UpdateStaff(staff);
+            return Ok(updatedStaff);
         }
 
         [HttpDelete]
-        public IActionResult DeleteStaff(string SSN)
+        public async Task<IActionResult> DeleteStaff(string SSN)
         {
-            _staffService.DeleteStaff(SSN);
-            return Ok();
+            var deletedStaff = await _staffService.DeleteStaff(SSN);
+            return Ok(deletedStaff);
         }
     }
 }

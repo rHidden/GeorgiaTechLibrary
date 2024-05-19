@@ -43,17 +43,17 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
-        public IActionResult UpdateMember(Member member)
+        public async Task<IActionResult> UpdateMember(Member member)
         {
-            _memberService.UpdateMember(member);
-            return Ok();
+            var updatedMember = await _memberService.UpdateMember(member);
+            return Ok(updatedMember);
         }
 
         [HttpDelete]
-        public IActionResult DeleteMember(string SSN)
+        public async Task<IActionResult> DeleteMember(string SSN)
         {
-            _memberService.DeleteMember(SSN);
-            return Ok();
+            var deletedMember = await _memberService.DeleteMember(SSN);
+            return Ok(deletedMember);
         }
     }
 }

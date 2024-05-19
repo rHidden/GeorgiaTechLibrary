@@ -7,8 +7,8 @@ namespace GeorgiaTechLibrary.Services.ServiceInterfaces
         Task<Library> GetLibrary(string name);
         Task<List<Library>> ListLibraries();
         Task<Library> CreateLibrary(Library library);
-        Task UpdateLibrary(Library library);
-        Task DeleteLibrary(string name);
+        Task<Library> UpdateLibrary(Library library);
+        Task<Library> DeleteLibrary(string name);
 
     }
 }

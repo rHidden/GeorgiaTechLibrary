@@ -14,18 +14,18 @@ namespace GeorgiaTechLibrary.Controllers
         public LoanController(ILoanService loanService)
         {
             _loanService = loanService;
-        }   
+        }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetLoan(int Id)
+        public async Task<IActionResult> GetLoan(int id)
         {
-            var loan = await _loanService.GetLoan(Id);
+            var loan = await _loanService.GetLoan(id);
             return Ok(loan);
         }
 
         [HttpGet]
-        [Route("{userSSN}")]
+        [Route("user/{userSSN}")]
         public async Task<IActionResult> ListUserLoans(string userSSN)
         {
             List<Loan> loans = await _loanService.ListUserLoans(userSSN);
@@ -44,17 +44,17 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
-        public IActionResult UpdateLoan(Loan loan)
+        public async Task<IActionResult> UpdateLoan(Loan loan)
         {
-            _loanService.UpdateLoan(loan);
-            return Ok();
+            var updatedLoan = await _loanService.UpdateLoan(loan);
+            return Ok(updatedLoan);
         }
 
         [HttpDelete]
-        public IActionResult DeleteLoan(int Id)
+        public async Task<IActionResult> DeleteLoan(int Id)
         {
-            _loanService.DeleteLoan(Id);
-            return Ok();
+            var deletedLoan = await _loanService.DeleteLoan(Id);
+            return Ok(deletedLoan);
         }
     }
 }

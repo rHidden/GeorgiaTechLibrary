@@ -7,7 +7,7 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<Library> GetLibrary(string libraryName);
         Task<List<Library>> ListLibraries();
         Task<Library> CreateLibrary(Library library);
-        Task UpdateLibrary(Library library);
-        Task DeleteLibrary(string libraryName);
+        Task<Library> UpdateLibrary(Library library);
+        Task<Library> DeleteLibrary(string libraryName);
     }
 }

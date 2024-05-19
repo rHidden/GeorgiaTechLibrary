@@ -2,7 +2,7 @@
 {
     public class Library
     {
-        public string? Name { get; set; }
+        public string Name { get; set; }
         public List<User>? Users { get; set; }
         public Address? LibraryAddress { get; set; }
         public List<BookInstance>? BookInstances { get; set; }

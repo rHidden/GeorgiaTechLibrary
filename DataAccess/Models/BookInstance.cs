@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Models
 {
-    public class BookInstance
+    public class BookInstance: Item
     {
         public int Id { get; set; }
         public Book? Book { get; set; }

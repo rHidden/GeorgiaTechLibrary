@@ -43,17 +43,17 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
-        public IActionResult UpdateLibrary(Library library)
+        public async Task<IActionResult> UpdateLibrary(Library library)
         {
-            _libraryService.UpdateLibrary(library);
-            return Ok();
+            var updatedLibrary = await _libraryService.UpdateLibrary(library);
+            return Ok(updatedLibrary);
         }
 
         [HttpDelete]
-        public IActionResult DeleteLibrary(string name)
+        public async Task<IActionResult> DeleteLibrary(string name)
         {
-            _libraryService.DeleteLibrary(name);
-            return Ok();
+            var deletedLibrary = await _libraryService.DeleteLibrary(name);
+            return Ok(deletedLibrary);
         }
     }
 }

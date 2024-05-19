@@ -114,7 +114,7 @@ namespace DataAccess.Repositories
             return null;
         }
 
-        public async Task UpdateBook(Book book)
+        public async Task<Book> UpdateBook(Book book)
         {
             try
             {
@@ -145,19 +145,22 @@ namespace DataAccess.Repositories
                     if (updateFields.Count == 0)
                     {
                         Console.WriteLine("No fields to update");
-                        return;
+                        return null;
                     }
 
                     command.CommandText = $"UPDATE Book SET {string.Join(", ", updateFields)} WHERE ISBN = @ISBN";
                     AddParameter(command, "@ISBN", book.ISBN);
 
                     await command.ExecuteNonQueryAsync();
+
+                    return await GetBook(book.ISBN);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error updating book: {ex.Message}");
             }
+            return null;
         }
 
         public async Task<Book> DeleteBook(string ISBN)

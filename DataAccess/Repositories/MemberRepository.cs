@@ -28,12 +28,12 @@ namespace DataAccess.Repositories
         {
             throw new NotImplementedException();
         }
-        public async Task DeleteMember(string SSN)
+        public async Task<Member> DeleteMember(string SSN)
         {
             throw new NotImplementedException();
         }
 
-        public async Task UpdateMember(Member newMember)
+        public async Task<Member> UpdateMember(Member newMember)
         {
             throw new NotImplementedException();
         }

@@ -28,15 +28,14 @@ namespace GeorgiaTechLibrary.Services
             return await _libraryRepository.CreateLibrary(library);
         }
 
-        public async Task UpdateLibrary(Library library)
+        public async Task<Library> UpdateLibrary(Library library)
         {
-            await _libraryRepository.UpdateLibrary(library);
+            return await _libraryRepository.UpdateLibrary(library);
         }
 
-        public async Task DeleteLibrary(string name)
+        public async Task<Library> DeleteLibrary(string name)
         {   
-            await _libraryRepository.DeleteLibrary(name);
-
+            return await _libraryRepository.DeleteLibrary(name);
         }
-    }
+    }   
 }

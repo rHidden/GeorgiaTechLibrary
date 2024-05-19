@@ -46,16 +46,16 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
-        public IActionResult UpdateBook(Book book)
+        public async Task<IActionResult> UpdateBook(Book book)
         {
-            _bookService.UpdateBook(book);
-            return Ok();
+            var updatedBook = await _bookService.UpdateBook(book);
+            return Ok(updatedBook);
         }
 
         [HttpDelete]
-        public IActionResult DeleteBook(string ISBN)
+        public async Task<IActionResult> DeleteBook(string ISBN)
         {
-            var deletedBook = _bookService.DeleteBook(ISBN);
+            var deletedBook = await _bookService.DeleteBook(ISBN);
             return Ok(deletedBook);
         }
     }

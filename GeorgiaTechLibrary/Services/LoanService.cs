@@ -29,14 +29,14 @@ namespace GeorgiaTechLibrary.Services
             return await _loanRepository.CreateLoan(loan);
         }
 
-        public async Task UpdateLoan(Loan loan)
+        public async Task<Loan> UpdateLoan(Loan loan)
         {
-            await _loanRepository.UpdateLoan(loan);
+            return await _loanRepository.UpdateLoan(loan);
         }
 
-        public async Task DeleteLoan(int Id)
+        public async Task<Loan> DeleteLoan(int Id)
         {
-            await _loanRepository.DeleteLoan(Id);
+            return await _loanRepository.DeleteLoan(Id);
 
         }
     }

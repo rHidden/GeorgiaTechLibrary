@@ -27,12 +27,12 @@ namespace DataAccess.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task UpdateStaff(Staff staff)
+        public async Task<Staff> UpdateStaff(Staff staff)
         {
             throw new NotImplementedException();
         }   
 
-        public async Task DeleteStaff(string SSN)
+        public async Task<Staff> DeleteStaff(string SSN)
         {
             throw new NotImplementedException();
         }

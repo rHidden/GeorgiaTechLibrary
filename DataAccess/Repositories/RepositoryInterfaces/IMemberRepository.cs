@@ -7,7 +7,7 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<Member> GetMember(string SSN);
         Task<List<Member>> ListMembers();
         Task<Member> CreateMember(Member member);
-        Task UpdateMember(Member member);
-        Task DeleteMember(string SSN);
+        Task<Member> UpdateMember(Member member);
+        Task<Member> DeleteMember(string SSN);
     }
 }
