@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Models
 {
-    public abstract class Loan
+    public class Loan
     {
         public int Id { get; set; }
         public DateTime? LoanDate { get; set; }
@@ -24,5 +24,9 @@
             User = user;
             Type = type;
         }
+    }
+    public enum LoanType { 
+        Book,
+        DigitalItem
     }
 }

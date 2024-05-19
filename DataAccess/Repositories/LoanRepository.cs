@@ -64,7 +64,7 @@ namespace DataAccess.Repositories
                             {
                                 loan.User.FirstName = reader["FirstName"].ToString();
                                 loan.User.LastName = reader["LastName"].ToString();
-                                loan.User.PhoneNum = reader["PhoneNumber"].ToString();
+                                loan.User.PhoneNumber = reader["PhoneNumber"].ToString();
                                 loan.User.UserAddress = new Address
                                 {
                                     Street = reader["Street"].ToString(),
