@@ -71,7 +71,7 @@ namespace DataAccess.Repositories
                                 SSN = reader["SSN"].ToString(),
                                 FirstName = reader["FirstName"].ToString(),
                                 LastName = reader["LastName"].ToString(),
-                                PhoneNum = reader["PhoneNumber"].ToString(),
+                                PhoneNumber = reader["PhoneNumber"].ToString(),
                                 UserAddress = new Address
                                 {
                                     Street = reader["Street"].ToString(),
