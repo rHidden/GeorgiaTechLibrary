@@ -31,7 +31,5 @@ namespace GeorgiaTechLibrary.Services
         {
             return await _bookRepository.DeleteBook(ISBN);
         }
-
-
     }
 }

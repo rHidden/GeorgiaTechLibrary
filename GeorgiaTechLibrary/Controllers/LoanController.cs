@@ -53,8 +53,8 @@ namespace GeorgiaTechLibrary.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteLoan(int Id)
         {
-            var deletedLoan = await _loanService.DeleteLoan(Id);
-            return Ok(deletedLoan);
+            var deletedSuccessfully = await _loanService.DeleteLoan(Id);
+            return Ok(deletedSuccessfully);
         }
     }
 }

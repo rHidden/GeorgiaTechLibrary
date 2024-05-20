@@ -8,7 +8,7 @@ namespace GeorgiaTechLibrary.Services.ServiceInterfaces
         Task<List<Member>> ListMembers();
         Task<Member> CreateMember(Member member);
         Task<Member> UpdateMember(Member member);
-        Task<Member> DeleteMember(string SSN);
+        Task<bool> DeleteMember(string SSN);
 
     }
 }

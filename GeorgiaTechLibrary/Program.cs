@@ -26,13 +26,13 @@ builder.Services.AddCors(options =>
 //services
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<ILibraryService, LibraryService>(); 
-builder.Services.AddScoped<ILoanService, LoanService>();
+//builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 //repos
 builder.Services.AddTransient<IBookRepository, BookRepository>();
 builder.Services.AddTransient<ILibraryRepository, LibraryRepository>();
-builder.Services.AddTransient<ILoanRepository, LoanRepository>();
+//builder.Services.AddTransient<ILoanRepository, LoanRepository>();
 builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 builder.Services.AddTransient<IStaffRepository, StaffRepository>();
 

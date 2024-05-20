@@ -52,8 +52,8 @@ namespace GeorgiaTechLibrary.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteStaff(string SSN)
         {
-            var deletedStaff = await _staffService.DeleteStaff(SSN);
-            return Ok(deletedStaff);
+            var deletedSuccessfully = await _staffService.DeleteStaff(SSN);
+            return Ok(deletedSuccessfully);
         }
     }
 }

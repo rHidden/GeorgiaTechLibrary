@@ -32,10 +32,9 @@ namespace GeorgiaTechLibrary.Services
             return await _memberRepository.UpdateMember(member);
         }
 
-        public async Task<Member> DeleteMember(string SSN)
+        public async Task<bool> DeleteMember(string SSN)
         {
             return await _memberRepository.DeleteMember(SSN);
-
         }
     }
 }
