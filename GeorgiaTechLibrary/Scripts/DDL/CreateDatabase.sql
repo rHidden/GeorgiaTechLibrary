@@ -1,15 +1,19 @@
-USE master
+USE master;
 
-DROP DATABASE IF EXISTS GeorgiaTechLibrary;
+ALTER DATABASE GeorgiaTechLibrary SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 
-GO
+IF DB_ID('GeorgiaTechLibrary') IS NOT NULL
+BEGIN
+    DROP DATABASE GeorgiaTechLibrary;
+END
 
 CREATE DATABASE GeorgiaTechLibrary;
+ALTER DATABASE GeorgiaTechLibrary SET MULTI_USER;
 
 GO
+USE GeorgiaTechLibrary;
 
-USE GeorgiaTechLibrary
-
+-- Create the tables
 CREATE TABLE [Library] (
     [Name] VARCHAR(50) PRIMARY KEY,
     Street VARCHAR(50),
@@ -20,17 +24,17 @@ CREATE TABLE [Library] (
 
 CREATE TABLE Book (
     ISBN VARCHAR(50) PRIMARY KEY,
-	[Name] VARCHAR(50),
+    [Name] VARCHAR(50),
     CanLoan BIT,
     [Description] VARCHAR(MAX),
-	SubjectArea VARCHAR(50)
+    SubjectArea VARCHAR(50)
 );
 
 CREATE TABLE BookAuthor(
-	BookISBN VARCHAR(50),
-	[Name] VARCHAR(50),
-	PRIMARY KEY (BookISBN, [Name]),
-	FOREIGN KEY (BookISBN) REFERENCES Book(ISBN)
+    BookISBN VARCHAR(50),
+    [Name] VARCHAR(50),
+    PRIMARY KEY (BookISBN, [Name]),
+    FOREIGN KEY (BookISBN) REFERENCES Book(ISBN)
 );
 
 CREATE TABLE BookInstance (
@@ -44,8 +48,8 @@ CREATE TABLE BookInstance (
 
 CREATE TABLE DigitalItem (
     Id INT PRIMARY KEY,
-	[Name] VARCHAR(50),
-    Size float,
+    [Name] VARCHAR(50),
+    Size FLOAT,
     [Format] VARCHAR(50),
     DigitalItemType VARCHAR(50),
     [Length] VARCHAR(50),
@@ -54,18 +58,18 @@ CREATE TABLE DigitalItem (
 );
 
 CREATE TABLE DigitalItemAuthor(
-	DigitalItemId INT,
-	[Name] VARCHAR(50),
-	PRIMARY KEY (DigitalItemId, [Name]),
-	FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id)
+    DigitalItemId INT,
+    [Name] VARCHAR(50),
+    PRIMARY KEY (DigitalItemId, [Name]),
+    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id)
 );
 
 CREATE TABLE DigitalItemLibrary (
     DigitalItemId INT,
     LibraryName VARCHAR(50),
-	PRIMARY KEY (DigitalItemId, LibraryName),
+    PRIMARY KEY (DigitalItemId, LibraryName),
     FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id),
-    FOREIGN KEY (LibraryName) REFERENCES Library([Name])
+    FOREIGN KEY (LibraryName) REFERENCES [Library]([Name])
 );
 
 CREATE TABLE [User] (
@@ -99,14 +103,14 @@ CREATE TABLE [Member] (
 
 CREATE TABLE Loan (
     Id INT PRIMARY KEY,
-	UserSSN VARCHAR(10),
+    UserSSN VARCHAR(10),
     LoanDate DATE,
     ReturnDate DATE,
-	DueDate DATE,
-	LoanType VARCHAR(50),
+    DueDate DATE,
+    LoanType VARCHAR(50),
     DigitalItemId INT,
     BookInstanceId INT,
     FOREIGN KEY (BookInstanceId) REFERENCES BookInstance(Id),
     FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id),
-	FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
+    FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
 );

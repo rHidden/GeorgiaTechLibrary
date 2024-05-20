@@ -37,7 +37,6 @@ namespace GeorgiaTechLibrary.Services
         public async Task<Loan> DeleteLoan(int Id)
         {
             return await _loanRepository.DeleteLoan(Id);
-
         }
     }
 }
