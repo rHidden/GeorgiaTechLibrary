@@ -104,7 +104,7 @@ namespace DataAccess.Repositories
                     AddParameter(command, "@SubjectArea", book.SubjectArea);
 
                     await command.ExecuteNonQueryAsync();
-                    return book;
+                    return null;
                 }
             }
             catch (Exception ex)
