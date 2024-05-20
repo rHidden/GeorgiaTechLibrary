@@ -8,6 +8,6 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<List<Library>> ListLibraries();
         Task<Library> CreateLibrary(Library library);
         Task<Library> UpdateLibrary(Library library);
-        Task<Library> DeleteLibrary(string libraryName);
+        Task<bool> DeleteLibrary(string libraryName);
     }
 }

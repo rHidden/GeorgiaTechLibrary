@@ -9,14 +9,14 @@ namespace DataAccess.Models
     public abstract class Item
     {
         public string? Name { get; set; }
-        public string? Author { get; set; }
+        public List<string>? Authors { get; set; }
 
         public Item() { }
 
-        public Item(string name, string author)
+        public Item(string name, List<string> authors)
         {
             Name = name;
-            Author = author;
+            Authors = authors;
         }
     }
 }

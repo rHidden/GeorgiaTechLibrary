@@ -33,7 +33,7 @@ namespace GeorgiaTechLibrary.Services
             return await _libraryRepository.UpdateLibrary(library);
         }
 
-        public async Task<Library> DeleteLibrary(string name)
+        public async Task<bool> DeleteLibrary(string name)
         {   
             return await _libraryRepository.DeleteLibrary(name);
         }

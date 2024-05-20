@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Models
 {
-    public class DigitalItem : Item
+    public abstract class DigitalItem : Item
     {
         public int Id { get; set; }
         public string? Format { get; set; }
@@ -14,7 +14,7 @@ namespace DataAccess.Models
 
         public DigitalItem() : base() { }
 
-        public DigitalItem(string name, string author, int id, string format, double size) : base(name, author)
+        public DigitalItem(string name, List<string> authors, int id, string format, double size) : base(name, authors)
         {
             Id = id;
             Format = format;

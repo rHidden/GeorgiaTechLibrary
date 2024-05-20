@@ -8,6 +8,6 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<List<Book>> ListBooks();
         Task<Book> CreateBook(Book book);
         Task<Book> UpdateBook(Book book);
-        Task<Book> DeleteBook(string ISBN);
+        Task<bool> DeleteBook(string ISBN);
     }
 }
