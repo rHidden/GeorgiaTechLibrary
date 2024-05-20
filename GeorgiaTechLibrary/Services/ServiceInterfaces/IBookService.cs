@@ -8,6 +8,6 @@ namespace GeorgiaTechLibrary.Services.ServiceInterfaces
         Task<List<Book>> ListBooks();
         Task<Book> CreateBook(Book book);
         Task<Book> UpdateBook(Book book);
-        Task<Book> DeleteBook(string ISBN);
+        Task<bool> DeleteBook(string ISBN);
     }
 }
