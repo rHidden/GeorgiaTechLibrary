@@ -22,20 +22,14 @@ CREATE TABLE Book (
     ISBN VARCHAR(50) PRIMARY KEY,
 	[Name] VARCHAR(50),
     CanLoan BIT,
-    [Description] VARCHAR(MAX)
+    [Description] VARCHAR(MAX),
+	SubjectArea VARCHAR(50)
 );
 
 CREATE TABLE BookAuthor(
 	BookISBN VARCHAR(50),
 	[Name] VARCHAR(50),
 	PRIMARY KEY (BookISBN, [Name]),
-	FOREIGN KEY (BookISBN) REFERENCES Book(ISBN)
-);
-
-CREATE TABLE BookSubjectArea(
-	BookISBN VARCHAR(50),
-	SubjectArea VARCHAR(50),
-	PRIMARY KEY (BookISBN, SubjectArea),
 	FOREIGN KEY (BookISBN) REFERENCES Book(ISBN)
 );
 
@@ -55,7 +49,6 @@ CREATE TABLE DigitalItem (
     [Format] VARCHAR(50),
     DigitalItemType VARCHAR(50),
     [Length] VARCHAR(50),
-    Quality VARCHAR(50),
     ResolutionWidth INT,
     ResolutionHeight INT
 );
@@ -89,14 +82,14 @@ CREATE TABLE [User] (
 );
 
 CREATE TABLE Staff (
-    UserSSN VARCHAR(10),
+    UserSSN VARCHAR(10) PRIMARY KEY,
     [Role] VARCHAR(50),
     LibrarianNumber VARCHAR(50),
     FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
 );
 
 CREATE TABLE [Member] (
-    UserSSN VARCHAR(10),
+    UserSSN VARCHAR(10) PRIMARY KEY,
     CardNumber VARCHAR(50),
     ExpiryDate DATE,
     Photo VARCHAR(50),
@@ -109,6 +102,7 @@ CREATE TABLE Loan (
 	UserSSN VARCHAR(10),
     LoanDate DATE,
     ReturnDate DATE,
+	DueDate DATE,
 	LoanType VARCHAR(50),
     DigitalItemId INT,
     BookInstanceId INT,
