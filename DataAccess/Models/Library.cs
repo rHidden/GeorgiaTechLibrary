@@ -12,7 +12,7 @@
 
         public Library(string name, Address libraryAddress, List<User> users, List<BookInstance> bookInstances, List<DigitalItem> digitalItems)
         {
-            Name = name
+            Name = name;
             LibraryAddress = libraryAddress;
             Users = users;
             BookInstances = bookInstances;

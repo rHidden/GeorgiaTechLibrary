@@ -15,14 +15,6 @@ namespace DataAccess.Repositories
             _connectionFactory = databaseConnectionFactory;
         }
 
-        private void AddParameter(DbCommand command, string name, object value)
-        {
-            var param = command.CreateParameter();
-            param.ParameterName = name;
-            param.Value = value ?? DBNull.Value;
-            command.Parameters.Add(param);
-        }
-
         public async Task<Library> GetLibrary(string libraryName)
         {
             //string sql = "SELECT library.[Name], library.[Street], library.[StreetNumber], " +
@@ -151,7 +143,11 @@ namespace DataAccess.Repositories
             string sql = "SELECT * FROM Library";
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var libraries = (await connection.QueryAsync<Library>(sql)).AsQueryable().AsList();
+                var libraries = (await connection.QueryAsync<Library, Address, Library>(sql, map: ((library, address) =>
+                {
+                    library.LibraryAddress = address;
+                    return library;
+                }), splitOn: "Street")).AsQueryable().AsList();
                 return libraries;
             }
         }
@@ -161,7 +157,14 @@ namespace DataAccess.Repositories
             string sql = "INSERT INTO Library (Name, Street, StreetNumber, City, Zipcode) VALUES (@Name, @Street, @StreetNumber, @City, @Zipcode)";
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var rowsAffected = await connection.ExecuteAsync(sql, library);
+                var rowsAffected = await connection.ExecuteAsync(sql, new
+                {
+                    Name = library.Name,
+                    Street = library.LibraryAddress.Street,
+                    StreetNumber = library.LibraryAddress.StreetNumber,
+                    ZipCode = library.LibraryAddress.ZipCode,
+                    City = library.LibraryAddress.City
+                });
                 return library;
             }
         }
@@ -172,7 +175,14 @@ namespace DataAccess.Repositories
                 "[City] = @City, [Zipcode] = @Zipcode WHERE Name = @Name";
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var rowsAffected = await connection.ExecuteAsync(sql, library.LibraryAddress);
+                var rowsAffected = await connection.ExecuteAsync(sql, new
+                {
+                    Name = library.Name,
+                    Street = library.LibraryAddress.Street,
+                    StreetNumber = library.LibraryAddress.StreetNumber,
+                    ZipCode = library.LibraryAddress.ZipCode,
+                    City = library.LibraryAddress.City
+                });
                 return library;
             }
         }
@@ -184,7 +194,7 @@ namespace DataAccess.Repositories
 
                 using (var connection = _connectionFactory.CreateConnection())
                 {
-                    int rowsAffected = await connection.ExecuteAsync(sql, libraryName);
+                    int rowsAffected = await connection.ExecuteAsync(sql, new { Name = libraryName });
 
                     if (rowsAffected != 0)
                     {
