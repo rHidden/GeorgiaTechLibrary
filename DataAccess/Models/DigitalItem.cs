@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Models
 {
-    public abstract class DigitalItem : Item
+    public class DigitalItem : Item
     {
         public int Id { get; set; }
         public string? Format { get; set; }

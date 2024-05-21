@@ -32,7 +32,7 @@ namespace DataAccess.Repositories
                     staff.PhoneNumber = user.PhoneNumber;
                     staff.UserAddress = address;
                     return staff;
-                }, new { SSN }, splitOn: "Street, LibrarianNumber")).AsQueryable().First();
+                }, new { SSN }, splitOn: "Street, LibrarianNumber")).AsQueryable().FirstOrDefault();
 
                 return staff;
             }

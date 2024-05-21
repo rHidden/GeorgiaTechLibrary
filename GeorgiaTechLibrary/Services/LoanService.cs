@@ -24,7 +24,12 @@ namespace GeorgiaTechLibrary.Services
             return await _loanRepository.ListUserLoans(userSSN);
         }
 
-        public async Task<Loan> CreateLoan(Loan loan)
+        public async Task<Loan> CreateLoan(BookLoan loan)
+        {
+            return await _loanRepository.CreateLoan(loan);
+        }
+
+        public async Task<Loan> CreateLoan(DigitalItemLoan loan)
         {
             return await _loanRepository.CreateLoan(loan);
         }
@@ -34,7 +39,7 @@ namespace GeorgiaTechLibrary.Services
             return await _loanRepository.UpdateLoan(loan);
         }
 
-        public async Task<Loan> DeleteLoan(int Id)
+        public async Task<bool> DeleteLoan(int Id)
         {
             return await _loanRepository.DeleteLoan(Id);
         }

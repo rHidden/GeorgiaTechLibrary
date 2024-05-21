@@ -11,5 +11,11 @@ namespace DataAccess.Models{
        {
            DigitalItem = book;
        }
-   } 
+
+        public DigitalItemLoan(Loan loan, DigitalItem book)
+           : base(loan)
+        {
+            DigitalItem = book;
+        }
+    } 
 }

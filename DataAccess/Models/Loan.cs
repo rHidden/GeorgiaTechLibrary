@@ -18,6 +18,15 @@
             ReturnDate = returnDate;
             User = user;
         }
+
+        public Loan(Loan loan)
+        {
+            Id = loan.Id;
+            LoanDate = loan.LoanDate;
+            DueDate = loan.DueDate;
+            ReturnDate = loan.ReturnDate;
+            User = loan.User;
+        }
     }
     public enum LoanType { 
         Book,

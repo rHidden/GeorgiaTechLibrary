@@ -6,9 +6,10 @@ namespace GeorgiaTechLibrary.Services.ServiceInterfaces
     {
         Task<Loan> GetLoan(int Id);
         Task<List<Loan>> ListUserLoans(string userSSN);
-        Task<Loan> CreateLoan(Loan loan);
+        Task<Loan> CreateLoan(DigitalItemLoan loan);
+        Task<Loan> CreateLoan(BookLoan loan);
         Task<Loan> UpdateLoan(Loan loan);
-        Task<Loan> DeleteLoan(int Id);
+        Task<bool> DeleteLoan(int Id);
 
     }
 }
