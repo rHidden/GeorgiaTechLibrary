@@ -2,8 +2,6 @@
 using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Models;
 using DataAccess.Repositories.RepositoryInterfaces;
-using System.Data.Common;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DataAccess.Repositories
 {
