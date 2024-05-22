@@ -186,7 +186,7 @@ namespace DataAccessTest
                 }
             };
 
-            _mockLibraryRepository.Setup(r => r.DeleteLibrary(libraryName)).ReturnsAsync(library);
+            _mockLibraryRepository.Setup(r => r.DeleteLibrary(libraryName)).ReturnsAsync(true);
             _mockLibraryRepository.Setup(r => r.GetLibrary(libraryName)).ReturnsAsync((Library)null);
 
             // Act
@@ -195,7 +195,6 @@ namespace DataAccessTest
 
             // Assert
             Assert.NotNull(deletedLibrary);
-            Assert.Equal(libraryName, deletedLibrary.Name);
             Assert.Null(result);
         }
     }

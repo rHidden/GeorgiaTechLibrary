@@ -15,7 +15,7 @@ namespace DataAccessTest
     public class BookRepositoryTest
     {
         private Mock<IDatabaseConnectionFactory> _mockDatabaseConnectionFactory;
-        private Mock<IBookRepository> _mockBookRepository;
+        private BookRepository _bookRepository;
         private string _connectionString;
 
         public BookRepositoryTest()
@@ -24,19 +24,19 @@ namespace DataAccessTest
             _mockDatabaseConnectionFactory = new Mock<IDatabaseConnectionFactory>();
             _mockDatabaseConnectionFactory.Setup(d => d.CreateConnection())
                .Returns(new SqlConnection(_connectionString));
-            _mockBookRepository = new Mock<IBookRepository>();
+            _bookRepository = new BookRepository(_mockDatabaseConnectionFactory.Object);
         }
 
         [Fact]
         public async Task CreateBook_CreatesNewBook()
         {
             // Arrange
-            var newBook = new Book { ISBN = "3456789012345", CanLoan = true, Description = "New Test Book", SubjectArea = "History" };
-
-            _mockBookRepository.Setup(r => r.CreateBook(newBook)).ReturnsAsync(newBook);
+            var isbn =  "3456789012345";
+            var newBook = new Book { ISBN = isbn, Name = "Test book", CanLoan = true, Description = "New Test Book", SubjectArea = "History" };
 
             // Act
-            var result = await _mockBookRepository.Object.CreateBook(newBook);
+            var result = await _bookRepository.CreateBook(newBook);
+            await _bookRepository.DeleteBook(isbn);
 
             // Assert
             Assert.NotNull(result);
@@ -51,12 +51,12 @@ namespace DataAccessTest
         {
             // Arrange
             var isbn = "1234567890123";
-            var expectedBook = new Book { ISBN = isbn, CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
-
-            _mockBookRepository.Setup(r => r.GetBook(isbn)).ReturnsAsync(expectedBook);
+            var expectedBook = new Book { ISBN = isbn, Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
 
             // Act
-            var result = await _mockBookRepository.Object.GetBook(isbn);
+            await _bookRepository.CreateBook(expectedBook);
+            var result = await _bookRepository.GetBook(isbn);
+            await _bookRepository.DeleteBook(isbn);
 
             // Assert
             Assert.NotNull(result);
@@ -70,14 +70,18 @@ namespace DataAccessTest
         public async Task ListBooks_ReturnsListOfBooks()
         {
             // Arrange
-            var book1 = new Book { ISBN = "1234567890123", CanLoan = true, Description = "Test Book 1", SubjectArea = "Fiction" };
-            var book2 = new Book { ISBN = "2345678901234", CanLoan = false, Description = "Test Book 2", SubjectArea = "Non-Fiction" };
+            var isbn1 = "1234567890123";
+            var isbn2 = "2345678901234";
+            var book1 = new Book { ISBN = "1234567890123", Name = "Test book", CanLoan = true, Description = "Test Book 1", SubjectArea = "Fiction" };
+            var book2 = new Book { ISBN = "2345678901234", Name = "Test book", CanLoan = false, Description = "Test Book 2", SubjectArea = "Non-Fiction" };
             var books = new List<Book> { book1, book2 };
 
-            _mockBookRepository.Setup(r => r.ListBooks()).ReturnsAsync(books);
-
             // Act
-            var result = await _mockBookRepository.Object.ListBooks();
+            await _bookRepository.CreateBook(book1);
+            await _bookRepository.CreateBook(book2);
+            var result = await _bookRepository.ListBooks();
+            await _bookRepository.DeleteBook(isbn1);
+            await _bookRepository.DeleteBook(isbn2);
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -90,13 +94,13 @@ namespace DataAccessTest
         {
             // Arrange
             var isbn = "1234567890123";
-            var originalBook = new Book { ISBN = isbn, CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
-            var updatedBook = new Book { ISBN = isbn, CanLoan = false, Description = "Updated Test Book", SubjectArea = "Science Fiction" };
-
-            _mockBookRepository.Setup(r => r.UpdateBook(updatedBook)).ReturnsAsync(updatedBook);
+            var originalBook = new Book { ISBN = isbn, Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
+            var updatedBook = new Book { ISBN = isbn, Name = "Test book", CanLoan = false, Description = "Updated Test Book", SubjectArea = "Science Fiction" };
 
             // Act
-            var result = await _mockBookRepository.Object.UpdateBook(updatedBook);
+            await _bookRepository.CreateBook(originalBook);
+            var result = await _bookRepository.UpdateBook(updatedBook);
+            await _bookRepository.DeleteBook(isbn);
 
             // Assert
             Assert.NotNull(result);
@@ -111,18 +115,15 @@ namespace DataAccessTest
         {
             // Arrange
             var isbn = "1234567890123";
-            var book = new Book { ISBN = isbn, CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
-
-            _mockBookRepository.Setup(r => r.DeleteBook(isbn)).ReturnsAsync(book);
-            _mockBookRepository.Setup(r => r.GetBook(isbn)).ReturnsAsync((Book)null);
+            var book = new Book { ISBN = isbn, Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
 
             // Act
-            var deletedBook = await _mockBookRepository.Object.DeleteBook(isbn);
-            var result = await _mockBookRepository.Object.GetBook(isbn);
+            await _bookRepository.CreateBook(book);
+            var deletedBook = await _bookRepository.DeleteBook(isbn);
+            var result = await _bookRepository.GetBook(isbn);
 
             // Assert
             Assert.NotNull(deletedBook);
-            Assert.Equal(isbn, deletedBook.ISBN);
             Assert.Null(result);
         }
     }

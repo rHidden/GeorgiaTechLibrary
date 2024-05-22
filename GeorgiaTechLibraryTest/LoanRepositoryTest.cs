@@ -38,9 +38,6 @@ namespace DataAccessTest
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
-                Type = LoanType.Book,
-                DigitalItem = null,
-                BookInstance = new BookInstance { Id = 1 },
                 User = new User { SSN = "123-45-6789" }
             };
 
@@ -55,8 +52,6 @@ namespace DataAccessTest
             Assert.Equal(expectedLoan.LoanDate, result.LoanDate);
             Assert.Equal(expectedLoan.DueDate, result.DueDate);
             Assert.Equal(expectedLoan.ReturnDate, result.ReturnDate);
-            Assert.Equal(expectedLoan.Type, result.Type);
-            Assert.Equal(expectedLoan.BookInstance.Id, result.BookInstance.Id);
             Assert.Equal(expectedLoan.User.SSN, result.User.SSN);
         }
 
@@ -83,19 +78,17 @@ namespace DataAccessTest
         }
 
         [Fact]
-        public async Task CreateLoan_ValidLoan_ReturnsCreatedLoan()
+        public async Task CreateLoan_ValidLoan_ReturnsCreatedDigitalItemLoan()
         {
             // Arrange
-            var loan = new Loan
+            var loan = new DigitalItemLoan
             {
                 Id = 1,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
-                Type = LoanType.Book,
-                DigitalItem = null,
-                BookInstance = new BookInstance { Id = 1 },
-                User = new User { SSN = "123-45-6789" }
+                User = new User { SSN = "123-45-6789" },
+                DigitalItem = new DigitalItem { Id = 1, Format = "Test Format", Size = 100.00}
             };
 
             _mockLoanRepository.Setup(r => r.CreateLoan(loan)).ReturnsAsync(loan);
@@ -109,8 +102,34 @@ namespace DataAccessTest
             Assert.Equal(loan.LoanDate, result.LoanDate);
             Assert.Equal(loan.DueDate, result.DueDate);
             Assert.Equal(loan.ReturnDate, result.ReturnDate);
-            Assert.Equal(loan.Type, result.Type);
-            Assert.Equal(loan.BookInstance.Id, result.BookInstance.Id);
+            Assert.Equal(loan.User.SSN, result.User.SSN);
+        }
+
+        [Fact]
+        public async Task CreateLoan_ValidLoan_ReturnsCreatedLoan()
+        {
+            // Arrange
+            var loan = new BookLoan
+            {
+                Id = 1,
+                LoanDate = DateTime.Now,
+                DueDate = DateTime.Now.AddDays(30),
+                ReturnDate = null,
+                User = new User { SSN = "123-45-6789" },
+                BookInstance = new BookInstance { Id = 123, IsLoaned = true, Book = null }
+            };
+
+            _mockLoanRepository.Setup(r => r.CreateLoan(loan)).ReturnsAsync(loan);
+
+            // Act
+            var result = await _mockLoanRepository.Object.CreateLoan(loan);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(loan.Id, result.Id);
+            Assert.Equal(loan.LoanDate, result.LoanDate);
+            Assert.Equal(loan.DueDate, result.DueDate);
+            Assert.Equal(loan.ReturnDate, result.ReturnDate);
             Assert.Equal(loan.User.SSN, result.User.SSN);
         }
 
@@ -124,9 +143,6 @@ namespace DataAccessTest
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
-                Type = LoanType.Book,
-                DigitalItem = null,
-                BookInstance = new BookInstance { Id = 1 },
                 User = new User { SSN = "123-45-6789" }
             };
 
@@ -141,8 +157,6 @@ namespace DataAccessTest
             Assert.Equal(loan.LoanDate, result.LoanDate);
             Assert.Equal(loan.DueDate, result.DueDate);
             Assert.Equal(loan.ReturnDate, result.ReturnDate);
-            Assert.Equal(loan.Type, result.Type);
-            Assert.Equal(loan.BookInstance.Id, result.BookInstance.Id);
             Assert.Equal(loan.User.SSN, result.User.SSN);
         }
 
@@ -157,14 +171,11 @@ namespace DataAccessTest
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
-                Type = LoanType.Book,
-                DigitalItem = null,
-                BookInstance = new BookInstance { Id = 1 },
                 User = new User { SSN = "123-45-6789" }
             };
 
             _mockLoanRepository.Setup(r => r.GetLoan(loanId)).ReturnsAsync(loan);
-            _mockLoanRepository.Setup(r => r.DeleteLoan(loanId)).ReturnsAsync(loan);
+            _mockLoanRepository.Setup(r => r.DeleteLoan(loanId)).ReturnsAsync(true);
 
             // Act
             var deletedLoan = await _mockLoanRepository.Object.DeleteLoan(loanId);
@@ -172,7 +183,6 @@ namespace DataAccessTest
 
             // Assert
             Assert.NotNull(deletedLoan);
-            Assert.Equal(loanId, deletedLoan.Id);
             Assert.Null(result);
         }
     }

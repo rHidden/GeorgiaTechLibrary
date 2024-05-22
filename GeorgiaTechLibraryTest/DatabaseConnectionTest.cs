@@ -8,7 +8,7 @@ namespace DataAccessTest
 {
     public class DatabaseConnectionTest
     {
-        public static readonly string _connectionString = "Server=(localdb)\\localDB1;Initial Catalog=GeorgiaTechLibrary;Integrated Security=true;TrustServerCertificate=true";
+        public static readonly string _connectionString = "Server=(localdb)\\localDB1;Initial Catalog=GeorgiaTechLibraryTestDatabase;Integrated Security=true;TrustServerCertificate=true";
 
         [Fact]
         public async Task Connection_IsOpenAfterCreation()
