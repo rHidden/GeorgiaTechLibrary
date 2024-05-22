@@ -467,59 +467,73 @@ END
 
 
 -- Insert data into Loan table
-SET @i = 1;
+SET @i = 1
+DECLARE @userSSN VARCHAR(10);
+DECLARE @loanDate DATE;
+DECLARE @dueDate DATE;
+DECLARE @returnDate DATE;
+DECLARE @loanType VARCHAR(50);
+DECLARE @digitalItemId INT;
+DECLARE @bookInstanceId INT;
 
--- Create a temporary table to hold DigitalItem IDs and BookInstance IDs
-CREATE TABLE #Items (Id INT, ItemType VARCHAR(20));
 
--- Insert DigitalItem IDs into the temporary table
-INSERT INTO #Items (Id, ItemType)
-SELECT Id, 'DigitalItem' FROM DigitalItem;
+WHILE @i <= 10000
+BEGIN
+    -- Randomly select a user with a weighted distribution
+    SET @userSSN = (SELECT TOP 1 SSN FROM [User] ORDER BY NEWID());
 
--- Insert BookInstance IDs into the temporary table
-INSERT INTO #Items (Id, ItemType)
-SELECT Id, 'BookInstance' FROM BookInstance;
+    -- Randomly select a loan type
+    SET @loanType = CASE WHEN RAND() <= 0.8 THEN 'Book' ELSE 'DigitalItem' END;
 
--- Shuffle the items randomly
-UPDATE #Items
-SET Id = ABS(CHECKSUM(NEWID())) % (SELECT COUNT(*) FROM #Items) + 1;
+    -- Set loan date and due date
+    SET @loanDate = DATEADD(DAY, -FLOOR(RAND() * 30), GETDATE()); -- Loan date within the last 30 days
+    SET @dueDate = DATEADD(DAY, 14, @loanDate); -- Due date 14 days after loan date
 
--- Update loan information for DigitalItems
-UPDATE Loan
-SET LoanType = 'DigitalItem',
-    DigitalItemId = i.Id -- Alias the Id column in the join
-FROM Loan
-JOIN #Items i ON Loan.Id = i.Id -- Alias the temporary table as "i"
-WHERE i.ItemType = 'DigitalItem' AND
-      LoanType IS NULL;
+    -- Initialize return date to NULL
+    SET @returnDate = NULL;
 
--- Update loan information for BookInstances
-UPDATE Loan
-SET LoanType = 'BookInstance',
-    BookInstanceId = i.Id -- Alias the Id column in the join
-FROM Loan
-JOIN #Items i ON Loan.Id = i.Id -- Alias the temporary table as "i"
-WHERE i.ItemType = 'BookInstance' AND
-      LoanType IS NULL;
+    IF @loanType = 'Book'
+    BEGIN
+        -- Randomly select a book instance with a weighted distribution
+        SET @bookInstanceId = (SELECT TOP 1 Id FROM BookInstance ORDER BY NEWID());
+        
+        -- Check if the selected book instance can be loaned
+        SELECT @canLoan = CanLoan FROM Book WHERE ISBN = (SELECT BookISBN FROM BookInstance WHERE Id = @bookInstanceId);
+        SELECT @isLoaned = IsLoaned FROM BookInstance WHERE Id = @bookInstanceId;
 
--- Drop the temporary table
-DROP TABLE #Items;
+        IF @canLoan = 1 AND @isLoaned = 0
+        BEGIN
+            -- 80% chance that the item is returned
+            IF RAND() <= 0.8
+            BEGIN
+                SET @returnDate = DATEADD(DAY, 14, @loanDate); -- Return date 7 days after loan date
+                UPDATE BookInstance SET IsLoaned = 0 WHERE Id = @bookInstanceId;
+            END
+            ELSE
+            BEGIN
+                UPDATE BookInstance SET IsLoaned = 1 WHERE Id = @bookInstanceId;
+            END
 
--- Update loan counts for some items
-UPDATE Loan
-SET LoanDate = DATEADD(DAY, -ABS(CHECKSUM(NEWID())) % 365, GETDATE()), -- Random loan date
-    ReturnDate = CASE WHEN ABS(CHECKSUM(NEWID())) % 10 <> 0 THEN DATEADD(DAY, ABS(CHECKSUM(NEWID())) % 365 + 1, LoanDate) END -- Random return date (if loaned)
-WHERE ABS(CHECKSUM(NEWID())) % 20 = 0; -- Adjust this ratio for loan volume
+            -- Insert the loan record
+            INSERT INTO Loan (Id, UserSSN, LoanDate, ReturnDate, DueDate, LoanType, BookInstanceId)
+            VALUES (@i, @userSSN, @loanDate, @returnDate, @dueDate, @loanType, @bookInstanceId);
+        END
+    END
+    ELSE
+    BEGIN
+        -- Randomly select a digital item with a weighted distribution
+        SET @digitalItemId = (SELECT TOP 1 Id FROM DigitalItem ORDER BY NEWID());
+        
+        -- 80% chance that the item is returned
+        IF RAND() <= 0.8
+        BEGIN
+            SET @returnDate = DATEADD(DAY, 7, @loanDate); -- Return date 7 days after loan date
+        END
 
--- Set return dates to null for items that were not loaned
-UPDATE Loan
-SET ReturnDate = NULL
-WHERE ReturnDate IS NOT NULL AND
-      LoanType = 'DigitalItem' AND
-      DigitalItemId IS NOT NULL;
+        -- Insert the loan record
+        INSERT INTO Loan (Id, UserSSN, LoanDate, ReturnDate, DueDate, LoanType, DigitalItemId)
+        VALUES (@i, @userSSN, @loanDate, @returnDate, @dueDate, @loanType, @digitalItemId);
+    END
 
-UPDATE Loan
-SET ReturnDate = NULL
-WHERE ReturnDate IS NOT NULL AND
-      LoanType = 'BookInstance' AND
-      BookInstanceId IS NOT NULL;
+    SET @i = @i + 1;
+END

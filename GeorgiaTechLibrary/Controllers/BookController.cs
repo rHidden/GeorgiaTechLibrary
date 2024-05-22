@@ -55,8 +55,8 @@ namespace GeorgiaTechLibrary.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteBook(string ISBN)
         {
-            var deletedBook = await _bookService.DeleteBook(ISBN);
-            return Ok(deletedBook);
+            var deletedSuccessfully = await _bookService.DeleteBook(ISBN);
+            return Ok(deletedSuccessfully);
         }
     }
 }

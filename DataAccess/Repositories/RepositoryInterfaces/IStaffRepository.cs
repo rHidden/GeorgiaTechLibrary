@@ -8,6 +8,6 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<List<Staff>> ListStaff();
         Task<Staff> CreateStaff(Staff staff);
         Task<Staff> UpdateStaff(Staff staff);
-        Task<Staff> DeleteStaff(string SSN);
+        Task<bool> DeleteStaff(string SSN);
     }
 }

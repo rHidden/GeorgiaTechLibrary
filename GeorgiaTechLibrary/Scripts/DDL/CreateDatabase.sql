@@ -34,7 +34,7 @@ CREATE TABLE BookAuthor(
     BookISBN VARCHAR(50),
     [Name] VARCHAR(50),
     PRIMARY KEY (BookISBN, [Name]),
-    FOREIGN KEY (BookISBN) REFERENCES Book(ISBN)
+    FOREIGN KEY (BookISBN) REFERENCES Book(ISBN) ON DELETE CASCADE
 );
 
 CREATE TABLE BookInstance (
@@ -42,8 +42,8 @@ CREATE TABLE BookInstance (
     IsLoaned BIT,
     BookISBN VARCHAR(50),
     LibraryName VARCHAR(50),
-    FOREIGN KEY (BookISBN) REFERENCES Book(ISBN),
-    FOREIGN KEY (LibraryName) REFERENCES [Library]([Name])
+    FOREIGN KEY (BookISBN) REFERENCES Book(ISBN) ON DELETE CASCADE,
+    FOREIGN KEY (LibraryName) REFERENCES [Library]([Name]) ON DELETE SET NULL
 );
 
 CREATE TABLE DigitalItem (
@@ -61,15 +61,15 @@ CREATE TABLE DigitalItemAuthor(
     DigitalItemId INT,
     [Name] VARCHAR(50),
     PRIMARY KEY (DigitalItemId, [Name]),
-    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id)
+    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE DigitalItemLibrary (
     DigitalItemId INT,
     LibraryName VARCHAR(50),
     PRIMARY KEY (DigitalItemId, LibraryName),
-    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id),
-    FOREIGN KEY (LibraryName) REFERENCES [Library]([Name])
+    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id) ON DELETE CASCADE,
+    FOREIGN KEY (LibraryName) REFERENCES [Library]([Name]) ON DELETE NO ACTION
 );
 
 CREATE TABLE [User] (
@@ -82,14 +82,14 @@ CREATE TABLE [User] (
     FirstName VARCHAR(50),
     LastName VARCHAR(50),
     LibraryName VARCHAR(50),
-    FOREIGN KEY (LibraryName) REFERENCES [Library]([Name])
+    FOREIGN KEY (LibraryName) REFERENCES [Library]([Name]) ON DELETE SET NULL
 );
 
 CREATE TABLE Staff (
     UserSSN VARCHAR(10) PRIMARY KEY,
     [Role] VARCHAR(50),
     LibrarianNumber VARCHAR(50),
-    FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
+    FOREIGN KEY (UserSSN) REFERENCES [User](SSN) ON DELETE CASCADE
 );
 
 CREATE TABLE [Member] (
@@ -98,7 +98,7 @@ CREATE TABLE [Member] (
     ExpiryDate DATE,
     Photo VARCHAR(50),
     MemberType VARCHAR(50),
-    FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
+    FOREIGN KEY (UserSSN) REFERENCES [User](SSN) ON DELETE CASCADE
 );
 
 CREATE TABLE Loan (
@@ -110,7 +110,7 @@ CREATE TABLE Loan (
     LoanType VARCHAR(50),
     DigitalItemId INT,
     BookInstanceId INT,
-    FOREIGN KEY (BookInstanceId) REFERENCES BookInstance(Id),
-    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id),
-    FOREIGN KEY (UserSSN) REFERENCES [User](SSN)
+    FOREIGN KEY (BookInstanceId) REFERENCES BookInstance(Id) ON DELETE SET NULL,
+    FOREIGN KEY (DigitalItemId) REFERENCES DigitalItem(Id) ON DELETE SET NULL,
+    FOREIGN KEY (UserSSN) REFERENCES [User](SSN) ON DELETE SET NULL
 );

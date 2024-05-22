@@ -1,15 +1,21 @@
-//namespace DataAccess.Models{
+namespace DataAccess.Models{
     
-//    public class DigitalItemLoan : Loan 
-//    {
-//        public DigitalItem? DigitalItem { get; set; }
+   public class DigitalItemLoan : Loan 
+   {
+       public DigitalItem? DigitalItem { get; set; }
 
-//        public DigitalItemLoan() { }
+       public DigitalItemLoan() { }
 
-//        public DigitalItemLoan(int id, DateTime loanDate, DateTime dueDate, DateTime returnDate, User user, DigitalItem book) 
-//            : base(id, loanDate, dueDate, returnDate, user)
-//        {
-//            DigitalItem = book;
-//        }
-//    } 
-//}
+       public DigitalItemLoan(int id, DateTime loanDate, DateTime dueDate, DateTime returnDate, User user, DigitalItem book) 
+           : base(id, loanDate, dueDate, returnDate, user)
+       {
+           DigitalItem = book;
+       }
+
+        public DigitalItemLoan(Loan loan, DigitalItem book)
+           : base(loan)
+        {
+            DigitalItem = book;
+        }
+    } 
+}

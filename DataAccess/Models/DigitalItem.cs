@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataAccess.Models
+﻿namespace DataAccess.Models
 {
     public class DigitalItem : Item
     {
@@ -14,7 +8,7 @@ namespace DataAccess.Models
 
         public DigitalItem() : base() { }
 
-        public DigitalItem(string name, string author, int id, string format, double size) : base(name, author)
+        public DigitalItem(string name, List<string> authors, int id, string format, double size) : base(name, authors)
         {
             Id = id;
             Format = format;

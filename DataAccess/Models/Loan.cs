@@ -6,23 +6,26 @@
         public DateTime? LoanDate { get; set; }
         public DateTime? DueDate { get; set; }
         public DateTime? ReturnDate { get; set; }
-        public DigitalItem? DigitalItem { get; set; }
-        public BookInstance? BookInstance { get; set; }
         public User? User { get; set; }
-        public LoanType? Type { get; set; }
 
         public Loan() { }
 
-        public Loan(int id, DateTime loanDate, DateTime dueDate, DateTime returnDate, DigitalItem digitalItem, BookInstance bookInstance, User user, LoanType type)
+        public Loan(int id, DateTime loanDate, DateTime dueDate, DateTime returnDate, User user)
         {
             Id = id;
             LoanDate = loanDate;
             DueDate = dueDate;
             ReturnDate = returnDate;
-            DigitalItem = digitalItem;
-            BookInstance = bookInstance;
             User = user;
-            Type = type;
+        }
+
+        public Loan(Loan loan)
+        {
+            Id = loan.Id;
+            LoanDate = loan.LoanDate;
+            DueDate = loan.DueDate;
+            ReturnDate = loan.ReturnDate;
+            User = loan.User;
         }
     }
     public enum LoanType { 

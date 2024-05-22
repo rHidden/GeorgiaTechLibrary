@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 // Dependency Injection
 //services
 builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<ILibraryService, LibraryService>(); 
+builder.Services.AddScoped<ILibraryService, LibraryService>();
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IStaffService, StaffService>();

@@ -37,7 +37,16 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLoan(Loan loan)
+        [Route("Book")]
+        public async Task<IActionResult> CreateLoan(BookLoan loan)
+        {
+            var createdLoan = await _loanService.CreateLoan(loan);
+            return Ok(createdLoan);
+        }
+
+        [HttpPost]
+        [Route("DigitalItem")]
+        public async Task<IActionResult> CreateLoan(DigitalItemLoan loan)
         {
             var createdLoan = await _loanService.CreateLoan(loan);
             return Ok(createdLoan);
@@ -53,8 +62,8 @@ namespace GeorgiaTechLibrary.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteLoan(int Id)
         {
-            var deletedLoan = await _loanService.DeleteLoan(Id);
-            return Ok(deletedLoan);
+            var deletedSuccessfully = await _loanService.DeleteLoan(Id);
+            return Ok(deletedSuccessfully);
         }
     }
 }

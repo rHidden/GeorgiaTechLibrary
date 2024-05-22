@@ -1,15 +1,21 @@
-//namespace DataAccess.Models{
+namespace DataAccess.Models{
 
-//    public class BookLoan : Loan
-//    {
-//        public BookInstance? Book { get; set; }
+   public class BookLoan : Loan
+   {
+       public BookInstance? BookInstance { get; set; }
 
-//        public BookLoan() { }
+       public BookLoan() { }
 
-//        public BookLoan(int id, DateTime loanDate, DateTime returnDate, DateTime dueDate, User user, BookInstance book) 
-//            : base(id, loanDate, dueDate, returnDate, user)
-//        {
-//            Book = book;
-//        }
-//    }
-//}
+       public BookLoan(int id, DateTime loanDate, DateTime dueDate, DateTime returnDate, User user, BookInstance bookInstance) 
+           : base(id, loanDate, dueDate, returnDate, user)
+       {
+           BookInstance = bookInstance;
+       }
+
+        public BookLoan(Loan loan, BookInstance bookInstance)
+           : base(loan)
+        {
+            BookInstance = bookInstance;
+        }
+    }
+}
