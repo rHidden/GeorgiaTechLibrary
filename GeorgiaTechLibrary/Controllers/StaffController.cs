@@ -43,6 +43,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
+        [Route("{SSN}")]
         public async Task<IActionResult> UpdateStaff(Staff staff)
         {
             var updatedStaff = await _staffService.UpdateStaff(staff);
@@ -50,6 +51,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpDelete]
+        [Route("{SSN}")]
         public async Task<IActionResult> DeleteStaff(string SSN)
         {
             var deletedSuccessfully = await _staffService.DeleteStaff(SSN);

@@ -143,7 +143,7 @@ namespace DataAccess.Repositories
             {
                 int rowsAffected = await connection.ExecuteAsync(sql, new { SSN });
 
-                return rowsAffected != 0;
+                return rowsAffected == 1;
             }
         }
     }

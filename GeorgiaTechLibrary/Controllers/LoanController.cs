@@ -54,6 +54,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateLoan(Loan loan)
         {
             var updatedLoan = await _loanService.UpdateLoan(loan);
@@ -61,6 +62,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteLoan(int Id)
         {
             var deletedSuccessfully = await _loanService.DeleteLoan(Id);

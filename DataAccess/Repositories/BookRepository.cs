@@ -16,39 +16,72 @@ namespace DataAccess.Repositories
 
         public async Task<Book> GetBook(string ISBN)
         {
-            string sql = "SELECT * FROM [Book] WHERE [ISBN] = @ISBN";
-            Book book = new();
+            string sql = "SELECT b.*, ba.Name " +
+                "FROM Book b " +
+                "LEFT JOIN BookAuthor ba ON b.ISBN = ba.BookISBN " +
+                "WHERE ISBN = @ISBN";
+
+            List<string> authors = new();
 
             using (var connection = _connectionFactory.CreateConnection())
             {
-                book = await connection.QuerySingleAsync<Book>(sql, new
-                {
-                    ISBN
-                });
+                var book = (await connection.QueryAsync<Book, string,Book>(sql, 
+                    map: (book, author) =>
+                    {
+                        authors.Add(author);
+                        book.Authors = authors;
+                        return book;
+                    },  
+                    param: new { ISBN },
+                    splitOn: "Name"
+                    )).AsQueryable().FirstOrDefault();
+                return book;
             }
-            return book;
         }
 
         public async Task<List<Book>> ListBooks()
         {
-            string sql = "SELECT * FROM [Book]";
-            List<Book> books = new();
+            string sql = "SELECT b.*, ba.Name " +
+                "FROM Book b " +
+                "LEFT JOIN BookAuthor ba ON b.ISBN = ba.BookISBN";
+
+            Dictionary<string, List<string>> bookAuthorPairs = new();
 
             using (var connection = _connectionFactory.CreateConnection())
             {
-                books = (await connection.QueryAsync<Book>(sql)).AsQueryable().ToList();
+                var books = (await connection.QueryAsync<Book, string, Book>(sql,
+                    map: (book, author) =>
+                    {
+                        bookAuthorPairs.TryAdd(book.ISBN ?? "", new List<string>());
+                        var authors = bookAuthorPairs[book.ISBN ?? ""];
+                        authors.Add(author);
+                        book.Authors = authors;
+                        return book;
+                    },
+                    splitOn: "Name"
+                    )).AsQueryable().DistinctBy(book => book.ISBN).ToList();
+                return books;
             }
-            return books;
         }
 
         public async Task<Book> CreateBook(Book book)
         {
-            string sql = "INSERT INTO [Book] (ISBN, CanLoan, Description, SubjectArea)" +
+            string sqlBook = "INSERT INTO [Book] (ISBN, CanLoan, Description, SubjectArea)" +
                 " VALUES (@ISBN, @CanLoan, @Description, @SubjectArea)";
+            string sqlAuthor = "INSERT INTO [BookAuthor] (BookISBN, Name)" +
+                " VALUES (@BookISBN, @Name)";
 
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var rowsAffected = await connection.ExecuteAsync(sql, book);
+                using (var transaction = connection.BeginTransaction())
+                {
+                    await connection.ExecuteAsync(sqlBook, book);
+                    foreach (var author in book.Authors ?? [])
+                    {
+                        await connection.ExecuteAsync(sqlAuthor, new { BookISBN = book.ISBN, Name = author });
+                    }
+                    transaction.Commit();
+                }
             }
             return book;
         }
@@ -76,14 +109,7 @@ namespace DataAccess.Repositories
                     ISBN
                 });
 
-                if (rowsAffected != 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return rowsAffected == 1;
             }
         }
     }
