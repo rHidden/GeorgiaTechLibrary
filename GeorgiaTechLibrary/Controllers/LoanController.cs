@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using GeorgiaTechLibrary.DTOs;
 using GeorgiaTechLibrary.Services;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,7 @@ namespace GeorgiaTechLibrary.Controllers
         [Route("user/{userSSN}")]
         public async Task<IActionResult> ListUserLoans(string userSSN)
         {
-            List<Loan> loans = await _loanService.ListUserLoans(userSSN);
+            List<LoanDTO> loans = await _loanService.ListUserLoans(userSSN);
             if (!loans.Any())
             {
                 return NotFound();

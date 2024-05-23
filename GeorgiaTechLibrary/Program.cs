@@ -4,6 +4,8 @@ using DataAccess.Repositories.RepositoryInterfaces;
 using GeorgiaTechLibrary.Services;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
 using DataAccess.DAO.DAOIntefaces;
+using GeorgiaTechLibrary.Automappers;
+using DataAccess.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,7 @@ builder.Services.AddScoped<ILibraryService, LibraryService>();
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
+builder.Services.AddAutoMapper(typeof(BookInstanceProfile), typeof(DigitalItemProfile), typeof(LoanProfile));
 //repos
 builder.Services.AddTransient<IBookRepository, BookRepository>();
 builder.Services.AddTransient<ILibraryRepository, LibraryRepository>();

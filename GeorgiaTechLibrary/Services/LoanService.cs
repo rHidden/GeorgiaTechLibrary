@@ -1,6 +1,8 @@
-﻿using DataAccess.Models;
+﻿using AutoMapper;
+using DataAccess.Models;
 using DataAccess.Repositories;
 using DataAccess.Repositories.RepositoryInterfaces;
+using GeorgiaTechLibrary.DTOs;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
 
 namespace GeorgiaTechLibrary.Services
@@ -8,28 +10,31 @@ namespace GeorgiaTechLibrary.Services
     public class LoanService : ILoanService
     {
         private readonly ILoanRepository _loanRepository;
+        private readonly IMapper _mapper;
 
-        public LoanService(ILoanRepository loanRepository)
+        public LoanService(ILoanRepository loanRepository, IMapper mapper)
         {
             _loanRepository = loanRepository;
+            _mapper = mapper;
         }
 
-        public async Task<Loan> GetLoan(int Id)
+        public async Task<LoanDTO> GetLoan(int Id)
         {
-            return await _loanRepository.GetLoan(Id);
+            var loan = await _loanRepository.GetLoan(Id);
+            return _mapper.Map<LoanDTO>(loan);
         }
 
-        public async Task<List<Loan>> ListUserLoans(string userSSN)
+        public async Task<List<LoanDTO>> ListUserLoans(string userSSN)
         {
-            return await _loanRepository.ListUserLoans(userSSN);
+            return _mapper.Map<List<LoanDTO>>(await _loanRepository.ListUserLoans(userSSN));
         }
 
-        public async Task<Loan> CreateLoan(BookLoan loan)
+        public async Task<Loan?> CreateLoan(BookLoan loan)
         {
             return await _loanRepository.CreateLoan(loan);
         }
 
-        public async Task<Loan> CreateLoan(DigitalItemLoan loan)
+        public async Task<Loan?> CreateLoan(DigitalItemLoan loan)
         {
             return await _loanRepository.CreateLoan(loan);
         }

@@ -8,7 +8,12 @@ namespace GeorgiaTechLibrary.Automappers
     {
         public LoanProfile()
         {
-            CreateMap<Loan, LoanDTO>().ReverseMap();
+            CreateMap<BookLoan, LoanDTO>()
+                .ForMember(loanDto => loanDto.LoanBookInstance, opt => opt.MapFrom(loan => loan.BookInstance))
+                .ReverseMap();
+            CreateMap<DigitalItemLoan, LoanDTO>()
+                .ForMember(loanDto => loanDto.LoanDigitalItem, opt => opt.MapFrom(loan => loan.DigitalItem))
+                .ReverseMap();
         }
     }
 }
