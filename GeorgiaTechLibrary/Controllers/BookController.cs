@@ -46,6 +46,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
+        [Route("{ISBN}")]
         public async Task<IActionResult> UpdateBook(Book book)
         {
             var updatedBook = await _bookService.UpdateBook(book);
@@ -53,6 +54,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpDelete]
+        [Route("{ISBN}")]
         public async Task<IActionResult> DeleteBook(string ISBN)
         {
             var deletedSuccessfully = await _bookService.DeleteBook(ISBN);

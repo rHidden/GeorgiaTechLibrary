@@ -43,6 +43,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
+        [Route("{name}")]
         public async Task<IActionResult> UpdateLibrary(Library library)
         {
             var updatedLibrary = await _libraryService.UpdateLibrary(library);
@@ -50,6 +51,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpDelete]
+        [Route("{name}")]
         public async Task<IActionResult> DeleteLibrary(string name)
         {
             var deletedSuccessfully = await _libraryService.DeleteLibrary(name);

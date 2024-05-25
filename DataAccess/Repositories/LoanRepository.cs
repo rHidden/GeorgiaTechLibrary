@@ -34,7 +34,7 @@ namespace DataAccess.Repositories
             {
                 var loan = (await connection.QueryAsync<Loan, Staff, Address, Staff, Member,
                     BookInstance, DigitalItem, Loan>(sql, 
-                    map: ((loan, user, address, staff, member, bookInstance, digitalItem) =>
+                    map: (loan, user, address, staff, member, bookInstance, digitalItem) =>
                     {
                         if(staff != null)
                         {
@@ -60,7 +60,7 @@ namespace DataAccess.Repositories
                             loan = new DigitalItemLoan(loan, digitalItem);
                         }
                         return loan;
-                    }), 
+                    }, 
                     param: new { id }, 
                     splitOn: "SSN, Street, Role, CardNumber, Id, Name")
                     ).AsQueryable().FirstOrDefault();
@@ -88,7 +88,7 @@ namespace DataAccess.Repositories
             {
                 var loan = (await connection.QueryAsync<Loan, User, Address, Staff, Member,
                     BookInstance, DigitalItem, Loan>(sql,
-                    map: ((loan, user, address, staff, member, bookInstance, digitalItem) =>
+                    map: (loan, user, address, staff, member, bookInstance, digitalItem) =>
                     {
                         if (staff != null)
                         {
@@ -114,7 +114,7 @@ namespace DataAccess.Repositories
                             loan = new DigitalItemLoan(loan, digitalItem);
                         }
                         return loan;
-                    }), 
+                    }, 
                     param: new { SSN = userSSN },
                     splitOn: "SSN, Street, Role, CardNumber, Id, Name")
                     ).AsQueryable().AsList();

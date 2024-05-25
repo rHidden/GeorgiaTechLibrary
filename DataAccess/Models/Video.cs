@@ -19,5 +19,11 @@ namespace DataAccess.Models
             Resolution = resolution;
             Length = length;
         }
+
+        public Video(DigitalItem digitalItem, Resolution resolution, int length) : base(digitalItem)
+        {
+            Resolution = resolution;
+            Length = length;
+        }
     }
 }

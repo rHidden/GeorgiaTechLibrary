@@ -15,5 +15,11 @@
             Size = size;
         }
 
+        public DigitalItem(DigitalItem digitalItem) : base(digitalItem.Name ?? "", digitalItem.Authors ?? new List<string>())
+        {
+            Id = digitalItem.Id;
+            Format = digitalItem.Format;
+            Size = digitalItem.Size;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using GeorgiaTechLibrary.DTOs;
 using GeorgiaTechLibrary.Services;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,7 @@ namespace GeorgiaTechLibrary.Controllers
         [Route("user/{userSSN}")]
         public async Task<IActionResult> ListUserLoans(string userSSN)
         {
-            List<Loan> loans = await _loanService.ListUserLoans(userSSN);
+            List<LoanDTO> loans = await _loanService.ListUserLoans(userSSN);
             if (!loans.Any())
             {
                 return NotFound();
@@ -53,6 +54,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPatch]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateLoan(Loan loan)
         {
             var updatedLoan = await _loanService.UpdateLoan(loan);
@@ -60,6 +62,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteLoan(int Id)
         {
             var deletedSuccessfully = await _loanService.DeleteLoan(Id);

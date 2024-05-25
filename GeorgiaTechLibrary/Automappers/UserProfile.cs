@@ -8,7 +8,14 @@ namespace GeorgiaTechLibrary.Automappers
     {
         public UserProfile()
         {
-            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserDTO>()
+                .ReverseMap();
+            CreateMap<Member, MemberDTO>()
+                .IncludeBase<User, UserDTO>()
+                .ReverseMap();
+            CreateMap<Staff, StaffDTO>()
+                .IncludeBase<User, UserDTO>()
+                .ReverseMap();
         }
     }
 }

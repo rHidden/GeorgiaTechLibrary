@@ -11,5 +11,10 @@
         {
             Resolution = resolution;
         }
+
+        public Image(DigitalItem digitalItem, Resolution resolution) : base(digitalItem)
+        {
+            Resolution = resolution;
+        }
     }
 }

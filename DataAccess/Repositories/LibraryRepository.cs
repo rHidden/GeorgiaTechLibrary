@@ -192,19 +192,12 @@ namespace DataAccess.Repositories
         {
             string sql = "DELETE FROM Library WHERE Name = @Name";
 
-                using (var connection = _connectionFactory.CreateConnection())
-                {
-                    int rowsAffected = await connection.ExecuteAsync(sql, new { Name = libraryName });
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                int rowsAffected = await connection.ExecuteAsync(sql, new { Name = libraryName });
 
-                    if (rowsAffected != 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
+                return rowsAffected == 1;
+            }
         }
     }
 }

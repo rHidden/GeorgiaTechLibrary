@@ -11,5 +11,10 @@
         {
             Length = length;
         }
+
+        public Audio(DigitalItem digitalItem, int length) : base(digitalItem)
+        {
+            Length = length;
+        }
     }
 }
