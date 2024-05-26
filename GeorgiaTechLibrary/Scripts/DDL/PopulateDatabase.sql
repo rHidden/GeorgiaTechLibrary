@@ -522,7 +522,7 @@ BEGIN
             ELSE
             BEGIN
                 -- Item is not returned
-                SET @returnDate = NULL; -- or handle it as appropriate for your schema
+                SET @returnDate = NULL;
                 UPDATE BookInstance SET IsLoaned = 1 WHERE Id = @bookInstanceId;
             END
 
