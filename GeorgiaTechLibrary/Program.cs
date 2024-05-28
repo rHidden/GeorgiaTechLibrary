@@ -32,6 +32,7 @@ builder.Services.AddScoped<ILibraryService, LibraryService>();
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAutoMapper(typeof(BookInstanceProfile), typeof(DigitalItemProfile), typeof(LoanProfile));
 //repos
 builder.Services.AddTransient<IBookRepository, BookRepository>();
@@ -41,6 +42,7 @@ builder.Services.AddTransient<ILibraryRepository, LibraryRepository>();
 builder.Services.AddTransient<ILoanRepository, LoanRepository>();
 builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 builder.Services.AddTransient<IStaffRepository, StaffRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<IDatabaseConnectionFactory, DatabaseConnectionFactory>(_ => new DatabaseConnectionFactory(builder.Configuration.GetConnectionString("Default")));
 
