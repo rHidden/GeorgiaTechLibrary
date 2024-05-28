@@ -26,6 +26,17 @@ namespace GeorgiaTechLibrary.Controllers
             return Ok(book);
         }
 
+        [HttpGet("description/{ISBN}")]
+        public async Task<IActionResult> GetBookDescriptionAsync(string ISBN)
+        {
+            Book book = await _bookService.GetBook(ISBN);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return Ok(book.Description);
+        }
+
         [HttpGet]
         public async Task<IActionResult> ListBooksAsync()
         {
