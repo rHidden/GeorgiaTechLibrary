@@ -526,8 +526,8 @@ BEGIN
                 UPDATE BookInstance SET IsLoaned = 1 WHERE Id = @bookInstanceId;
             END
 
-            INSERT INTO Loan (Id, UserSSN, LoanDate, ReturnDate, DueDate, LoanType, BookInstanceId)
-            VALUES (@i, @userSSN, @loanDate, @returnDate, @dueDate, @loanType, @bookInstanceId);
+            INSERT INTO Loan (UserSSN, LoanDate, ReturnDate, DueDate, LoanType, BookInstanceId)
+            VALUES (@userSSN, @loanDate, @returnDate, @dueDate, @loanType, @bookInstanceId);
         END
     END
     ELSE
@@ -542,8 +542,8 @@ BEGIN
         END
 
         -- Insert the loan record
-        INSERT INTO Loan (Id, UserSSN, LoanDate, ReturnDate, DueDate, LoanType, DigitalItemId)
-        VALUES (@i, @userSSN, @loanDate, @returnDate, @dueDate, @loanType, @digitalItemId);
+        INSERT INTO Loan (UserSSN, LoanDate, ReturnDate, DueDate, LoanType, DigitalItemId)
+        VALUES (@userSSN, @loanDate, @returnDate, @dueDate, @loanType, @digitalItemId);
     END
 
     SET @i = @i + 1;

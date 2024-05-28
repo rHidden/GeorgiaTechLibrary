@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DataAccess.Models;
-using DataAccess.Repositories;
 using DataAccess.Repositories.RepositoryInterfaces;
 using GeorgiaTechLibrary.DTOs;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
@@ -47,6 +46,11 @@ namespace GeorgiaTechLibrary.Services
         public async Task<bool> DeleteLoan(int Id)
         {
             return await _loanRepository.DeleteLoan(Id);
+        }
+
+        public async Task<Loan> ReturnLoan(int id)
+        {
+            return await _loanRepository.ReturnLoan(id);
         }
     }
 }
