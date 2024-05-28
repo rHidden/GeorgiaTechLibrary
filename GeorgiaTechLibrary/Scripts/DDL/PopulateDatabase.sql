@@ -506,15 +506,26 @@ BEGIN
             -- 80% chance that the item is returned
             IF RAND() <= 0.8
             BEGIN
-                SET @returnDate = DATEADD(DAY, 14, @loanDate); -- Return date 7 days after loan date
+                -- 90% chance that the returned item is on time (within 14 days)
+                IF RAND() <= 0.9
+                BEGIN
+                    SET @returnDate = DATEADD(DAY, FLOOR(RAND() * 14) + 1, @loanDate);
+                END
+                ELSE
+                BEGIN
+                    -- Return date is between 15 to 70 days - so its late
+                    SET @returnDate = DATEADD(DAY, 14 + FLOOR(RAND() * 56), @loanDate);
+                END
+
                 UPDATE BookInstance SET IsLoaned = 0 WHERE Id = @bookInstanceId;
             END
             ELSE
             BEGIN
+                -- Item is not returned
+                SET @returnDate = NULL;
                 UPDATE BookInstance SET IsLoaned = 1 WHERE Id = @bookInstanceId;
             END
 
-            -- Insert the loan record
             INSERT INTO Loan (Id, UserSSN, LoanDate, ReturnDate, DueDate, LoanType, BookInstanceId)
             VALUES (@i, @userSSN, @loanDate, @returnDate, @dueDate, @loanType, @bookInstanceId);
         END
@@ -527,7 +538,7 @@ BEGIN
         -- 80% chance that the item is returned
         IF RAND() <= 0.8
         BEGIN
-            SET @returnDate = DATEADD(DAY, 7, @loanDate); -- Return date 7 days after loan date
+            SET @returnDate =  @dueDate; -- Return should be assigned automatically on the due date and the access denied for user, otherwise null
         END
 
         -- Insert the loan record
