@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace DataAccessTest
+namespace GeorgiaTechLibraryTest.UnitTests
 {
     public class DatabaseConnectionTest
     {

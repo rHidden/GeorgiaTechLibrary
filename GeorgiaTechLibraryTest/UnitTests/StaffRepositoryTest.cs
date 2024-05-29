@@ -10,7 +10,7 @@ using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Repositories.RepositoryInterfaces;
 using System.Threading.Tasks;
 
-namespace DataAccessTest
+namespace GeorgiaTechLibraryTest.UnitTests
 {
     public class StaffRepositoryTest
     {
@@ -31,10 +31,9 @@ namespace DataAccessTest
         public async Task CreateStaff_CreatesNewStaff()
         {
             // Arrange
-            var ssn = "123456789";
             var newStaff = new Staff
             {
-                SSN = ssn,
+                SSN = "7",
                 FirstName = "John",
                 LastName = "Doe",
                 PhoneNumber = "1234567890",
@@ -45,7 +44,7 @@ namespace DataAccessTest
 
             // Act
             var result = await _staffRepository.CreateStaff(newStaff);
-            await _staffRepository.DeleteStaff(ssn);
+            await _staffRepository.DeleteStaff(newStaff.SSN);
 
             // Assert
             Assert.NotNull(result);
@@ -62,10 +61,9 @@ namespace DataAccessTest
         public async Task GetStaff_WithValidSSN_ReturnsStaff()
         {
             // Arrange
-            var ssn = "123456789";
             var expectedStaff = new Staff
             {
-                SSN = ssn,
+                SSN = "8",
                 FirstName = "John",
                 LastName = "Doe",
                 PhoneNumber = "1234567890",
@@ -76,8 +74,8 @@ namespace DataAccessTest
 
             // Act
             await _staffRepository.CreateStaff(expectedStaff);
-            var result = await _staffRepository.GetStaff(ssn);
-            await _staffRepository.DeleteStaff(ssn);
+            var result = await _staffRepository.GetStaff(expectedStaff.SSN);
+            await _staffRepository.DeleteStaff(expectedStaff.SSN);
 
             // Assert
             Assert.NotNull(result);
@@ -94,11 +92,9 @@ namespace DataAccessTest
         public async Task ListStaff_ReturnsListOfStaff()
         {
             // Arrange
-            var ssn1 = "123456789";
-            var ssn2 = "987654321";
             var staff1 = new Staff
             {
-                SSN = ssn1,
+                SSN = "9",
                 FirstName = "John",
                 LastName = "Doe",
                 PhoneNumber = "1234567890",
@@ -108,7 +104,7 @@ namespace DataAccessTest
             };
             var staff2 = new Staff
             {
-                SSN = ssn2,
+                SSN = "10",
                 FirstName = "Jane",
                 LastName = "Doe",
                 PhoneNumber = "0987654321",
@@ -121,8 +117,8 @@ namespace DataAccessTest
             await _staffRepository.CreateStaff(staff1);
             await _staffRepository.CreateStaff(staff2);
             var result = await _staffRepository.ListStaff();
-            await _staffRepository.DeleteStaff(ssn1);
-            await _staffRepository.DeleteStaff(ssn2);
+            await _staffRepository.DeleteStaff(staff1.SSN);
+            await _staffRepository.DeleteStaff(staff2.SSN);
 
             // Assert
             Assert.Equal(2, result.Count);
@@ -134,10 +130,9 @@ namespace DataAccessTest
         public async Task UpdateStaff_UpdatesExistingStaff()
         {
             // Arrange
-            var ssn = "123456789";
             var originalStaff = new Staff
             {
-                SSN = ssn,
+                SSN = "11",
                 FirstName = "John",
                 LastName = "Doe",
                 PhoneNumber = "1234567890",
@@ -147,7 +142,7 @@ namespace DataAccessTest
             };
             var updatedStaff = new Staff
             {
-                SSN = ssn,
+                SSN = "11",
                 FirstName = "John",
                 LastName = "Doe",
                 PhoneNumber = "0987654321",
@@ -159,7 +154,7 @@ namespace DataAccessTest
             // Act
             await _staffRepository.CreateStaff(originalStaff);
             var result = await _staffRepository.UpdateStaff(updatedStaff);
-            await _staffRepository.DeleteStaff(ssn);
+            await _staffRepository.DeleteStaff(updatedStaff.SSN);
 
             // Assert
             Assert.NotNull(result);
@@ -176,10 +171,9 @@ namespace DataAccessTest
         public async Task DeleteStaff_RemovesStaffFromDatabase()
         {
             // Arrange
-            var ssn = "123456789";
             var staff = new Staff
             {
-                SSN = ssn,
+                SSN = "12",
                 FirstName = "John",
                 LastName = "Doe",
                 PhoneNumber = "1234567890",
@@ -190,7 +184,7 @@ namespace DataAccessTest
 
             // Act
             await _staffRepository.CreateStaff(staff);
-            var result = await _staffRepository.DeleteStaff(ssn);
+            var result = await _staffRepository.DeleteStaff(staff.SSN);
 
             // Assert
             Assert.True(result);

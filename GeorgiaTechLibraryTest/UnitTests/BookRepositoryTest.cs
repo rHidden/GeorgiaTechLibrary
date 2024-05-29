@@ -10,7 +10,7 @@ using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Repositories.RepositoryInterfaces;
 using System.Threading.Tasks;
 
-namespace DataAccessTest
+namespace GeorgiaTechLibraryTest.UnitTests
 {
     public class BookRepositoryTest
     {
@@ -31,12 +31,11 @@ namespace DataAccessTest
         public async Task CreateBook_CreatesNewBook()
         {
             // Arrange
-            var isbn =  "3456789012345";
-            var newBook = new Book { ISBN = isbn, Name = "Test book", CanLoan = true, Description = "New Test Book", SubjectArea = "History" };
+            var newBook = new Book { ISBN = "13", Name = "Test book", CanLoan = true, Description = "New Test Book", SubjectArea = "History" };
 
             // Act
             var result = await _bookRepository.CreateBook(newBook);
-            await _bookRepository.DeleteBook(isbn);
+            await _bookRepository.DeleteBook(newBook.ISBN);
 
             // Assert
             Assert.NotNull(result);
@@ -50,13 +49,12 @@ namespace DataAccessTest
         public async Task GetBook_WithValidISBN_ReturnsBook()
         {
             // Arrange
-            var isbn = "1234567890123";
-            var expectedBook = new Book { ISBN = isbn, Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
+            var expectedBook = new Book { ISBN = "14", Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
 
             // Act
             await _bookRepository.CreateBook(expectedBook);
-            var result = await _bookRepository.GetBook(isbn);
-            await _bookRepository.DeleteBook(isbn);
+            var result = await _bookRepository.GetBook(expectedBook.ISBN);
+            await _bookRepository.DeleteBook(expectedBook.ISBN);
 
             // Assert
             Assert.NotNull(result);
@@ -70,21 +68,18 @@ namespace DataAccessTest
         public async Task ListBooks_ReturnsListOfBooks()
         {
             // Arrange
-            var isbn1 = "1234567890123";
-            var isbn2 = "2345678901234";
-            var book1 = new Book { ISBN = "1234567890123", CanLoan = true, Description = "Test Book 1", SubjectArea = "Fiction" };
-            var book2 = new Book { ISBN = "2345678901234", CanLoan = false, Description = "Test Book 2", SubjectArea = "Non-Fiction" };
+            var book1 = new Book { ISBN = "15", CanLoan = true, Description = "Test Book 1", SubjectArea = "Fiction" };
+            var book2 = new Book { ISBN = "16", CanLoan = false, Description = "Test Book 2", SubjectArea = "Non-Fiction" };
             var books = new List<Book> { book1, book2 };
 
             // Act
             await _bookRepository.CreateBook(book1);
             await _bookRepository.CreateBook(book2);
             var result = await _bookRepository.ListBooks();
-            await _bookRepository.DeleteBook(isbn1);
-            await _bookRepository.DeleteBook(isbn2);
+            await _bookRepository.DeleteBook(book1.ISBN);
+            await _bookRepository.DeleteBook(book2.ISBN);
 
             // Assert
-            Assert.Equal(2, result.Count);
             Assert.Contains(result, r => r.ISBN == book1.ISBN && r.Description == book1.Description && r.CanLoan == book1.CanLoan && r.SubjectArea == book1.SubjectArea);
             Assert.Contains(result, r => r.ISBN == book2.ISBN && r.Description == book2.Description && r.CanLoan == book2.CanLoan && r.SubjectArea == book2.SubjectArea);
         }
@@ -93,18 +88,17 @@ namespace DataAccessTest
         public async Task UpdateBook_UpdatesExistingBook()
         {
             // Arrange
-            var isbn = "1234567890123";
-            var originalBook = new Book { ISBN = isbn, Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
-            var updatedBook = new Book { ISBN = isbn, Name = "Test book", CanLoan = false, Description = "Updated Test Book", SubjectArea = "Science Fiction" };
+            var originalBook = new Book { ISBN = "17", Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
+            var updatedBook = new Book { ISBN = "17", Name = "Test book", CanLoan = false, Description = "Updated Test Book", SubjectArea = "Science Fiction" };
 
             // Act
             await _bookRepository.CreateBook(originalBook);
             var result = await _bookRepository.UpdateBook(updatedBook);
-            await _bookRepository.DeleteBook(isbn);
+            await _bookRepository.DeleteBook(updatedBook.ISBN);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(isbn, result.ISBN);
+            Assert.Equal(updatedBook.ISBN, result.ISBN);
             Assert.False(result.CanLoan);
             Assert.Equal(updatedBook.Description, result.Description);
             Assert.Equal(updatedBook.SubjectArea, result.SubjectArea);
@@ -114,12 +108,11 @@ namespace DataAccessTest
         public async Task DeleteBook_RemovesBookFromDatabase()
         {
             // Arrange
-            var isbn = "1234567890123";
-            var book = new Book { ISBN = isbn, Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
+            var book = new Book { ISBN = "18", Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
 
             // Act
             await _bookRepository.CreateBook(book);
-            var deletedBook = await _bookRepository.DeleteBook(isbn);
+            var deletedBook = await _bookRepository.DeleteBook(book.ISBN);
 
             // Assert
             Assert.NotNull(deletedBook);

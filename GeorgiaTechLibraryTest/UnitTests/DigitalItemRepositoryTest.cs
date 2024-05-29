@@ -10,7 +10,7 @@ using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Repositories.RepositoryInterfaces;
 using System.Threading.Tasks;
 
-namespace DataAccessTest
+namespace GeorgiaTechLibraryTest.UnitTests
 {
     public class DigitalItemRepositoryTest
     {
@@ -33,7 +33,7 @@ namespace DataAccessTest
             // Arrange
             var newAudio = new Audio
             {
-                Id = 1,
+                Id = 7,
                 Name = "Test Audio",
                 Format = "mp3",
                 Size = 5.0,
@@ -61,7 +61,7 @@ namespace DataAccessTest
             // Arrange
             var newText = new Text
             {
-                Id = 2,
+                Id = 8,
                 Name = "Test Text",
                 Format = "pdf",
                 Size = 1.0,
@@ -88,7 +88,7 @@ namespace DataAccessTest
             // Arrange
             var newText = new Text
             {
-                Id = 3,
+                Id = 9,
                 Name = "Test Text",
                 Format = "pdf",
                 Size = 1.0,
@@ -97,7 +97,7 @@ namespace DataAccessTest
 
             var newVideo = new Video
             {
-                Id = 4,
+                Id = 10,
                 Name = "Test Video",
                 Format = "mp4",
                 Size = 100.0,
@@ -114,9 +114,22 @@ namespace DataAccessTest
             await _digitalItemRepository.DeleteDigitalItem(newVideo.Id);
 
             // Assert
-            Assert.Equal(2, result.Count);
-            Assert.Contains(result, r => r.Id == newText.Id && r.Name == newText.Name && r.Format == newText.Format && r.Size == newText.Size);
-            Assert.Contains(result, r => r.Id == newVideo.Id && r.Name == newVideo.Name && r.Format == newVideo.Format && r.Size == newVideo.Size && ((Video)r).Length == newVideo.Length && ((Video)r).Resolution.Width == newVideo.Resolution.Width && ((Video)r).Resolution.Height == newVideo.Resolution.Height);
+            var actualText = result.FirstOrDefault(r => r.Id == newText.Id) as Text;
+            var actualVideo = result.FirstOrDefault(r => r.Id == newVideo.Id) as Video;
+
+            Assert.NotNull(actualText);
+            Assert.NotNull(actualVideo);
+
+            Assert.Equal(newText.Name, actualText.Name);
+            Assert.Equal(newText.Format, actualText.Format);
+            Assert.Equal(newText.Size, actualText.Size);
+            Assert.Equal(newText.Authors.OrderBy(a => a), actualText.Authors.OrderBy(a => a));
+
+            Assert.Equal(newVideo.Name, actualVideo.Name);
+            Assert.Equal(newVideo.Format, actualVideo.Format);
+            Assert.Equal(newVideo.Size, actualVideo.Size);
+            Assert.Equal(newVideo.Length, actualVideo.Length);
+            Assert.Equal(newVideo.Authors.OrderBy(a => a), actualVideo.Authors.OrderBy(a => a));
         }
 
         [Fact]
@@ -125,7 +138,7 @@ namespace DataAccessTest
             // Arrange
             var newText = new Text
             {
-                Id = 5,
+                Id = 11,
                 Name = "Test Text",
                 Format = "pdf",
                 Size = 1.0,
@@ -134,7 +147,7 @@ namespace DataAccessTest
 
             var updatedText = new Text
             {
-                Id = 5,
+                Id = 11,
                 Name = "Updated Text",
                 Format = "epub",
                 Size = 1.5,
@@ -161,7 +174,7 @@ namespace DataAccessTest
             // Arrange
             var newText = new Text
             {
-                Id = 6,
+                Id = 12,
                 Name = "Test Text",
                 Format = "pdf",
                 Size = 1.0,

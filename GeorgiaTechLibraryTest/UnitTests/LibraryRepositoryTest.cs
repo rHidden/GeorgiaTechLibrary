@@ -10,7 +10,7 @@ using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Repositories.RepositoryInterfaces;
 using System.Threading.Tasks;
 
-namespace DataAccessTest
+namespace GeorgiaTechLibraryTest.UnitTests
 {
     public class LibraryRepositoryTest
     {
