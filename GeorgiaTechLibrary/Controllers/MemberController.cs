@@ -21,6 +21,10 @@ namespace GeorgiaTechLibrary.Controllers
         public async Task<IActionResult> GetMember(string SSN)
         {
             var member = await _memberService.GetMember(SSN);
+            if(member == null)
+            {
+                return NotFound();
+            }
             return Ok(member);
         }
 

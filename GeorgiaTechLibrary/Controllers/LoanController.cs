@@ -22,6 +22,10 @@ namespace GeorgiaTechLibrary.Controllers
         public async Task<IActionResult> GetLoan(int id)
         {
             var loan = await _loanService.GetLoan(id);
+            if (loan == null)
+            {
+                return NotFound();
+            }
             return Ok(loan);
         }
 
