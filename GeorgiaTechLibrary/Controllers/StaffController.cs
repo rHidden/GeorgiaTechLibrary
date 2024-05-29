@@ -21,6 +21,10 @@ namespace GeorgiaTechLibrary.Controllers
         public async Task<IActionResult> GetStaff(string SSN)
         {
             var staff = await _staffService.GetStaff(SSN);
+            if (staff == null)
+            {
+                return NotFound();
+            }
             return Ok(staff);
         }
 
