@@ -1,0 +1,34 @@
+﻿name: .NET Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run Roslyn Analyzers
+      run: dotnet analyze --severity warning --configuration Release
+
+    - name: Run tests and collect coverage
+      run: |
+        dotnet test --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        reportgenerator "-reports:coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
