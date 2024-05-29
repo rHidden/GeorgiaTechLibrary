@@ -49,14 +49,11 @@ namespace DataAccess.Repositories
             {
                 var members = await connection.QueryAsync<User, Address, Member, Member>(sql, (user, address, member) =>
                 {
-                    if(user != null)
-                    {
-                        member.SSN = user?.SSN;
-                        member.FirstName = user?.FirstName;
-                        member.LastName = user?.LastName;
-                        member.PhoneNumber = user?.PhoneNumber;
-                        member.UserAddress = address;
-                    }
+                    member.SSN = user.SSN;
+                    member.FirstName = user.FirstName;
+                    member.LastName = user.LastName;
+                    member.PhoneNumber = user.PhoneNumber;
+                    member.UserAddress = address;
                     return member;
                 }, splitOn: "Street, CardNumber");
 

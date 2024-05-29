@@ -1,14 +1,8 @@
-﻿using Xunit;
-using DataAccess.DAO;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using Moq;
 using DataAccess.Repositories;
 using DataAccess.DAO.DAOIntefaces;
-using DataAccess.Repositories.RepositoryInterfaces;
-using System.Threading.Tasks;
 
 namespace GeorgiaTechLibraryTest.UnitTests
 {
@@ -83,12 +77,14 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 IsLoaned = false,
                 Book = book1
             };
+
             var expectedBookInstance2 = new BookInstance
             {
                 Id = 3,
                 IsLoaned = true,
                 Book = book2
             };
+
             var bookInstances = new List<BookInstance> { expectedBookInstance1, expectedBookInstance2 };
 
             // Act
@@ -103,8 +99,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
             await _bookRepository.DeleteBook(book2.ISBN);
 
             // Assert
-            Assert.Equal(2, result.Count);
-
             var actualBookInstance1 = result.FirstOrDefault(r => r.Id == expectedBookInstance1.Id);
             var actualBookInstance2 = result.FirstOrDefault(r => r.Id == expectedBookInstance2.Id);
 

@@ -1,14 +1,8 @@
-﻿using Xunit;
-using DataAccess.DAO;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using Moq;
 using DataAccess.Repositories;
 using DataAccess.DAO.DAOIntefaces;
-using DataAccess.Repositories.RepositoryInterfaces;
-using System.Threading.Tasks;
 
 namespace GeorgiaTechLibraryTest.UnitTests
 {
@@ -102,6 +96,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 LibrarianNumber = "123456",
                 Role = "Librarian"
             };
+
             var staff2 = new Staff
             {
                 SSN = "10",
@@ -140,6 +135,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 LibrarianNumber = "123456",
                 Role = "Librarian"
             };
+
             var updatedStaff = new Staff
             {
                 SSN = "11",

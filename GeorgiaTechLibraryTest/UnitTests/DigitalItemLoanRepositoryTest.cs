@@ -1,15 +1,8 @@
-﻿using Xunit;
-using DataAccess.DAO;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using Moq;
 using DataAccess.Repositories;
 using DataAccess.DAO.DAOIntefaces;
-using DataAccess.Repositories.RepositoryInterfaces;
-using System.Threading.Tasks;
-using Microsoft.SqlServer.Server;
 
 namespace GeorgiaTechLibraryTest.UnitTests
 {
@@ -36,7 +29,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task CreateDigitalItemLoan_CreatesNewDigitalItemLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "13" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "13" , CardNumber = "123456" };
 
             var text = new Text
             {
@@ -79,7 +72,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task GetDigitalItemLoan_WithValidId_ReturnsDigitalItemLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "14" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "14", CardNumber = "123456" };
 
             var text = new Text
             {
@@ -113,18 +106,13 @@ namespace GeorgiaTechLibraryTest.UnitTests
             // Assert
             var retrievedDigitalItemLoan = Assert.IsType<DigitalItemLoan>(result);
             Assert.NotNull(result);
-            //Assert.Equal(expectedDigitalItemLoan.LoanDate, retrievedDigitalItemLoan.LoanDate);
-            //Assert.Equal(expectedDigitalItemLoan.DueDate, retrievedDigitalItemLoan.DueDate);
-            //Assert.Null(retrievedDigitalItemLoan.ReturnDate);
-            //Assert.Equal(expectedDigitalItemLoan.User.SSN, retrievedDigitalItemLoan.User.SSN);
-            //Assert.Equal(expectedDigitalItemLoan.DigitalItem.Id, retrievedDigitalItemLoan.DigitalItem.Id);
         }
 
         [Fact]
         public async Task ListUserDigitalItemLoans_WithValidSSN_ReturnsListOfDigitalItemLoans()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "15" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "15", CardNumber = "123456" };
 
             var text1 = new Text
             {
@@ -188,7 +176,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task UpdateDigitalItemLoan_UpdatesExistingDigitalItemLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "16" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "16" , CardNumber = "123456" };
 
             var text = new Text
             {
@@ -242,7 +230,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task DeleteDigitalItemLoan_RemovesDigitalItemLoanFromDatabase()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "17" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "17" , CardNumber = "123456" };
 
             var text = new Text
             {

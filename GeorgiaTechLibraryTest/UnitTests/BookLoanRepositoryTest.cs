@@ -1,14 +1,8 @@
-﻿using Xunit;
-using DataAccess.DAO;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using Moq;
 using DataAccess.Repositories;
 using DataAccess.DAO.DAOIntefaces;
-using DataAccess.Repositories.RepositoryInterfaces;
-using System.Threading.Tasks;
 
 namespace GeorgiaTechLibraryTest.UnitTests
 {
@@ -37,7 +31,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task CreateBookLoan_CreatesNewBookLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456785" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456785", CardNumber = "123456" };
 
             var book = new Book
             {
@@ -88,7 +82,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task GetBookLoan_WithValidId_ReturnsBookLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456784" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456784", CardNumber = "123456" };
 
             var book = new Book
             {
@@ -129,20 +123,13 @@ namespace GeorgiaTechLibraryTest.UnitTests
             // Assert
             var retrievedBookLoan = Assert.IsType<BookLoan>(result);
             Assert.NotNull(result);
-            //Assert.Equal(expectedBookLoan.LoanDate, retrievedBookLoan.LoanDate);
-            //Assert.Equal(expectedBookLoan.DueDate, retrievedBookLoan.DueDate);
-            //Assert.Null(retrievedBookLoan.ReturnDate);
-            //Assert.Equal(expectedBookLoan.User.SSN, retrievedBookLoan.User.SSN);
-            //Assert.Equal(expectedBookLoan.BookInstance.Id, retrievedBookLoan.BookInstance.Id);
         }
 
         [Fact]
         public async Task ListUserBookLoans_WithValidSSN_ReturnsListOfBookLoans()
         {
             // Arrange
-            var userSSN = "123456783";
-
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = userSSN };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456783", CardNumber = "123456" };
 
             var book1 = new Book
             {
@@ -202,7 +189,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
             await _bookInstanceRepository.CreateBookInstance(bookInstance2);
             await _loanRepository.CreateLoan(bookLoan1);
             await _loanRepository.CreateLoan(bookLoan2);
-            var result = await _loanRepository.ListUserLoans(userSSN);
+            var result = await _loanRepository.ListUserLoans(user.SSN);
             await _loanRepository.DeleteLoan(bookLoan1.Id);
             await _loanRepository.DeleteLoan(bookLoan2.Id);
             await _bookInstanceRepository.DeleteBookInstance(bookInstance1.Id);
@@ -221,7 +208,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task UpdateBookLoan_UpdatesExistingBookLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456782" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456782", CardNumber = "123456"};
 
             var book = new Book
             {
@@ -283,7 +270,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task DeleteBookLoan_DeletesExistingBookLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456781" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456781" , CardNumber = "123456" };
 
             var book = new Book
             {

@@ -1,14 +1,8 @@
-﻿using Xunit;
-using DataAccess.DAO;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using Moq;
 using DataAccess.Repositories;
 using DataAccess.DAO.DAOIntefaces;
-using DataAccess.Repositories.RepositoryInterfaces;
-using System.Threading.Tasks;
 
 namespace GeorgiaTechLibraryTest.UnitTests
 {
@@ -95,47 +89,47 @@ namespace GeorgiaTechLibraryTest.UnitTests
             Assert.Equal(expectedMember.MemberType, result.MemberType);
         }
 
-        //[Fact]
-        //public async Task ListMembers_ReturnsListOfMembers()
-        //{
-        //    // Arrange
-        //    var member1 = new Member
-        //    {
-        //        SSN = "3",
-        //        FirstName = "John",
-        //        LastName = "Doe",
-        //        PhoneNumber = "1234567890",
-        //        UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" },
-        //        CardNumber = "123456",
-        //        ExpiryDate = DateTime.UtcNow.AddYears(1),
-        //        Photo = "photo_url",
-        //        MemberType = "Regular"
-        //    };
-        //    var member2 = new Member
-        //    {
-        //        SSN = "4",
-        //        FirstName = "Jane",
-        //        LastName = "Doe",
-        //        PhoneNumber = "0987654321",
-        //        UserAddress = new Address { Street = "Second St", StreetNumber = "2", City = "City", ZipCode = "54321" },
-        //        CardNumber = "654321",
-        //        ExpiryDate = DateTime.UtcNow.AddYears(1),
-        //        Photo = "photo_url",
-        //        MemberType = "Premium"
-        //    };
+        [Fact]
+        public async Task ListMembers_ReturnsListOfMembers()
+        {
+            // Arrange
+            var member1 = new Member
+            {
+                SSN = "3",
+                FirstName = "John",
+                LastName = "Doe",
+                PhoneNumber = "1234567890",
+                UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" },
+                CardNumber = "123456",
+                ExpiryDate = DateTime.UtcNow.AddYears(1),
+                Photo = "photo_url",
+                MemberType = "Regular"
+            };
 
-        //    // Act
-        //    await _memberRepository.CreateMember(member1);
-        //    await _memberRepository.CreateMember(member2);
-        //    var result = await _memberRepository.ListMembers();
-        //    await _memberRepository.DeleteMember(member1.SSN);
-        //    await _memberRepository.DeleteMember(member2.SSN);
+            var member2 = new Member
+            {
+                SSN = "4",
+                FirstName = "Jane",
+                LastName = "Doe",
+                PhoneNumber = "0987654321",
+                UserAddress = new Address { Street = "Second St", StreetNumber = "2", City = "City", ZipCode = "54321" },
+                CardNumber = "654321",
+                ExpiryDate = DateTime.UtcNow.AddYears(1),
+                Photo = "photo_url",
+                MemberType = "Premium"
+            };
 
-        //    // Assert
-        //    Assert.Equal(2, result.Count);
-        //    Assert.Contains(result, r => r.SSN == member1.SSN && r.FirstName == member1.FirstName && r.LastName == member1.LastName && r.MemberType == member1.MemberType);
-        //    Assert.Contains(result, r => r.SSN == member2.SSN && r.FirstName == member2.FirstName && r.LastName == member2.LastName && r.MemberType == member2.MemberType);
-        //}
+            // Act
+            await _memberRepository.CreateMember(member1);
+            await _memberRepository.CreateMember(member2);
+            var result = await _memberRepository.ListMembers();
+            await _memberRepository.DeleteMember(member1.SSN);
+            await _memberRepository.DeleteMember(member2.SSN);
+
+            // Assert
+            Assert.Contains(result, r => r.SSN == member1.SSN && r.FirstName == member1.FirstName && r.LastName == member1.LastName && r.MemberType == member1.MemberType);
+            Assert.Contains(result, r => r.SSN == member2.SSN && r.FirstName == member2.FirstName && r.LastName == member2.LastName && r.MemberType == member2.MemberType);
+        }
 
         [Fact]
         public async Task UpdateMember_UpdatesExistingMember()
@@ -153,6 +147,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 Photo = "photo_url",
                 MemberType = "Regular"
             };
+
             var updatedMember = new Member
             {
                 SSN = "5",
