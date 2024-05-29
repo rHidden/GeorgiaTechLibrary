@@ -1,7 +1,6 @@
 ﻿using DataAccess.Models;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace GeorgiaTechLibrary.Controllers
 {
@@ -15,13 +14,6 @@ namespace GeorgiaTechLibrary.Controllers
             _bookService = bookService;
         }
 
-        /// <summary>
-        /// Retrieves a list of all books.
-        /// </summary>
-        /// <description>
-        /// Description: This endpoint retrieves a list of all books in the database.
-        /// </description>
-        /// <returns>A list of books.</returns>
         [HttpGet]
         [Route("{ISBN}")]
         public async Task<IActionResult> GetBookAsync(string ISBN)
