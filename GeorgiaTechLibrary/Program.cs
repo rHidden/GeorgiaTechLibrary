@@ -49,7 +49,7 @@ builder.Services.AddScoped<IDatabaseConnectionFactory, DatabaseConnectionFactory
 builder.Services.AddSwaggerGen(c =>
 {
     c.EnableAnnotations();
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeorgiaTechLibrary", Version = "v1" });
 });
 
 var app = builder.Build();
