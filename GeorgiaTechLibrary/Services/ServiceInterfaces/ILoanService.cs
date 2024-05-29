@@ -12,5 +12,6 @@ namespace GeorgiaTechLibrary.Services.ServiceInterfaces
         Task<Loan> UpdateLoan(Loan loan);
         Task<bool> DeleteLoan(int id);
         Task<Loan> ReturnLoan(int id);
+        Task<LoanItemStatisticsDTO> GetLoanItemStatistics();
     }
 }

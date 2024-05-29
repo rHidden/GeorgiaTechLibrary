@@ -74,5 +74,25 @@ namespace GeorgiaTechLibrary.Controllers
             var deletedSuccessfully = await _staffService.DeleteStaff(SSN);
             return Ok(deletedSuccessfully);
         }
+
+        [HttpGet]
+        [Route("OutsideCity/Library")]
+        [SwaggerOperation(Summary = "Get staff outside city per library",
+            Description = "Returns a list of staff members living outside of the city grouped by the libraries.")]
+        public async Task<IActionResult> GetStaffOutSideCityPerLibrary()
+        {
+            var users = await _staffService.GetStaffLivingOutsideOfCityPerLibrary();
+            return Ok(users);
+        }
+
+        [HttpGet]
+        [Route("OutsideCity")]
+        [SwaggerOperation(Summary = "Get staff outside city",
+            Description = "Returns a list of staff members living outside of the city grouped by cities.")]
+        public async Task<IActionResult> GetStaffOutSideCity()
+        {
+            var users = await _staffService.GetStaffLivingOutsideOfCity();
+            return Ok(users);
+        }
     }
 }

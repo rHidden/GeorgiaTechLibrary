@@ -9,5 +9,7 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<Staff> CreateStaff(Staff staff);
         Task<Staff> UpdateStaff(Staff staff);
         Task<bool> DeleteStaff(string SSN);
+        Task<List<(string Name, int StaffLivingOutsideOfCity)>> GetStaffLivingOutsideOfCityPerLibrary();
+        Task<List<(string Name, int StaffLivingOutsideOfCity)>> GetStaffLivingOutsideOfCity();
     }
 }

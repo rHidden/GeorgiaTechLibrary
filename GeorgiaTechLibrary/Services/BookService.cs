@@ -31,5 +31,10 @@ namespace GeorgiaTechLibrary.Services
         {
             return await _bookRepository.DeleteBook(ISBN);
         }
+
+        public async Task<List<Book>> GetMostPopularBooksAmongStudents()
+        {
+            return await _bookRepository.GetMostPopularBooksAmongStudents();
+        }
     }
 }

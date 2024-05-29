@@ -92,6 +92,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpPatch]
         [Route("/return/{id}")]
+        [SwaggerOperation(Summary = "Return a loan",
+            Description = "Returns a loan based on the passed ID.\n\n" +
+            "param id - the loan ID")]
         public async Task<IActionResult> ReturnLoan(int id)
         {
             var updatedLoan = await _loanService.ReturnLoan(id);
@@ -100,6 +103,16 @@ namespace GeorgiaTechLibrary.Controllers
                 return StatusCode(410, "This loan has already been returned.");
             }
             return Ok(updatedLoan);
+        }
+
+        [HttpGet]
+        [Route("Statistics")]
+        [SwaggerOperation(Summary = "Get loan item statistics",
+            Description = "Returns statistics about what are the percentages of the loan items being loaned.")]
+        public async Task<IActionResult> GetLoanItemStatistics()
+        {
+            var statistics = await _loanService.GetLoanItemStatistics();
+            return Ok(statistics);
         }
     }
 }

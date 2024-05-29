@@ -3,25 +3,29 @@ SELECT
     COUNT(u.SSN) AS StaffLivingOutsideOfCity 
 FROM 
     Staff s 
-LEFT JOIN 
+INNER JOIN 
     [User] u ON u.SSN = s.UserSSN
-LEFT JOIN 
+INNER JOIN 
     Library l ON l.Name = u.LibraryName
 WHERE 
     u.City <> l.City
 GROUP BY 
-    l.Name;
+    l.Name
+ORDER BY 
+	StaffLivingOutsideOfCity DESC
 
 SELECT 
     l.City, 
     COUNT(u.SSN) AS StaffLivingOutsideOfCity 
 FROM 
     Staff s 
-LEFT JOIN 
+INNER JOIN 
     [User] u ON u.SSN = s.UserSSN
-LEFT JOIN 
+INNER JOIN 
     Library l ON l.Name = u.LibraryName
 WHERE 
     u.City <> l.City
 GROUP BY 
-    l.City;
+    l.City
+ORDER BY 
+	StaffLivingOutsideOfCity DESC

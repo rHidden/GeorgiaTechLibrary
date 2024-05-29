@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using GeorgiaTechLibrary.DTOs;
 
 namespace GeorgiaTechLibrary.Services.ServiceInterfaces
 {
@@ -9,6 +10,7 @@ namespace GeorgiaTechLibrary.Services.ServiceInterfaces
         Task<Staff> CreateStaff(Staff staff);
         Task<Staff> UpdateStaff(Staff staff);
         Task<bool> DeleteStaff(string SSN);
-
+        Task<List<StaffOutsideCityDto>> GetStaffLivingOutsideOfCityPerLibrary();
+        Task<List<StaffOutsideCityDto>> GetStaffLivingOutsideOfCity();
     }
 }

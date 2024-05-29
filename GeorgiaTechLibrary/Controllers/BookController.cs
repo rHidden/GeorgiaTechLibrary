@@ -88,5 +88,15 @@ namespace GeorgiaTechLibrary.Controllers
             var deletedSuccessfully = await _bookService.DeleteBook(ISBN);
             return Ok(deletedSuccessfully);
         }
+
+        [HttpGet]
+        [Route("Popular")]
+        [SwaggerOperation(Summary = "Get most popular books among students",
+            Description = "Returns a list of the most popular books among students.")]
+        public async Task<IActionResult> GetMostPopularBooksAmongStudents()
+        {
+            var books = await _bookService.GetMostPopularBooksAmongStudents();
+            return Ok(books);
+        }
     }
 }
