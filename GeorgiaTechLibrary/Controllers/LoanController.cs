@@ -89,5 +89,17 @@ namespace GeorgiaTechLibrary.Controllers
             var deletedSuccessfully = await _loanService.DeleteLoan(id);
             return Ok(deletedSuccessfully);
         }
+
+        [HttpPatch]
+        [Route("/return/{id}")]
+        public async Task<IActionResult> ReturnLoan(int id)
+        {
+            var updatedLoan = await _loanService.ReturnLoan(id);
+            if (updatedLoan == null)
+            {
+                return StatusCode(410, "This loan has already been returned.");
+            }
+            return Ok(updatedLoan);
+        }
     }
 }

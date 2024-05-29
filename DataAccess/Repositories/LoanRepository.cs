@@ -2,6 +2,7 @@
 using DataAccess.DAO.DAOIntefaces;
 using DataAccess.Models;
 using DataAccess.Repositories.RepositoryInterfaces;
+using System.Transactions;
 
 namespace DataAccess.Repositories
 {
@@ -14,7 +15,7 @@ namespace DataAccess.Repositories
             _connectionFactory = databaseConnectionFactory;
         }
 
-        public async Task<Loan> GetLoan(int id)
+        public async Task<Loan?> GetLoan(int id)
         {
             string sql = "SELECT loan.Id, loan.LoanDate, loan.ReturnDate, loan.DueDate, " +
                 "[user].SSN, [user].FirstName, [user].LastName, [user].PhoneNumber, [user].Street, " +
@@ -33,13 +34,13 @@ namespace DataAccess.Repositories
             using (var connection = _connectionFactory.CreateConnection())
             {
                 var loan = (await connection.QueryAsync<Loan, Staff, Address, Staff, Member,
-                    BookInstance, DigitalItem, Loan>(sql, 
+                    BookInstance, DigitalItem, Loan>(sql,
                     map: (loan, user, address, staff, member, bookInstance, digitalItem) =>
                     {
-                        if(staff != null)
+                        if (staff != null)
                         {
                             loan.User = staff;
-                        } 
+                        }
                         else
                         {
                             loan.User = member;
@@ -60,8 +61,8 @@ namespace DataAccess.Repositories
                             loan = new DigitalItemLoan(loan, digitalItem);
                         }
                         return loan;
-                    }, 
-                    param: new { id }, 
+                    },
+                    param: new { id },
                     splitOn: "SSN, Street, Role, CardNumber, Id, Name")
                     ).AsQueryable().FirstOrDefault();
                 return loan;
@@ -117,7 +118,7 @@ namespace DataAccess.Repositories
                             loan = new DigitalItemLoan(loan, digitalItem);
                         }
                         return loan;
-                    }, 
+                    },
                     param: new { SSN = userSSN },
                     splitOn: "SSN, Street, Role, CardNumber, Id, Name")
                     ).AsQueryable().AsList();
@@ -129,13 +130,13 @@ namespace DataAccess.Repositories
         {
             if (loan.BookInstance?.Book?.CanLoan ?? false)
             {
-                string sql = "INSERT INTO Loan (Id, UserSSN, LoanDate, ReturnDate, DueDate, LoanType, BookInstanceId) " +
-                    "VALUES (@Id, @UserSSN, @LoanDate, @ReturnDate, @DueDate, @LoanType, @BookInstanceId)";
+                string sql = "INSERT INTO Loan (UserSSN, LoanDate, ReturnDate, DueDate, LoanType, BookInstanceId) " +
+                    "OUTPUT Inserted.Id " +
+                    "VALUES (@UserSSN, @LoanDate, @ReturnDate, @DueDate, @LoanType, @BookInstanceId)";
                 using (var connection = _connectionFactory.CreateConnection())
                 {
-                    var rowsAffected = await connection.ExecuteAsync(sql, new
+                    loan.Id = await connection.QuerySingleAsync<int>(sql, new
                     {
-                        loan.Id,
                         UserSSN = loan.User?.SSN,
                         loan.LoanDate,
                         loan.ReturnDate,
@@ -152,21 +153,21 @@ namespace DataAccess.Repositories
             }
         }
 
-        public async Task<Loan> CreateLoan(DigitalItemLoan loan) //TODO cant loan not canLoan book
+        public async Task<Loan?> CreateLoan(DigitalItemLoan loan)
         {
-            string sql = "INSERT INTO Loan (Id, UserSSN, LoanDate, ReturnDate, DueDate, LoanType, DigitalItemId) " +
-                "VALUES (@Id, @UserSSN, @LoanDate, @ReturnDate, @DueDate, @LoanType, @DigitalItemId)";
+            string sql = "INSERT INTO Loan (UserSSN, LoanDate, ReturnDate, DueDate, LoanType, DigitalItemId) " +
+                "OUTPUT Inserted.Id " +
+                "VALUES (@UserSSN, @LoanDate, @ReturnDate, @DueDate, @LoanType, @DigitalItemId)";
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var rowsAffected = await connection.ExecuteAsync(sql, new
+                loan.Id = await connection.QuerySingleAsync<int>(sql, new
                 {
-                    loan.Id,
                     UserSSN = loan.User?.SSN,
                     loan.LoanDate,
                     loan.ReturnDate,
                     loan.DueDate,
                     LoanType = "DigitalItem",
-                    DIgitalItemId = loan.DigitalItem?.Id
+                    DigitalItemId = loan.DigitalItem?.Id
                 });
                 return loan;
             }
@@ -203,6 +204,75 @@ namespace DataAccess.Repositories
                 else
                 {
                     return false;
+                }
+            }
+        }
+
+        public async Task<Loan?> ReturnLoan(int id)
+        {
+            string getReservedUser = "SELECT u.*, b.*, br.ReservationDate FROM Loan l " +
+                "INNER JOIN BookInstance bi ON bi.Id = l.BookInstanceId " +
+                "INNER JOIN BookReservation br ON br.BookISBN = bi.BookISBN " +
+                "INNER JOIN [User] u ON u.SSN = br.UserSSN " +
+                "INNER JOIN Book b ON b.ISBN = br.BookISBN " +
+                "WHERE l.Id = @Id " +
+                "ORDER BY br.ReservationDate ASC";
+            string getBookInstance = "SELECT bi.* FROM Loan l " +
+                "INNER JOIN BookInstance bi ON bi.Id = l.BookInstanceId " +
+                "WHERE l.Id = @Id";
+            string deleteReservation = "DELETE FROM BookReservation " +
+                "WHERE UserSSN = @UserSSN AND BookISBN = @BookISBN AND ReservationDate = @ReservationDate";
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                using (var connection = _connectionFactory.CreateConnection())
+                {
+                    //GetLoan
+                    var loan = await GetLoan(id);
+                    if (loan?.ReturnDate == null) {
+                        loan.ReturnDate = DateTime.Now;
+                        //Return Loan
+                        var updatedLoan = await UpdateLoan(loan);
+
+                        //Check for book reservation
+                        var bookReservation = (await connection.QueryAsync<User, Book, DateTime, BookReservation>(getReservedUser, 
+                            map: (user, book, reservationDate) =>
+                            {
+                                return new BookReservation(user, book, reservationDate);
+                            },
+                            param: new { id },
+                            splitOn: "ISBN, ReservationDate")).FirstOrDefault();
+                        if (bookReservation != null)
+                        {
+                            //Get book instance
+                            var bookInstance = await connection.QuerySingleAsync<BookInstance>(getBookInstance, 
+                                new { id });
+                            bookInstance.Book = bookReservation.Book;
+
+                            //Make book loan for reservation
+                            BookLoan newBookLoan = new();
+                            newBookLoan.LoanDate = loan.ReturnDate;
+                            newBookLoan.DueDate = loan.ReturnDate?.AddMonths(1);
+                            newBookLoan.User = bookReservation.User;
+                            newBookLoan.BookInstance = bookInstance;
+
+                            //Create new loan for reservation
+                            await CreateLoan(newBookLoan);
+
+                            //Delete reservation
+                            await connection.ExecuteAsync(deleteReservation, 
+                                new { 
+                                    UserSSN = bookReservation.User?.SSN,
+                                    BookISBN = bookReservation.Book?.ISBN,
+                                    bookReservation.ReservationDate
+                                });
+                        }
+                        scope.Complete();
+                        return updatedLoan;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
         }
