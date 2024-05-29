@@ -73,15 +73,15 @@ namespace DataAccess.Repositories
 
             using (var connection = _connectionFactory.CreateConnection())
             {
-                using (var transaction = connection.BeginTransaction())
-                {
+                //using (var transaction = connection.BeginTransaction())
+                //{
                     await connection.ExecuteAsync(sqlBook, book);
                     foreach (var author in book.Authors ?? [])
                     {
                         await connection.ExecuteAsync(sqlAuthor, new { BookISBN = book.ISBN, Name = author });
                     }
-                    transaction.Commit();
-                }
+                    //transaction.Commit();
+                //}
             }
             return book;
         }

@@ -51,7 +51,7 @@ namespace DataAccess.Repositories
                         loan.User.LastName = user.LastName;
                         loan.User.UserAddress = address;
 
-                        if(bookInstance != null) 
+                        if (bookInstance != null) 
                         {
                             loan = new BookLoan(loan, bookInstance);
                         }
@@ -99,11 +99,14 @@ namespace DataAccess.Repositories
                             loan.User = member;
                         }
 
-                        loan.User.SSN = user.SSN;
-                        loan.User.PhoneNumber = user.PhoneNumber;
-                        loan.User.FirstName = user.FirstName;
-                        loan.User.LastName = user.LastName;
-                        loan.User.UserAddress = address;
+                        if (loan.User != null)
+                        {
+                            loan.User.SSN = user?.SSN;
+                            loan.User.PhoneNumber = user?.PhoneNumber;
+                            loan.User.FirstName = user?.FirstName;
+                            loan.User.LastName = user?.LastName;
+                            loan.User.UserAddress = address;
+                        }
 
                         if (bookInstance != null)
                         {
