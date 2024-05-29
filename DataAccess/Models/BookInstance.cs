@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Models
 {
-    public class BookInstance: Item
+    public class BookInstance
     {
         public int Id { get; set; }
         public bool? IsLoaned { get; set; }

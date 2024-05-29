@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using GeorgiaTechLibrary.DTOs;
 using GeorgiaTechLibrary.Services;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,10 @@ namespace GeorgiaTechLibrary.Controllers
         public async Task<IActionResult> GetLoan(int id)
         {
             var loan = await _loanService.GetLoan(id);
+            if (loan == null)
+            {
+                return NotFound();
+            }
             return Ok(loan);
         }
 
@@ -28,7 +33,7 @@ namespace GeorgiaTechLibrary.Controllers
         [Route("user/{userSSN}")]
         public async Task<IActionResult> ListUserLoans(string userSSN)
         {
-            List<Loan> loans = await _loanService.ListUserLoans(userSSN);
+            List<LoanDTO> loans = await _loanService.ListUserLoans(userSSN);
             if (!loans.Any())
             {
                 return NotFound();
@@ -37,13 +42,23 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLoan(Loan loan)
+        [Route("Book")]
+        public async Task<IActionResult> CreateLoan(BookLoan loan)
+        {
+            var createdLoan = await _loanService.CreateLoan(loan);
+            return Ok(createdLoan);
+        }
+
+        [HttpPost]
+        [Route("DigitalItem")]
+        public async Task<IActionResult> CreateLoan(DigitalItemLoan loan)
         {
             var createdLoan = await _loanService.CreateLoan(loan);
             return Ok(createdLoan);
         }
 
         [HttpPatch]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateLoan(Loan loan)
         {
             var updatedLoan = await _loanService.UpdateLoan(loan);
@@ -51,6 +66,7 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteLoan(int Id)
         {
             var deletedSuccessfully = await _loanService.DeleteLoan(Id);

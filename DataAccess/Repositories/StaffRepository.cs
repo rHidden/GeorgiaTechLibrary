@@ -32,7 +32,7 @@ namespace DataAccess.Repositories
                     staff.PhoneNumber = user.PhoneNumber;
                     staff.UserAddress = address;
                     return staff;
-                }, new { SSN }, splitOn: "Street, LibrarianNumber")).AsQueryable().First();
+                }, new { SSN }, splitOn: "Street, LibrarianNumber")).AsQueryable().FirstOrDefault();
 
                 return staff;
             }
@@ -143,7 +143,7 @@ namespace DataAccess.Repositories
             {
                 int rowsAffected = await connection.ExecuteAsync(sql, new { SSN });
 
-                return rowsAffected != 0;
+                return rowsAffected == 1;
             }
         }
     }

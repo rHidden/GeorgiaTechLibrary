@@ -6,8 +6,9 @@ namespace DataAccess.Repositories.RepositoryInterfaces
     {
         Task<Loan> GetLoan(int id);
         Task<List<Loan>> ListUserLoans(string userSSN);
-        Task<Loan> CreateLoan(Loan loan);
+        Task<Loan?> CreateLoan(DigitalItemLoan loan);
+        Task<Loan?> CreateLoan(BookLoan loan);
         Task<Loan> UpdateLoan(Loan loan); 
-        Task<Loan> DeleteLoan(int id);
+        Task<bool> DeleteLoan(int id);
     }
 }

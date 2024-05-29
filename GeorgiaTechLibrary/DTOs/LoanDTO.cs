@@ -8,8 +8,7 @@
         public DateTime ReturnDate { get; set; }
         public BookInstanceDTO? LoanBookInstance { get; set; }
         public DigitalItemDTO? LoanDigitalItem { get; set; }
-        public UserDTO User { get; set; }
-        public LoanType Type { get; set; }
+        public UserDTO? User { get; set; }
     }
     
     public enum LoanType

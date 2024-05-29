@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Models
 {
-    public abstract class DigitalItem : Item
+    public class DigitalItem : Item
     {
         public int Id { get; set; }
         public string? Format { get; set; }
@@ -15,5 +15,11 @@
             Size = size;
         }
 
+        public DigitalItem(DigitalItem digitalItem) : base(digitalItem.Name ?? "", digitalItem.Authors ?? new List<string>())
+        {
+            Id = digitalItem.Id;
+            Format = digitalItem.Format;
+            Size = digitalItem.Size;
+        }
     }
 }

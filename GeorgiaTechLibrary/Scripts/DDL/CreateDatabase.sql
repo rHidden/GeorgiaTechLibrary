@@ -1,9 +1,8 @@
 USE master;
 
-ALTER DATABASE GeorgiaTechLibrary SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-
 IF DB_ID('GeorgiaTechLibrary') IS NOT NULL
 BEGIN
+	ALTER DATABASE GeorgiaTechLibrary SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
     DROP DATABASE GeorgiaTechLibrary;
 END
 
@@ -52,7 +51,7 @@ CREATE TABLE DigitalItem (
     Size FLOAT,
     [Format] VARCHAR(50),
     DigitalItemType VARCHAR(50),
-    [Length] VARCHAR(50),
+    [Length] int,
     ResolutionWidth INT,
     ResolutionHeight INT
 );

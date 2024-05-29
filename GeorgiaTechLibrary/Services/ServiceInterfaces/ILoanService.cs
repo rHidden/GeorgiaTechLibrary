@@ -1,14 +1,16 @@
 ﻿using DataAccess.Models;
+using GeorgiaTechLibrary.DTOs;
 
 namespace GeorgiaTechLibrary.Services.ServiceInterfaces
 {
     public interface ILoanService
     {
-        Task<Loan> GetLoan(int Id);
-        Task<List<Loan>> ListUserLoans(string userSSN);
-        Task<Loan> CreateLoan(Loan loan);
+        Task<LoanDTO> GetLoan(int Id);
+        Task<List<LoanDTO>> ListUserLoans(string userSSN);
+        Task<Loan?> CreateLoan(DigitalItemLoan loan);
+        Task<Loan?> CreateLoan(BookLoan loan);
         Task<Loan> UpdateLoan(Loan loan);
-        Task<Loan> DeleteLoan(int Id);
+        Task<bool> DeleteLoan(int Id);
 
     }
 }
