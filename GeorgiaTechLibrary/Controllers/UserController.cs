@@ -1,8 +1,7 @@
 ﻿using DataAccess.Models;
-using GeorgiaTechLibrary.Services;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GeorgiaTechLibrary.Controllers
 {
@@ -17,7 +16,9 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
-        [Route("/active")]
+        [Route("active")]
+        [SwaggerOperation(Summary = "Get most active users",
+            Description = "Returns a list of the most active users.")]
         public async Task<IActionResult> GetMostActiveUsers()
         {
             var users = await _userService.GetMostActiveUsers();

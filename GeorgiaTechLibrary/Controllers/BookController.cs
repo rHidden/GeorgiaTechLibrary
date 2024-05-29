@@ -1,6 +1,7 @@
 ﻿using DataAccess.Models;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GeorgiaTechLibrary.Controllers
 {
@@ -16,6 +17,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpGet]
         [Route("{ISBN}")]
+        [SwaggerOperation(Summary = "Get book",
+            Description = "Returns a book based on the passed ISBN.\n\n" +
+            "param ISBN - International Standard Book Number")]
         public async Task<IActionResult> GetBookAsync(string ISBN)
         {
             Book book = await _bookService.GetBook(ISBN);
@@ -27,6 +31,9 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet("description/{ISBN}")]
+        [SwaggerOperation(Summary = "Get book description",
+            Description = "Returns the description of a book based on the passed ISBN.\n\n" +
+            "param ISBN - International Standard Book Number")]
         public async Task<IActionResult> GetBookDescriptionAsync(string ISBN)
         {
             Book book = await _bookService.GetBook(ISBN);
@@ -38,6 +45,8 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "List all books",
+            Description = "Returns a list of all books.")]
         public async Task<IActionResult> ListBooksAsync()
         {
             List<Book> books = await _bookService.ListBooks();
@@ -48,8 +57,10 @@ namespace GeorgiaTechLibrary.Controllers
             return Ok(books);
         }
 
-
         [HttpPost]
+        [SwaggerOperation(Summary = "Create a new book",
+            Description = "Creates a new book and returns the created book.\n\n" +
+            "param book - the created book")]
         public async Task<IActionResult> CreateBook(Book book)
         {
             var createdBook = await _bookService.CreateBook(book);
@@ -58,6 +69,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpPatch]
         [Route("{ISBN}")]
+        [SwaggerOperation(Summary = "Update a book",
+            Description = "Updates the details of a book based on the passed ISBN.\n\n" +
+            "param book - the updated book")]
         public async Task<IActionResult> UpdateBook(Book book)
         {
             var updatedBook = await _bookService.UpdateBook(book);
@@ -66,6 +80,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpDelete]
         [Route("{ISBN}")]
+        [SwaggerOperation(Summary = "Delete a book",
+            Description = "Deletes a book based on the passed ISBN.\n\n" +
+            "param ISBN - International Standard Book Number")]
         public async Task<IActionResult> DeleteBook(string ISBN)
         {
             var deletedSuccessfully = await _bookService.DeleteBook(ISBN);

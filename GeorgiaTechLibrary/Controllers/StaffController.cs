@@ -1,8 +1,7 @@
 ﻿using DataAccess.Models;
-using GeorgiaTechLibrary.Services;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GeorgiaTechLibrary.Controllers
 {
@@ -14,10 +13,13 @@ namespace GeorgiaTechLibrary.Controllers
         public StaffController(IStaffService staffService)
         {
             _staffService = staffService;
-        }   
+        }
 
         [HttpGet]
         [Route("{SSN}")]
+        [SwaggerOperation(Summary = "Get staff member",
+            Description = "Returns a staff member based on the passed SSN.\n\n" +
+            "param SSN - Social Security Number of the staff member")]
         public async Task<IActionResult> GetStaff(string SSN)
         {
             var staff = await _staffService.GetStaff(SSN);
@@ -29,6 +31,8 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "List all staff members",
+            Description = "Returns a list of all staff members.")]
         public async Task<IActionResult> ListStaff()
         {
             List<Staff> staffs = await _staffService.ListStaff();
@@ -40,6 +44,9 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Create a new staff member",
+            Description = "Creates a new staff member and returns the created staff member.\n\n" +
+            "param staff - The created staff member")]
         public async Task<IActionResult> CreateStaff(Staff staff)
         {
             var createdStaff = await _staffService.CreateStaff(staff);
@@ -48,6 +55,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpPatch]
         [Route("{SSN}")]
+        [SwaggerOperation(Summary = "Update a staff member",
+            Description = "Updates the details of a staff.\n\n" +
+            "param staff - The updated staff member")]
         public async Task<IActionResult> UpdateStaff(Staff staff)
         {
             var updatedStaff = await _staffService.UpdateStaff(staff);
@@ -56,6 +66,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpDelete]
         [Route("{SSN}")]
+        [SwaggerOperation(Summary = "Delete a staff member",
+            Description = "Deletes a staff member based on the passed SSN.\n\n" +
+            "param SSN - Social Security Number of the staff member")]
         public async Task<IActionResult> DeleteStaff(string SSN)
         {
             var deletedSuccessfully = await _staffService.DeleteStaff(SSN);
