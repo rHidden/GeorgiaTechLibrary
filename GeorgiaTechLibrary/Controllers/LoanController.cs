@@ -48,6 +48,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpGet]
         [Route("AverageReturnDays")]
+        [SwaggerOperation(Summary = "Get average book return in days",
+            Description = "Returns a number which is an average number of days for returning a book.\n\n" +
+            "Returning a book = ReturnDate - LoanDate")]
         public async Task<IActionResult> GetAverageNumberOfDaysToReturnBooks()
         {
             var averageReturnDays = await _loanService.GetAverageNumberOfDaysToReturnBooks();
