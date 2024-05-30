@@ -3,6 +3,7 @@ using GeorgiaTechLibrary.Services.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using DataAccess.Models;
+using static DataAccess.Models.Book;
 
 namespace GeorgiaTechLibraryTest.IntegrationTests
 {
@@ -30,14 +31,14 @@ namespace GeorgiaTechLibraryTest.IntegrationTests
                 {
                     ISBN = "1234567890",
                     SubjectArea = "Subject area 1",
-                    Status = "loanable",
+                    Status = BookStatus.loanable,
                     Description = "Description 1"
                 },
                 new Book
                 {
                     ISBN = "0987654321",
                     SubjectArea = "Subject area 2",
-                    Status = "loanable",
+                    Status = BookStatus.loanable,
                     Description = "Description 2"
                 }
             };
@@ -46,7 +47,7 @@ namespace GeorgiaTechLibraryTest.IntegrationTests
             {
                 ISBN = _isbn,
                 SubjectArea = "Subject area",
-                Status = "loanable",
+                Status = BookStatus.loanable,
                 Description = "Description"
             };
         }
