@@ -50,7 +50,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var newBookLoan = new BookLoan
             {
-                Id = 1,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
@@ -101,7 +100,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var expectedBookLoan = new BookLoan
             {
-                Id = 2,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
@@ -163,7 +161,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var bookLoan1 = new BookLoan
             {
-                Id = 3,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
@@ -173,7 +170,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var bookLoan2 = new BookLoan
             {
-                Id = 4,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
@@ -208,7 +204,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task UpdateBookLoan_UpdatesExistingBookLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456782", CardNumber = "123456"};
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456782", CardNumber = "123456" };
 
             var book = new Book
             {
@@ -227,7 +223,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var originalBookLoan = new BookLoan
             {
-                Id = 4,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
@@ -237,7 +232,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var updatedBookLoan = new BookLoan
             {
-                Id = 4,
                 LoanDate = DateTime.Now.AddDays(-1),
                 DueDate = DateTime.Now.AddDays(29),
                 ReturnDate = DateTime.Now,
@@ -270,7 +264,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task DeleteBookLoan_DeletesExistingBookLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456781" , CardNumber = "123456" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "123456781", CardNumber = "123456" };
 
             var book = new Book
             {
@@ -289,7 +283,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var bookLoan = new BookLoan
             {
-                Id = 5,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
