@@ -43,7 +43,7 @@ public class DatabaseHelper
                 CREATE TABLE Book (
                     ISBN VARCHAR(50) PRIMARY KEY,
                     [Name] VARCHAR(50),
-                    CanLoan BIT,
+                    [Status] VARCHAR(50),
                     [Description] VARCHAR(MAX),
                     SubjectArea VARCHAR(50)
                 );

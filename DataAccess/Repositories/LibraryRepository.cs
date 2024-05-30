@@ -81,7 +81,7 @@ namespace DataAccess.Repositories
 
             //    // Get BookInstances
             //    command.CommandText = @"
-            //        SELECT bi.*, b.ISBN, b.CanLoan, b.Description, b.SubjectArea
+            //        SELECT bi.*, b.ISBN, b.Status, b.Description, b.SubjectArea
             //        FROM BookInstance bi
             //        JOIN Book b ON bi.BookISBN = b.ISBN
             //        WHERE bi.LibraryName = @LibraryName";
@@ -99,7 +99,7 @@ namespace DataAccess.Repositories
             //                Book = new Book
             //                {
             //                    ISBN = reader["ISBN"].ToString(),
-            //                    CanLoan = (bool)reader["CanLoan"],
+            //                    Status = (bool)reader["Status"],
             //                    Description = reader["Description"].ToString(),
             //                    SubjectArea = reader["SubjectArea"].ToString()
             //                },

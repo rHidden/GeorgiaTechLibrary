@@ -30,14 +30,14 @@ namespace GeorgiaTechLibraryTest.IntegrationTests
                 {
                     ISBN = "1234567890",
                     SubjectArea = "Subject area 1",
-                    CanLoan = true,
+                    Status = "loanable"
                     Description = "Description 1"
                 },
                 new Book
                 {
                     ISBN = "0987654321",
                     SubjectArea = "Subject area 2",
-                    CanLoan = true,
+                    Status = "loanable"
                     Description = "Description 2"
                 }
             };
@@ -46,7 +46,7 @@ namespace GeorgiaTechLibraryTest.IntegrationTests
             {
                 ISBN = _isbn,
                 SubjectArea = "Subject area",
-                CanLoan = true,
+                Status = "loanable"
                 Description = "Description"
             };
         }
