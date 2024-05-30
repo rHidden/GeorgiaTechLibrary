@@ -20,17 +20,17 @@ jobs:
         dotnet-version: '8.0'
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore GeorgiaTechLibrary/GeorgiaTechLibrary.sln
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release GeorgiaTechLibrary/GeorgiaTechLibrary.sln --no-restore
 
     - name: Run Roslyn Analyzers
-      run: dotnet build --configuration Release
+      run: dotnet build GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release
 
     - name: Run tests and collect coverage
       run: |
-        dotnet test --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests
+        dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests
         reportgenerator "-reports:coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
 
     - name: Install Postman CLI
