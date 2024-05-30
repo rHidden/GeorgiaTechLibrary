@@ -126,45 +126,40 @@ namespace DataAccess.Repositories
             }
         }
 
-        public async Task<Loan?> CreateLoan(BookLoan loan) //TODO cant loan not canLoan book
+        public async Task<Loan?> CreateLoan(BookLoan loan)
         {
-            if (loan.BookInstance?.Book?.CanLoan ?? false)
-            {
-                string sql = "INSERT INTO Loan (UserSSN, LoanDate, ReturnDate, DueDate, LoanType, BookInstanceId) " +
-                    "OUTPUT Inserted.Id " +
-                    "VALUES (@UserSSN, @LoanDate, @ReturnDate, @DueDate, @LoanType, @BookInstanceId)";
-                using (var connection = _connectionFactory.CreateConnection())
-                {
-                    loan.Id = await connection.QuerySingleAsync<int>(sql, new
-                    {
-                        UserSSN = loan.User?.SSN,
-                        loan.LoanDate,
-                        loan.ReturnDate,
-                        loan.DueDate,
-                        LoanType = "Book",
-                        BookInstanceId = loan.BookInstance?.Id
-                    });
-                    return loan;
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
+            string sql = @"
+                DECLARE @InsertedIds TABLE (Id INT);
+                INSERT INTO Loan (UserSSN, LoanDate, DueDate, LoanType, BookInstanceId) 
+                OUTPUT Inserted.Id INTO @InsertedIds(Id)
+                VALUES (@UserSSN, @LoanDate, @DueDate, @LoanType, @BookInstanceId);
+                SELECT Id FROM @InsertedIds;";
 
-        public async Task<Loan?> CreateLoan(DigitalItemLoan loan)
-        {
-            string sql = "INSERT INTO Loan (UserSSN, LoanDate, ReturnDate, DueDate, LoanType, DigitalItemId) " +
-                "OUTPUT Inserted.Id " +
-                "VALUES (@UserSSN, @LoanDate, @ReturnDate, @DueDate, @LoanType, @DigitalItemId)";
             using (var connection = _connectionFactory.CreateConnection())
             {
                 loan.Id = await connection.QuerySingleAsync<int>(sql, new
                 {
                     UserSSN = loan.User?.SSN,
                     loan.LoanDate,
-                    loan.ReturnDate,
+                    loan.DueDate,
+                    LoanType = "Book",
+                    BookInstanceId = loan.BookInstance?.Id
+                });
+                return loan;
+            } 
+        }
+
+        public async Task<Loan?> CreateLoan(DigitalItemLoan loan)
+        {
+            string sql = "INSERT INTO Loan (UserSSN, LoanDate, DueDate, LoanType, DigitalItemId) " +
+                "OUTPUT Inserted.Id " +
+                "VALUES (@UserSSN, @LoanDate, @DueDate, @LoanType, @DigitalItemId)";
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                loan.Id = await connection.QuerySingleAsync<int>(sql, new
+                {
+                    UserSSN = loan.User?.SSN,
+                    loan.LoanDate,
                     loan.DueDate,
                     LoanType = "DigitalItem",
                     DigitalItemId = loan.DigitalItem?.Id

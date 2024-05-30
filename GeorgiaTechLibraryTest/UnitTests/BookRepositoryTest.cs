@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Moq;
 using DataAccess.Repositories;
 using DataAccess.DAO.DAOIntefaces;
+using static DataAccess.Models.Book;
 
 namespace GeorgiaTechLibraryTest.UnitTests
 {
@@ -25,7 +26,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task CreateBook_CreatesNewBook()
         {
             // Arrange
-            var newBook = new Book { ISBN = "13", Name = "Test book", CanLoan = true, Description = "New Test Book", SubjectArea = "History" };
+            var newBook = new Book { ISBN = "13", Name = "Test book", Status = BookStatus.loanable, Description = "New Test Book", SubjectArea = "History" };
 
             // Act
             var result = await _bookRepository.CreateBook(newBook);
@@ -34,7 +35,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(newBook.ISBN, result.ISBN);
-            Assert.True(result.CanLoan);
+            Assert.Equal(result.Status, BookStatus.loanable);
             Assert.Equal(newBook.Description, result.Description);
             Assert.Equal(newBook.SubjectArea, result.SubjectArea);
         }
@@ -43,7 +44,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task GetBook_WithValidISBN_ReturnsBook()
         {
             // Arrange
-            var expectedBook = new Book { ISBN = "14", Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
+            var expectedBook = new Book { ISBN = "14", Name = "Test book", Status = BookStatus.loanable, Description = "Test Book", SubjectArea = "Fiction" };
 
             // Act
             await _bookRepository.CreateBook(expectedBook);
@@ -53,7 +54,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(expectedBook.ISBN, result.ISBN);
-            Assert.True(result.CanLoan);
+            Assert.Equal(result.Status, BookStatus.loanable);
             Assert.Equal(expectedBook.Description, result.Description);
             Assert.Equal(expectedBook.SubjectArea, result.SubjectArea);
         }
@@ -62,8 +63,8 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task ListBooks_ReturnsListOfBooks()
         {
             // Arrange
-            var book1 = new Book { ISBN = "15", CanLoan = true, Description = "Test Book 1", SubjectArea = "Fiction" };
-            var book2 = new Book { ISBN = "16", CanLoan = false, Description = "Test Book 2", SubjectArea = "Non-Fiction" };
+            var book1 = new Book { ISBN = "15", Status = BookStatus.loanable, Description = "Test Book 1", SubjectArea = "Fiction" };
+            var book2 = new Book { ISBN = "16", Status = BookStatus.unloanable, Description = "Test Book 2", SubjectArea = "Non-Fiction" };
             var books = new List<Book> { book1, book2 };
 
             // Act
@@ -74,16 +75,16 @@ namespace GeorgiaTechLibraryTest.UnitTests
             await _bookRepository.DeleteBook(book2.ISBN);
 
             // Assert
-            Assert.Contains(result, r => r.ISBN == book1.ISBN && r.Description == book1.Description && r.CanLoan == book1.CanLoan && r.SubjectArea == book1.SubjectArea);
-            Assert.Contains(result, r => r.ISBN == book2.ISBN && r.Description == book2.Description && r.CanLoan == book2.CanLoan && r.SubjectArea == book2.SubjectArea);
+            Assert.Contains(result, r => r.ISBN == book1.ISBN && r.Description == book1.Description && r.Status == book1.Status && r.SubjectArea == book1.SubjectArea);
+            Assert.Contains(result, r => r.ISBN == book2.ISBN && r.Description == book2.Description && r.Status == book2.Status && r.SubjectArea == book2.SubjectArea);
         }
 
         [Fact]
         public async Task UpdateBook_UpdatesExistingBook()
         {
             // Arrange
-            var originalBook = new Book { ISBN = "17", Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
-            var updatedBook = new Book { ISBN = "17", Name = "Test book", CanLoan = false, Description = "Updated Test Book", SubjectArea = "Science Fiction" };
+            var originalBook = new Book { ISBN = "17", Name = "Test book", Status = BookStatus.loanable, Description = "Test Book", SubjectArea = "Fiction" };
+            var updatedBook = new Book { ISBN = "17", Name = "Test book", Status = BookStatus.unloanable, Description = "Updated Test Book", SubjectArea = "Science Fiction" };
 
             // Act
             await _bookRepository.CreateBook(originalBook);
@@ -93,7 +94,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(updatedBook.ISBN, result.ISBN);
-            Assert.False(result.CanLoan);
+            Assert.Equal(result.Status, BookStatus.unloanable);
             Assert.Equal(updatedBook.Description, result.Description);
             Assert.Equal(updatedBook.SubjectArea, result.SubjectArea);
         }
@@ -102,7 +103,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task DeleteBook_RemovesBookFromDatabase()
         {
             // Arrange
-            var book = new Book { ISBN = "18", Name = "Test book", CanLoan = true, Description = "Test Book", SubjectArea = "Fiction" };
+            var book = new Book { ISBN = "18", Name = "Test book", Status = BookStatus.loanable, Description = "Test Book", SubjectArea = "Fiction" };
 
             // Act
             await _bookRepository.CreateBook(book);

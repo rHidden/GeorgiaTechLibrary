@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Moq;
 using DataAccess.Repositories;
 using DataAccess.DAO.DAOIntefaces;
+using static DataAccess.Models.Book;
 
 namespace GeorgiaTechLibraryTest.UnitTests
 {
@@ -38,7 +39,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 Description = "Test Book",
                 Authors = new List<string> { "Author1" },
                 ISBN = "7",
-                CanLoan = true
+                Status = BookStatus.loanable
             };
 
             var bookInstance = new BookInstance
@@ -88,7 +89,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 Description = "Test Book",
                 Authors = new List<string> { "Author1" },
                 ISBN = "8",
-                CanLoan = true
+                Status = BookStatus.loanable
             };
 
             var bookInstance = new BookInstance
@@ -134,7 +135,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 Description = "Test Book 1",
                 Authors = new List<string> { "Author1" },
                 ISBN = "9",
-                CanLoan = true
+                Status = BookStatus.loanable
             };
 
             var book2 = new Book
@@ -142,7 +143,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 Description = "Test Book 2",
                 Authors = new List<string> { "Author1" },
                 ISBN = "10",
-                CanLoan = true
+                Status = BookStatus.loanable
             };
 
             var bookInstance1 = new BookInstance
@@ -211,7 +212,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 Description = "Test Book",
                 Authors = new List<string> { "Author1" },
                 ISBN = "11",
-                CanLoan = true
+                Status = BookStatus.loanable
             };
 
             var bookInstance = new BookInstance
@@ -271,7 +272,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
                 Description = "Test Book",
                 Authors = new List<string> { "Author1" },
                 ISBN = "12",
-                CanLoan = true
+                Status = BookStatus.loanable
             };
 
             var bookInstance = new BookInstance

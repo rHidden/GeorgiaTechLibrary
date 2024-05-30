@@ -66,8 +66,8 @@ namespace DataAccess.Repositories
 
         public async Task<Book> CreateBook(Book book)
         {
-            string sqlBook = "INSERT INTO [Book] (ISBN, CanLoan, Description, SubjectArea)" +
-                " VALUES (@ISBN, @CanLoan, @Description, @SubjectArea)";
+            string sqlBook = "INSERT INTO [Book] (ISBN, [Status], Description, SubjectArea)" +
+                " VALUES (@ISBN, @Status, @Description, @SubjectArea)";
             string sqlAuthor = "INSERT INTO [BookAuthor] (BookISBN, Name)" +
                 " VALUES (@BookISBN, @Name)";
 
@@ -89,7 +89,7 @@ namespace DataAccess.Repositories
         public async Task<Book> UpdateBook(Book book)
         {
             string sql = "UPDATE [Book] SET " +
-                "[Name] = @Name, [CanLoan] = @CanLoan, [Description] = @Description " +
+                "[Name] = @Name, [Status] = @Status, [Description] = @Description " +
                 "WHERE [ISBN] = @ISBN;";
 
             using (var connection = _connectionFactory.CreateConnection())

@@ -28,7 +28,7 @@ END
 -- Insert data into Book table
 DECLARE @randomSubjectArea NVARCHAR(50);
 DECLARE @randomDescription NVARCHAR(50);
-DECLARE @canLoan BIT;
+DECLARE @status VARCHAR(50);
 
 SET @i = 1;
 WHILE @i <= 1000
@@ -69,13 +69,17 @@ BEGIN
         ('A masterful presentation of the subject.')
     ) AS Descriptions(value) ORDER BY NEWID());
 
-	SET @canLoan = CASE 
-        WHEN RAND() <= 0.9 THEN 1 
-        ELSE 0 
-    END;
+	DECLARE @random_value FLOAT;
+	SET @random_value = RAND();
+	SET @status = CASE 
+		WHEN @random_value <= 0.85 THEN 'loanable'
+		WHEN @random_value <= 0.95 THEN 'unloanable'
+		ELSE 'obtain'
+	END;
 
-    INSERT INTO Book (ISBN, [Name], CanLoan, [Description], SubjectArea)
-    VALUES (CONCAT('ISBN', (RIGHT('000' + CAST(@i AS VARCHAR(3)), 3))), CONCAT('Book nr.', @i), @canLoan, @randomDescription, @randomSubjectArea);
+
+    INSERT INTO Book (ISBN, [Name], [Status], [Description], SubjectArea)
+    VALUES (CONCAT('ISBN', (RIGHT('000' + CAST(@i AS VARCHAR(3)), 3))), CONCAT('Book nr.', @i), @status, @randomDescription, @randomSubjectArea);
     
     SET @i = @i + 1;
 END;
@@ -176,11 +180,11 @@ WHILE @i <= 10000
 BEGIN
     SET @bookISBN = CONCAT('ISBN', RIGHT('000' + CAST(((@i - 1) / 10 + 1) AS VARCHAR(3)), 3)); --10 instances for each book ensured
     
-    -- to ensure that isLoaned cannot be true if canLoan is false, otherwise 50/50 chance it is loaned
-    SELECT @canLoan = CanLoan FROM Book WHERE ISBN = @bookISBN;
-    IF @canLoan = 1
+    -- to ensure that isLoaned cannot be true if status is unloanable/obtain, otherwise 70/30 chance it is loaned
+    SELECT @status = [Status] FROM Book WHERE ISBN = @bookISBN;
+    IF @status = 'loanable'
     BEGIN
-        SET @isLoaned = CASE WHEN RAND() <= 0.5 THEN 1 ELSE 0 END;
+        SET @isLoaned = CASE WHEN RAND() <= 0.7 THEN 1 ELSE 0 END;
     END
     ELSE
     BEGIN
@@ -498,10 +502,10 @@ BEGIN
         SET @bookInstanceId = (SELECT TOP 1 Id FROM BookInstance ORDER BY NEWID());
         
         -- Check if the selected book instance can be loaned
-        SELECT @canLoan = CanLoan FROM Book WHERE ISBN = (SELECT BookISBN FROM BookInstance WHERE Id = @bookInstanceId);
+        SELECT @status = [Status] FROM Book WHERE ISBN = (SELECT BookISBN FROM BookInstance WHERE Id = @bookInstanceId);
         SELECT @isLoaned = IsLoaned FROM BookInstance WHERE Id = @bookInstanceId;
 
-        IF @canLoan = 1 AND @isLoaned = 0
+        IF @status = 'loanable' AND @isLoaned = 0
         BEGIN
             -- 80% chance that the item is returned
             IF RAND() <= 0.8
