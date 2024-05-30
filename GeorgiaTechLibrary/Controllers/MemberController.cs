@@ -1,8 +1,7 @@
 ﻿using DataAccess.Models;
-using GeorgiaTechLibrary.Services;
 using GeorgiaTechLibrary.Services.ServiceInterfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GeorgiaTechLibrary.Controllers
 {
@@ -18,13 +17,22 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpGet]
         [Route("{SSN}")]
+        [SwaggerOperation(Summary = "Get member",
+            Description = "Returns a member based on the passed SSN.\n\n" +
+            "param SSN - Social Security Number of the member")]
         public async Task<IActionResult> GetMember(string SSN)
         {
             var member = await _memberService.GetMember(SSN);
+            if (member == null)
+            {
+                return NotFound();
+            }
             return Ok(member);
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "List all members",
+            Description = "Returns a list of all members.")]
         public async Task<IActionResult> ListMembers()
         {
             List<Member> members = await _memberService.ListMembers();
@@ -36,6 +44,9 @@ namespace GeorgiaTechLibrary.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Create a new member",
+            Description = "Creates a new member and returns the created member.\n\n" +
+            "param member - The created member")]
         public async Task<IActionResult> CreateMember(Member member)
         {
             var createdMember = await _memberService.CreateMember(member);
@@ -44,6 +55,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpPatch]
         [Route("{SSN}")]
+        [SwaggerOperation(Summary = "Update a member",
+            Description = "Updates the details of a member.\n\n" +
+            "param member - The updated member")]
         public async Task<IActionResult> UpdateMember(Member member)
         {
             var updatedMember = await _memberService.UpdateMember(member);
@@ -52,6 +66,9 @@ namespace GeorgiaTechLibrary.Controllers
 
         [HttpDelete]
         [Route("{SSN}")]
+        [SwaggerOperation(Summary = "Delete a member",
+            Description = "Deletes a member based on the passed SSN.\n\n" +
+            "param SSN - Social Security Number of the member")]
         public async Task<IActionResult> DeleteMember(string SSN)
         {
             var deletedSuccessfully = await _memberService.DeleteMember(SSN);

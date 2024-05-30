@@ -11,6 +11,6 @@ WHERE
 GROUP BY 
     u.SSN
 HAVING 
-    AVG(DATEDIFF(day, l.DueDate, l.ReturnDate)) > 3
+    COUNT(DATEDIFF(day, l.DueDate, l.ReturnDate)) > 2
 ORDER BY 
     SumOfDaysOfBeingLate DESC;

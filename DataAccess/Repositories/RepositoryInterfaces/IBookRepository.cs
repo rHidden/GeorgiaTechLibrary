@@ -9,5 +9,6 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<Book> CreateBook(Book book);
         Task<Book> UpdateBook(Book book);
         Task<bool> DeleteBook(string ISBN);
+        Task<List<Book>> GetMostPopularBooksAmongStudents();
     }
 }

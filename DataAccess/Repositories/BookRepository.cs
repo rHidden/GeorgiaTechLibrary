@@ -73,15 +73,15 @@ namespace DataAccess.Repositories
 
             using (var connection = _connectionFactory.CreateConnection())
             {
-                using (var transaction = connection.BeginTransaction())
-                {
+                //using (var transaction = connection.BeginTransaction())
+                //{
                     await connection.ExecuteAsync(sqlBook, book);
                     foreach (var author in book.Authors ?? [])
                     {
                         await connection.ExecuteAsync(sqlAuthor, new { BookISBN = book.ISBN, Name = author });
                     }
-                    transaction.Commit();
-                }
+                    //transaction.Commit();
+                //}
             }
             return book;
         }
@@ -110,6 +110,31 @@ namespace DataAccess.Repositories
                 });
 
                 return rowsAffected == 1;
+            }
+        }
+
+        public async Task<List<Book>> GetMostPopularBooksAmongStudents()
+        {
+            string sql = "SELECT TOP 5 WITH TIES b.ISBN " +
+                "FROM Book b " +
+                "INNER JOIN BookInstance bi ON bi.BookISBN = b.ISBN " +
+                "INNER JOIN Loan l ON l.BookInstanceId = bi.Id " +
+                "INNER JOIN [Member] m ON m.UserSSN = l.UserSSN " +
+                "WHERE m.MemberType = 'Student' " +
+                "GROUP BY b.ISBN " +
+                "ORDER BY COUNT(l.Id) DESC";
+            using(var connection = _connectionFactory.CreateConnection())
+            {
+                var bookISBNs = (await connection.QueryAsync<string>(sql)).ToList();
+
+                List<Book> books = new();
+
+                foreach (var isbn in bookISBNs)
+                {
+                    books.Add(await GetBook(isbn));
+                }
+
+                return books;
             }
         }
     }
