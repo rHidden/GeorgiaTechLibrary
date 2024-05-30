@@ -57,5 +57,10 @@ namespace GeorgiaTechLibrary.Services
         {
             return _mapper.Map<LoanItemStatisticsDTO>(await _loanRepository.GetLoanItemStatistics());
         }
+
+        public async Task<float> GetAverageNumberOfDaysToReturnBooks()
+        {
+            return await _loanRepository.GetAverageNumberOfDaysToReturnBooks();
+        }
     }
 }

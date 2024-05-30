@@ -12,5 +12,6 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<bool> DeleteLoan(int id);
         Task<Loan?> ReturnLoan(int id);
         Task<(double Books, double Videos, double Audios, double Texts, double Images)> GetLoanItemStatistics();
+        Task<float> GetAverageNumberOfDaysToReturnBooks();
     }
 }
