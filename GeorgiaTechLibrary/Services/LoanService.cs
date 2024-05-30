@@ -48,5 +48,11 @@ namespace GeorgiaTechLibrary.Services
         {
             return await _loanRepository.DeleteLoan(Id);
         }
+
+        public async Task<float> GetAverageNumberOfDaysToReturnBooks()
+        {
+            return await _loanRepository.GetAverageNumberOfDaysToReturnBooks();
+        }
+
     }
 }

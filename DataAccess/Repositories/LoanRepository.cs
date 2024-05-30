@@ -203,5 +203,30 @@ namespace DataAccess.Repositories
                 }
             }
         }
+
+        public async Task<float> GetAverageNumberOfDaysToReturnBooks()
+        {
+            string sql = "SELECT dbo.GetAverageNumberOfDaysToReturnBooks();";
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                await connection.OpenAsync();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = sql;
+                    var result = await command.ExecuteScalarAsync();
+
+                    if (result != null && float.TryParse(result.ToString(), out float averageNumberOfDays))
+                    {
+                        return averageNumberOfDays;
+                    }
+                    else
+                    {
+                        throw new Exception("Problem retrieving average return days");
+                    }
+                }
+            }
+        }
+
     }
 }

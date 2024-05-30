@@ -11,5 +11,3 @@ BEGIN
 
     RETURN @AverageNumberOfDays;
 END;
-
-SELECT dbo.GetAverageNumberOfDaysToReturnBooks() AS AverageNumberOfDaysToReturnBooks;

@@ -10,5 +10,6 @@ namespace DataAccess.Repositories.RepositoryInterfaces
         Task<Loan?> CreateLoan(BookLoan loan);
         Task<Loan> UpdateLoan(Loan loan); 
         Task<bool> DeleteLoan(int id);
+        Task<float> GetAverageNumberOfDaysToReturnBooks();
     }
 }

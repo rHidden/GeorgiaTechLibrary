@@ -37,6 +37,14 @@ namespace GeorgiaTechLibrary.Controllers
             return Ok(loans);
         }
 
+        [HttpGet]
+        [Route("AverageReturnDays")]
+        public async Task<IActionResult> GetAverageNumberOfDaysToReturnBooks()
+        {
+            var averageReturnDays = await _loanService.GetAverageNumberOfDaysToReturnBooks();
+            return Ok(averageReturnDays);
+        }
+
         [HttpPost]
         [Route("Book")]
         public async Task<IActionResult> CreateLoan(BookLoan loan)
