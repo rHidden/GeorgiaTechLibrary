@@ -5,7 +5,7 @@ using GeorgiaTechLibrary.Services.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace GeorgiaTechLibraryTests.IntegrationTests
+namespace GeorgiaTechLibraryTest.IntegrationTests
 {
     public class LoanControllerTest
     {
