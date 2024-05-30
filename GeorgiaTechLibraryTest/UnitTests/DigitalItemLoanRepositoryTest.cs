@@ -29,7 +29,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task CreateDigitalItemLoan_CreatesNewDigitalItemLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "13" , CardNumber = "123456" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "13", CardNumber = "123456" };
 
             var text = new Text
             {
@@ -42,7 +42,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var newDigitalItemLoan = new DigitalItemLoan
             {
-                Id = 6,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
@@ -86,7 +85,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
             var expectedDigitalItemLoan = new DigitalItemLoan
             {
 
-                Id = 7,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
@@ -134,13 +132,12 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var digitalItemLoan1 = new DigitalItemLoan
             {
-                Id = 8,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = DateTime.Now.AddDays(1),
                 User = user,
                 DigitalItem = text1,
-                
+
             };
 
             var digitalItemLoan2 = new DigitalItemLoan
@@ -176,7 +173,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task UpdateDigitalItemLoan_UpdatesExistingDigitalItemLoan()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "16" , CardNumber = "123456" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "16", CardNumber = "123456" };
 
             var text = new Text
             {
@@ -189,7 +186,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var originalDigitalItemLoan = new DigitalItemLoan
             {
-                Id = 10,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
@@ -199,7 +195,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
 
             var updatedDigitalItemLoan = new DigitalItemLoan
             {
-                Id = 10,
                 LoanDate = DateTime.Now.AddDays(-1),
                 DueDate = DateTime.Now.AddDays(29),
                 ReturnDate = DateTime.Now,
@@ -230,7 +225,7 @@ namespace GeorgiaTechLibraryTest.UnitTests
         public async Task DeleteDigitalItemLoan_RemovesDigitalItemLoanFromDatabase()
         {
             // Arrange
-            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "17" , CardNumber = "123456" };
+            var user = new Member { UserAddress = new Address { Street = "Main St", StreetNumber = "1", City = "City", ZipCode = "12345" }, SSN = "17", CardNumber = "123456" };
 
             var text = new Text
             {
@@ -244,7 +239,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
             var digitalItemLoan = new DigitalItemLoan
             {
 
-                Id = 11,
                 LoanDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30),
                 ReturnDate = null,
