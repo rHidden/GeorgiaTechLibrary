@@ -128,9 +128,13 @@ namespace DataAccess.Repositories
 
         public async Task<Loan?> CreateLoan(BookLoan loan)
         {
-            string sql = "INSERT INTO Loan (UserSSN, LoanDate, DueDate, LoanType, BookInstanceId) " +
-                "OUTPUT Inserted.Id " +
-                "VALUES (@UserSSN, @LoanDate, @DueDate, @LoanType, @BookInstanceId)";
+            string sql = @"
+                DECLARE @InsertedIds TABLE (Id INT);
+                INSERT INTO Loan (UserSSN, LoanDate, DueDate, LoanType, BookInstanceId) 
+                OUTPUT Inserted.Id INTO @InsertedIds(Id)
+                VALUES (@UserSSN, @LoanDate, @DueDate, @LoanType, @BookInstanceId);
+                SELECT Id FROM @InsertedIds;";
+
             using (var connection = _connectionFactory.CreateConnection())
             {
                 loan.Id = await connection.QuerySingleAsync<int>(sql, new
@@ -142,7 +146,7 @@ namespace DataAccess.Repositories
                     BookInstanceId = loan.BookInstance?.Id
                 });
                 return loan;
-            }
+            } 
         }
 
         public async Task<Loan?> CreateLoan(DigitalItemLoan loan)

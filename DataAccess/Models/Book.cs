@@ -1,4 +1,6 @@
-﻿namespace DataAccess.Models
+﻿using System.Text.Json.Serialization;
+
+namespace DataAccess.Models
 {
     public class Book: Item
     {
@@ -18,6 +20,7 @@
             Status = status;
         }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum BookStatus
         {
             loanable,
