@@ -51,12 +51,11 @@ jobs:
         # Run all tests excluding repository tests and generate the coverage report
         dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=../coveragereport/ /p:CoverletOutputFormat=opencover --filter "FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests"
 
-        # List files in the coverage report directory for debugging
-        echo "Listing files in coveragereport directory:"
-        ls -la GeorgiaTechLibrary/coveragereport
-
         # Generate the coverage report
         reportgenerator "-reports:GeorgiaTechLibrary/coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
+
+    - name: Call API endpoint
+      run: curl -X GET http://localhost:5000/api/Book
 
     - name: Install Postman CLI
       run: |
