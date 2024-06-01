@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Webshop.Application.Contracts;
 using Webshop.Catalog.Application.Contracts.Persistence;
 using Webshop.Catalog.Domain.AggregateRoots;
 using Webshop.Domain.Common;
 using Webshop.Order.Application.Contracts.Persistence;
-using Webshop.Order.Application.Features.Order.Commands.CreateOrder;
 using Webshop.Order.Domain.AggregateRoots;
 
 namespace Webshop.Order.Application.Features.Commands.UpdateOrder

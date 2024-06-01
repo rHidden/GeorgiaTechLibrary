@@ -47,8 +47,14 @@ jobs:
 
     - name: Run tests and collect coverage
       run: |
-        dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --filter FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests
-        reportgenerator "-reports:coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
+        # Create a directory for the coverage reports
+        mkdir -p coveragereport
+
+        # Run all tests excluding repository tests and generate the coverage report
+        dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=coveragereport/coverage.opencover.xml /p:CoverletOutputFormat=opencover --filter "FullyQualifiedName!~RepositoryTests"
+
+        # Generate the coverage report
+        reportgenerator "-reports:coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
 
     - name: Install Postman CLI
       run: |
