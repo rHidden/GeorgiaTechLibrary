@@ -6,8 +6,8 @@ namespace GeorgiaTechLibrary.Automappers
 {
     public class BookInstanceProfile : Profile
     {
-        public BookInstanceProfile() 
-        { 
+        public BookInstanceProfile()
+        {
             CreateMap<BookInstance, BookInstanceDTO>().ReverseMap();
         }
     }

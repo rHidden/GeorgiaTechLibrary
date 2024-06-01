@@ -43,9 +43,9 @@ namespace DataAccess.Repositories
                 "GROUP BY u.SSN " +
                 "HAVING COUNT(DATEDIFF(day, l.DueDate, l.ReturnDate)) > 2 " +
                 "ORDER BY SumOfDaysOfBeingLate DESC";
-            using(var connection = _connectionFactory.CreateConnection())
+            using (var connection = _connectionFactory.CreateConnection())
             {
-                var lateUserSSNs = (await connection.QueryAsync<string, int, (string UserSSN, int SumOfDaysOfBeingLate)> (sql, map: (userSSN, daysLate) =>
+                var lateUserSSNs = (await connection.QueryAsync<string, int, (string UserSSN, int SumOfDaysOfBeingLate)>(sql, map: (userSSN, daysLate) =>
                 {
                     return (userSSN, daysLate);
                 },
@@ -55,7 +55,7 @@ namespace DataAccess.Repositories
                 var userTasks = lateUserSSNs.Select(async x => (await GetUser(x.UserSSN) ?? new User(), x.SumOfDaysOfBeingLate));
                 var userResults = await Task.WhenAll(userTasks);
                 var lateUsers = userResults.ToList();
-                
+
                 return lateUsers;
             }
         }
@@ -92,13 +92,13 @@ namespace DataAccess.Repositories
                 "LastName, Street, StreetNumber, City, Zipcode " +
                 "FROM [User] " +
                 "WHERE SSN = @SSN";
-            using(var connection = _connectionFactory.CreateConnection())
+            using (var connection = _connectionFactory.CreateConnection())
             {
                 var users = (await connection.QueryAsync<User, Address, User>(sql, map: (user, address) =>
                 {
                     user.UserAddress = address;
                     return user;
-                }, 
+                },
                 param: new { SSN },
                 splitOn: "Street"
                 )).FirstOrDefault();

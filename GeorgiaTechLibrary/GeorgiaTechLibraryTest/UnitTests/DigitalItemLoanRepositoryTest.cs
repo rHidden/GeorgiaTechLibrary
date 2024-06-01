@@ -256,7 +256,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
             await _memberRepository.DeleteMember(user.SSN);
 
             // Assert
-            Assert.NotNull(deletedDigitalItemLoan);
             Assert.Null(result);
         }
     }

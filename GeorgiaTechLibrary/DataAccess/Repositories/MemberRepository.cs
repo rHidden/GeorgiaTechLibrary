@@ -74,7 +74,8 @@ namespace DataAccess.Repositories
                 await connection.OpenAsync();
                 using (var transaction = connection.BeginTransaction())
                 {
-                    await connection.ExecuteAsync(sqlUser, new { 
+                    await connection.ExecuteAsync(sqlUser, new
+                    {
                         SSN = member.SSN,
                         FirstName = member.FirstName,
                         LastName = member.LastName,
@@ -82,7 +83,7 @@ namespace DataAccess.Repositories
                         Street = member.UserAddress.Street,
                         StreetNumber = member.UserAddress.StreetNumber,
                         City = member.UserAddress.City,
-                        ZipCode = member.UserAddress.ZipCode 
+                        ZipCode = member.UserAddress.ZipCode
                     }, transaction);
                     await connection.ExecuteAsync(sqlMember, member, transaction);
                     transaction.Commit();

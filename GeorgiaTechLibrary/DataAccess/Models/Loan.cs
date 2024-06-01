@@ -28,7 +28,8 @@
             User = loan.User;
         }
     }
-    public enum LoanType { 
+    public enum LoanType
+    {
         Book,
         DigitalItem
     }

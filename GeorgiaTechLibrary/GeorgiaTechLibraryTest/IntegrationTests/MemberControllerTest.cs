@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace GeorgiaTechLibraryTest.IntegrationTests  
+namespace GeorgiaTechLibraryTest.IntegrationTests
 {
     public class MemberControllerTest
     {

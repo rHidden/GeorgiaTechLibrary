@@ -7,7 +7,7 @@
 
         public Staff() { }
 
-        public Staff(string ssn, string firstName, string lastName, string phoneNum, 
+        public Staff(string ssn, string firstName, string lastName, string phoneNum,
             string librarianNum, string role, Address userAddress)
             : base(ssn, firstName, lastName, phoneNum, userAddress)
         {

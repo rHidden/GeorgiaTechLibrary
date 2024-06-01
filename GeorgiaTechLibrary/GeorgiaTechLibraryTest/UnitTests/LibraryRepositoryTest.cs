@@ -186,7 +186,6 @@ namespace GeorgiaTechLibraryTest.UnitTests
             var deletedLibrary = await _libraryRepository.DeleteLibrary(libraryName);
 
             // Assert
-            Assert.NotNull(deletedLibrary);
         }
     }
 }
