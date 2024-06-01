@@ -51,7 +51,7 @@ jobs:
         mkdir -p coveragereport
 
         # Run all tests excluding repository tests and generate the coverage report
-        dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=coveragereport/coverage.opencover.xml /p:CoverletOutputFormat=opencover --filter "FullyQualifiedName!~RepositoryTests"
+        dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=coveragereport/coverage.opencover.xml /p:CoverletOutputFormat=opencover --filter FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests
 
         # Generate the coverage report
         reportgenerator "-reports:coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
