@@ -13,9 +13,9 @@ namespace Webshop.Order.Application.Features.Requests
     public class CreateOrderRequest
     {
 
-        public int CustomerId { get; private set; }
-        public int Discount { get; private set; }
-        public List<CreateOrderLineRequest> OrderLines { get; private set; }
+        public int CustomerId { get; set; }
+        public int Discount { get; set; }
+        public List<CreateOrderLineRequest> OrderLines { get; set; }
 
         public class Validator : AbstractValidator<CreateOrderRequest>
         {
@@ -27,7 +27,6 @@ namespace Webshop.Order.Application.Features.Requests
                     .GreaterThan(0).WithMessage(Errors.General.ValueTooSmall(nameof(CustomerId), 0).Message);
                 //Discount
                 RuleFor(r => r.Discount)
-                    .NotEmpty().WithMessage(Errors.General.ValueIsEmpty(nameof(Discount)).Message)
                     .GreaterThanOrEqualTo(0).WithMessage(Errors.General.ValueTooSmall(nameof(Discount), 0).Message)
                     .LessThanOrEqualTo(15).WithMessage(Errors.General.ValueTooLarge(nameof(Discount), 15).Message);
                 //OrderLines
