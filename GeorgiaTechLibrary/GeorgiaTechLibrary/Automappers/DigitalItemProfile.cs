@@ -6,8 +6,8 @@ namespace GeorgiaTechLibrary.Automappers
 {
     public class DigitalItemProfile : Profile
     {
-        public DigitalItemProfile() 
-        { 
+        public DigitalItemProfile()
+        {
             CreateMap<DigitalItem, DigitalItemDTO>().ReverseMap();
         }
     }

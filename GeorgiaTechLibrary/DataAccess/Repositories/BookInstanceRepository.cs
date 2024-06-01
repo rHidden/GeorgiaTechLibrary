@@ -75,11 +75,11 @@ namespace DataAccess.Repositories
 
             using (var connection = _connectionFactory.CreateConnection())
             {
-                await connection.ExecuteAsync(sqlInstance, new 
-                { 
-                    bookInstance.Id, 
-                    bookInstance.IsLoaned, 
-                    BookISBN = bookInstance.Book?.ISBN 
+                await connection.ExecuteAsync(sqlInstance, new
+                {
+                    bookInstance.Id,
+                    bookInstance.IsLoaned,
+                    BookISBN = bookInstance.Book?.ISBN
                 });
             }
             return bookInstance;

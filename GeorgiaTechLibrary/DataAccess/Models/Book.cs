@@ -2,7 +2,7 @@
 
 namespace DataAccess.Models
 {
-    public class Book: Item
+    public class Book : Item
     {
         public string? ISBN { get; set; }
         public string? Description { get; set; }
@@ -11,7 +11,7 @@ namespace DataAccess.Models
 
         public Book() { }
 
-        public Book(string name, List<string> authors, string isbn, string description, 
+        public Book(string name, List<string> authors, string isbn, string description,
             string subjectArea, BookStatus status) : base(name, authors)
         {
             ISBN = isbn;

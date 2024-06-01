@@ -34,8 +34,8 @@ namespace GeorgiaTechLibrary.Services
         }
 
         public async Task<bool> DeleteLibrary(string name)
-        {   
+        {
             return await _libraryRepository.DeleteLibrary(name);
         }
-    }   
+    }
 }

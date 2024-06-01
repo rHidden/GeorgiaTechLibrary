@@ -24,36 +24,36 @@ namespace DataAccess.Repositories
             List<string> authors = new();
             using (var connection = _connectionFactory.CreateConnection())
             {
-                 var digitalItem = (await connection.QueryAsync<DigitalItem, string,
-                    int?, Resolution?, string?, DigitalItem>(sql, 
-                    map: (digitalItem, type, length, resolution, author) => 
-                    {
-                        switch (type ?? "")
-                        {
-                            case "Text":
-                                digitalItem = new Text(digitalItem);
-                                break;
-                            case "Video":
-                                digitalItem = new Video(digitalItem, resolution ?? new(), length ?? 0);
-                                break;
-                            case "Audio":
-                                digitalItem = new Audio(digitalItem, length ?? 0);
-                                break;
-                            case "Image":
-                                digitalItem = new Image(digitalItem, resolution ?? new());
-                                break;
-                            default:
-                                break;
-                        }
-                        authors.Add(author ?? "");
-                        digitalItem.Authors = authors;
-                        return digitalItem;
-                    },
-                    splitOn: "DigitalItemType, Length, ResolutionWidth, Name",
-                    param: new
-                    {
-                        id
-                    })).AsQueryable().FirstOrDefault();
+                var digitalItem = (await connection.QueryAsync<DigitalItem, string,
+                   int?, Resolution?, string?, DigitalItem>(sql,
+                   map: (digitalItem, type, length, resolution, author) =>
+                   {
+                       switch (type ?? "")
+                       {
+                           case "Text":
+                               digitalItem = new Text(digitalItem);
+                               break;
+                           case "Video":
+                               digitalItem = new Video(digitalItem, resolution ?? new(), length ?? 0);
+                               break;
+                           case "Audio":
+                               digitalItem = new Audio(digitalItem, length ?? 0);
+                               break;
+                           case "Image":
+                               digitalItem = new Image(digitalItem, resolution ?? new());
+                               break;
+                           default:
+                               break;
+                       }
+                       authors.Add(author ?? "");
+                       digitalItem.Authors = authors;
+                       return digitalItem;
+                   },
+                   splitOn: "DigitalItemType, Length, ResolutionWidth, Name",
+                   param: new
+                   {
+                       id
+                   })).AsQueryable().FirstOrDefault();
                 return digitalItem;
             }
         }
@@ -125,10 +125,10 @@ namespace DataAccess.Repositories
                     }, transaction);
                     foreach (var author in audio.Authors ?? [])
                     {
-                        await connection.ExecuteAsync(sqlAuthor, new 
-                        { 
-                            DigitalItemId = audio.Id, 
-                            Name = author 
+                        await connection.ExecuteAsync(sqlAuthor, new
+                        {
+                            DigitalItemId = audio.Id,
+                            Name = author
                         }, transaction);
                     }
                     transaction.Commit();

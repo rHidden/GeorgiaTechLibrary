@@ -25,13 +25,13 @@ namespace DataAccess.Repositories
 
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var book = (await connection.QueryAsync<Book, string,Book>(sql, 
+                var book = (await connection.QueryAsync<Book, string, Book>(sql,
                     map: (book, author) =>
                     {
                         authors.Add(author);
                         book.Authors = authors;
                         return book;
-                    },  
+                    },
                     param: new { ISBN },
                     splitOn: "Name"
                     )).AsQueryable().FirstOrDefault();
@@ -75,12 +75,12 @@ namespace DataAccess.Repositories
             {
                 //using (var transaction = connection.BeginTransaction())
                 //{
-                    await connection.ExecuteAsync(sqlBook, book);
-                    foreach (var author in book.Authors ?? [])
-                    {
-                        await connection.ExecuteAsync(sqlAuthor, new { BookISBN = book.ISBN, Name = author });
-                    }
-                    //transaction.Commit();
+                await connection.ExecuteAsync(sqlBook, book);
+                foreach (var author in book.Authors ?? [])
+                {
+                    await connection.ExecuteAsync(sqlAuthor, new { BookISBN = book.ISBN, Name = author });
+                }
+                //transaction.Commit();
                 //}
             }
             return book;
@@ -123,7 +123,7 @@ namespace DataAccess.Repositories
                 "WHERE m.MemberType = 'Student' " +
                 "GROUP BY b.ISBN " +
                 "ORDER BY COUNT(l.Id) DESC";
-            using(var connection = _connectionFactory.CreateConnection())
+            using (var connection = _connectionFactory.CreateConnection())
             {
                 var bookISBNs = (await connection.QueryAsync<string>(sql)).ToList();
 

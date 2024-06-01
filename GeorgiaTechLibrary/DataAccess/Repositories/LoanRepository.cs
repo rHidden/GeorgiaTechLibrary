@@ -52,7 +52,7 @@ namespace DataAccess.Repositories
                         loan.User.LastName = user.LastName;
                         loan.User.UserAddress = address;
 
-                        if (bookInstance != null) 
+                        if (bookInstance != null)
                         {
                             loan = new BookLoan(loan, bookInstance);
                         }
@@ -146,7 +146,7 @@ namespace DataAccess.Repositories
                     BookInstanceId = loan.BookInstance?.Id
                 });
                 return loan;
-            } 
+            }
         }
 
         public async Task<Loan?> CreateLoan(DigitalItemLoan loan)
@@ -223,13 +223,14 @@ namespace DataAccess.Repositories
                 {
                     //GetLoan
                     var loan = await GetLoan(id);
-                    if (loan?.ReturnDate == null) {
+                    if (loan?.ReturnDate == null)
+                    {
                         loan.ReturnDate = DateTime.Now;
                         //Return Loan
                         var updatedLoan = await UpdateLoan(loan);
 
                         //Check for book reservation
-                        var bookReservation = (await connection.QueryAsync<User, Book, DateTime, BookReservation>(getReservedUser, 
+                        var bookReservation = (await connection.QueryAsync<User, Book, DateTime, BookReservation>(getReservedUser,
                             map: (user, book, reservationDate) =>
                             {
                                 return new BookReservation(user, book, reservationDate);
@@ -239,7 +240,7 @@ namespace DataAccess.Repositories
                         if (bookReservation != null)
                         {
                             //Get book instance
-                            var bookInstance = await connection.QuerySingleAsync<BookInstance>(getBookInstance, 
+                            var bookInstance = await connection.QuerySingleAsync<BookInstance>(getBookInstance,
                                 new { id });
                             bookInstance.Book = bookReservation.Book;
 
@@ -254,8 +255,9 @@ namespace DataAccess.Repositories
                             await CreateLoan(newBookLoan);
 
                             //Delete reservation
-                            await connection.ExecuteAsync(deleteReservation, 
-                                new { 
+                            await connection.ExecuteAsync(deleteReservation,
+                                new
+                                {
                                     UserSSN = bookReservation.User?.SSN,
                                     BookISBN = bookReservation.Book?.ISBN,
                                     bookReservation.ReservationDate
@@ -282,7 +284,7 @@ namespace DataAccess.Repositories
                 "FROM Loan l LEFT JOIN DigitalItem di ON di.Id = l.DigitalItemId";
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var statistics = await connection.QuerySingleAsync<(double Books, double Videos, double Audios, 
+                var statistics = await connection.QuerySingleAsync<(double Books, double Videos, double Audios,
                     double Texts, double Images)>(sql);
                 return statistics;
             }

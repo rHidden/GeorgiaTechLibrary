@@ -9,7 +9,7 @@
 
         public Member() { }
 
-        public Member(string ssn, string firstName, string lastName, string phoneNum, 
+        public Member(string ssn, string firstName, string lastName, string phoneNum,
             string cardNum, DateTime expiryDate, string photo, string memberType, Address userAddress)
             : base(ssn, firstName, lastName, phoneNum, userAddress)
         {
