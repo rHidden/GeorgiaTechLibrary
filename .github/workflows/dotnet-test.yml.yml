@@ -2,9 +2,9 @@
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, pipeline]
   pull_request:
-    branches: [ master ]
+    branches: [ master, pipeline ]
 
 jobs:
   build:
@@ -26,7 +26,15 @@ jobs:
       run: dotnet restore GeorgiaTechLibrary/GeorgiaTechLibrary.sln
 
     - name: Format code
-      run: dotnet format GeorgiaTechLibrary/GeorgiaTechLibrary.sln --check --severity info
+      run: dotnet format GeorgiaTechLibrary/GeorgiaTechLibrary.sln
+      id: format
+
+    - name: Check for formatting changes
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "Code is not formatted. Please run 'dotnet format' to fix the formatting issues."
+          exit 1
+        fi
 
     - name: Build
       run: dotnet build --configuration Release GeorgiaTechLibrary/GeorgiaTechLibrary.sln --no-restore
