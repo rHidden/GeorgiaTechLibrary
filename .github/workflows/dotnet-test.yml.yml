@@ -55,7 +55,7 @@ jobs:
         reportgenerator "-reports:GeorgiaTechLibrary/coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
 
     - name: Call API endpoint
-      run: curl -X GET http://localhost:5000/api/Book
+      run: curl -X GET http://localhost:44385/api/Book
 
     - name: Install Postman CLI
       run: |
