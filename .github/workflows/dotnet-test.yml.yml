@@ -19,8 +19,14 @@ jobs:
       with:
         dotnet-version: '8.0'
 
+    - name: Install dotnet format
+      run: dotnet tool install -g dotnet-format
+
     - name: Restore dependencies
       run: dotnet restore GeorgiaTechLibrary/GeorgiaTechLibrary.sln
+
+    - name: Format code
+      run: dotnet format GeorgiaTechLibrary/GeorgiaTechLibrary.sln --check --severity info
 
     - name: Build
       run: dotnet build --configuration Release GeorgiaTechLibrary/GeorgiaTechLibrary.sln --no-restore
