@@ -7,9 +7,15 @@
 	[Description] [ntext] NULL,
 	[AmountInStock] [int] NULL,
 	[MinStock] [int] NULL,
+	[SellerId] [int] NOT NULL,
  CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )
 )
+GO
 
+ALTER TABLE [dbo].[Product]  WITH CHECK ADD CONSTRAINT [FK_SellerProduct] FOREIGN KEY([SellerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO

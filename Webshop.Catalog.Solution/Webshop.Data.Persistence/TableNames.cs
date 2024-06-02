@@ -22,7 +22,7 @@ namespace Webshop.Data.Persistence
 
         public static class Order
         {
-            public static string ORDERTABLE = "Order";
+            public static string ORDERTABLE = "[Order]";
             public static string ORDERLINETABLE = "OrderLine";
         }
     }
