@@ -12,7 +12,6 @@ namespace Webshop.Order.Application.Features.Requests
 {
     public class UpdateOrderRequest
     {
-
         public int UserId { get; set; }
         public int Discount { get; set; }
         public List<UpdateOrderLineRequest> OrderLines { get; set; }

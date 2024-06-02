@@ -94,7 +94,7 @@ namespace Webshop.Order.Api.Controllers
             var result = await this.dispatcher.Dispatch(query);
             return FromResult<IEnumerable<OrderDto>>(result);
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> GetOrdersOfBuyer(int buyerId)
         {

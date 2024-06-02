@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,6 @@ namespace Webshop.Order.Application.Features.Requests
 {
     public class CreateOrderRequest
     {
-
         public int UserId { get; set; }
         public int Discount { get; set; }
         public List<CreateOrderLineRequest> OrderLines { get; set; }

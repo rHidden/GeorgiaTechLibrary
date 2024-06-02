@@ -45,6 +45,16 @@ namespace Webshop.Order.Application.Test.RequestTests
         {
             //Arrange
             int userId = -1;
+            Assert.That(validationResults.Errors[0].PropertyName, Is.EqualTo("CustomerId"));
+            Assert.That(validationResults.Errors[1].ErrorCode, Is.EqualTo("GreaterThanValidator"));
+            Assert.That(validationResults.Errors[1].PropertyName, Is.EqualTo("CustomerId"));
+        }
+
+        [Test]
+        public void TestUpdateOrderRequest_InvalidCustomerIdIsNegative_ExpectFailure()
+        {
+            //Arrange
+            int userId = -1;
             int discount = 5;
             int quantity = 3;
             int productId = 7;

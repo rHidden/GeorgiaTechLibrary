@@ -1,4 +1,4 @@
-﻿name: .NET Tests
+name: .NET Tests
 
 on:
   push:
@@ -58,7 +58,7 @@ jobs:
         ls -la coveragereport
 
         # Generate the coverage report
-        reportgenerator "-reports:coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
+        reportgenerator "-reports:coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"r
 
     - name: Install Postman CLI
       run: |
