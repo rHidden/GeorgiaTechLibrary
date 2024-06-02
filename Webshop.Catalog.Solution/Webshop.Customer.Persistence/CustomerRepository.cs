@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Dapper;
 using Webshop.Customer.Application.Contracts.Persistence;
 using Webshop.Data.Persistence;
-using Webshop.Domain.AggregateRoots;
 
 namespace Webshop.Customer.Persistence
 {
@@ -17,7 +16,7 @@ namespace Webshop.Customer.Persistence
         {
             using(var connection = dataContext.CreateConnection())
             {
-                string command = $"insert into {TableName} (Name, Address, Address2, City, Region, PostalCode, Country, Email, BuyerFlag, SellerFlag) values (@name, @address, @address2, @city, @region, @postalcode, @country, @email, 0, 0)";
+                string command = $"insert into {TableName} (Name, Address, Address2, City, Region, PostalCode, Country, Email) values (@name, @address, @address2, @city, @region, @postalcode, @country, @email)";
                 await connection.ExecuteAsync(command, new { name = entity.Name, address = entity.Address, address2 = entity.Address2, city = entity.City, region = entity.Region, postalcode = entity.PostalCode, country = entity.Country, email = entity.Email });
             }
         }
@@ -65,63 +64,6 @@ namespace Webshop.Customer.Persistence
                     country = entity.Country,
                     email = entity.Email
                 });
-            }
-        }
-
-        public async Task<Domain.AggregateRoots.Seller> GetSellerById(int id)
-        {
-            using (var connection = dataContext.CreateConnection())
-            {
-                string query = $"select * from {TableName} where id = @id and SellerFlag = 1";
-                return await connection.QuerySingleAsync<Domain.AggregateRoots.Seller>(query, new { id = id });
-            }
-        }
-
-        public async Task RegisterSeller(int id, double review)
-        {
-            using (var connection = dataContext.CreateConnection())
-            {
-                string query = $"update {TableName} set SellerFlag = 1, SellerReview = @review where id = @id";
-                await connection.ExecuteAsync(query, new { review = review, id = id });
-            }
-        }
-
-
-        public async Task UpdateSeller(int id, double review)
-        {
-            using (var connection = dataContext.CreateConnection())
-            {
-                string query = $"update {TableName} set SellerReview = @review where id = @id";
-                await connection.ExecuteAsync(query, new { review = review, id = id });
-            }
-        }
-
-
-        public async Task<Domain.AggregateRoots.Buyer> GetBuyerById(int id)
-        {
-            using (var connection = dataContext.CreateConnection())
-            {
-                string query = $"select * from {TableName} where id = @id and BuyerFlag = 1";
-                return await connection.QuerySingleAsync<Domain.AggregateRoots.Buyer>(query, new { id = id });
-            }
-        }
-
-        public async Task RegisterBuyer(int id, string descrtiption)
-        {
-            using (var connection = dataContext.CreateConnection())
-            {
-                string query = $"update {TableName} set BuyerFlag = 1, BuyerDescription = @description where id = @id";
-                await connection.ExecuteAsync(query, new { descrtiption = descrtiption, id = id });
-            }
-        }
-
-
-        public async Task UpdateBuyer(int id, string description)
-        {
-            using (var connection = dataContext.CreateConnection())
-            {
-                string query = $"update {TableName} set BuyerDescription = @description where id = @id";
-                await connection.ExecuteAsync(query, new { description = description, id = id });
             }
         }
     }

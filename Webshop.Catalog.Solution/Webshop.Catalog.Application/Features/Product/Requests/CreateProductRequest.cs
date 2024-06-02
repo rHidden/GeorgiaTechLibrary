@@ -18,7 +18,6 @@ namespace Webshop.Catalog.Application.Features.Product.Requests
         /// The currency must be a 3 character currency code
         /// </summary>
         public string Currency { get; set; }
-        public int CustomerId { get; set; }
 
         public class Validator : AbstractValidator<CreateProductRequest>
         {
@@ -38,9 +37,6 @@ namespace Webshop.Catalog.Application.Features.Product.Requests
                 RuleFor(r => r.Currency)
                     .NotEmpty().WithMessage(Errors.General.ValueIsEmpty(nameof(Currency)).Message)
                     .Length(3).WithMessage(Errors.General.ValueOutOfRange(nameof(Currency), 3, 3).Message);
-                //customerId
-                RuleFor(r => r.CustomerId)
-                    .GreaterThanOrEqualTo(1).WithMessage(Errors.General.ValueTooSmall(nameof(CustomerId), 1).Message);
             }
         }
     }

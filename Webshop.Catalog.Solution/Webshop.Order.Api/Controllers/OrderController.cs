@@ -57,7 +57,7 @@ namespace Webshop.Order.Api.Controllers
             var validationResult = await validator.ValidateAsync(request);
             if (validationResult.IsValid)
             {
-                UpdateOrderCommand command = new UpdateOrderCommand(id, request.CustomerId, request.Discount, request.OrderLines);
+                UpdateOrderCommand command = new UpdateOrderCommand(request.CustomerId, request.Discount, request.OrderLines);
                 var commandResult = await this.dispatcher.Dispatch(command);
                 return FromResult(commandResult);
             }

@@ -13,18 +13,15 @@ namespace Webshop.Order.Application.Profiles
     {
         public MappingProfile()
         {
-            CreateMap<Domain.AggregateRoots.OrderLine, OrderLineDto>().ForMember(dest => dest.Product,
-                opt => opt.MapFrom(src => src.Product)).ReverseMap();
-            CreateMap<Domain.AggregateRoots.OrderLine, CreateOrderLineRequest>().ForMember(dest => dest.ProductId,
-                opt => opt.MapFrom(src => src.Product.Id)).ReverseMap();
-            CreateMap<Domain.AggregateRoots.OrderLine, UpdateOrderLineRequest>().ForMember(dest => dest.ProductId,
-                opt => opt.MapFrom(src => src.Product.Id)).ReverseMap();
+            CreateMap<Domain.AggregateRoots.OrderLine, OrderLineDto>().ReverseMap();
+            CreateMap<Domain.AggregateRoots.OrderLine, CreateOrderLineRequest>().ReverseMap();
+            CreateMap<Domain.AggregateRoots.OrderLine, UpdateOrderLineRequest>().ReverseMap();
             CreateMap<Domain.AggregateRoots.Order, OrderDto>().ForMember(dest => dest.OrderLines, 
                 opt => opt.MapFrom(src => src.OrderLines)).ReverseMap();
             CreateMap<Domain.AggregateRoots.Order, CreateOrderRequest>().ForMember(dest => dest.OrderLines,
-                opt => opt.MapFrom(src => src.OrderLines)).ReverseMap();
+                opt => opt.MapFrom(src => src.OrderLines)).ReverseMap(); ;
             CreateMap<Domain.AggregateRoots.Order, UpdateOrderRequest>().ForMember(dest => dest.OrderLines,
-                opt => opt.MapFrom(src => src.OrderLines)).ReverseMap();
+                opt => opt.MapFrom(src => src.OrderLines)).ReverseMap(); ;
         }
     }
 }

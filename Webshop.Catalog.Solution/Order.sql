@@ -1,6 +1,6 @@
 CREATE TABLE [dbo].[Order](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[TotalPrice] [float] NOT NULL,
+	[TotalPrice] [float](10,2) NOT NULL,
 	[Discount] [int] NOT NULL,
 	[Date] [date] NOT NULL,
 	[CustomerId] [int] NULL,

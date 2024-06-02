@@ -1,64 +1,71 @@
-version: '3.9'
-
+version: "3.9"
 services:
-  catalog:
-  #the catalog api
-    build:
-      context: .
-      dockerfile: Webshop.Catalog.Api/Dockerfile
-    image: georgiatechlibrary/webshopcatalogapi
+  help:
+    # SeQ is a framework for logging of exceptions etc
+    container_name: webshophelp
+    image: georgiatechlibrary/webshophelp
+    restart: unless-stopped
     ports:
-      - "8082:8080"
+      - 8000:80      
+    networks:
+      - backtier
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development  
+      - SERVER=webshopdatabase
+  seq:
+    # SeQ is a framework for logging of exceptions etc
+    container_name: SeQ
+    image: datalust/seq:latest
+    restart: unless-stopped
+    ports:
+      - 8081:80
+      - 5341:5341
+    networks:
+      - backtier
+    environment:
+      - ACCEPT_EULA=Y
+  smtp4dev:
+    # development time email server and client, easy to test sending emails
+    container_name: smtp4dev
+    image: rnwood/smtp4dev:latest
+    ports:
+      - 8082:80
+      - 26:25
+    networks:
+      - backtier
+  paymentapi:
+   # the payment API
+    container_name: webshop.payment
+    image: georgiatechlibrary/webshoppaymentapi
+    restart: unless-stopped
+    ports:
+      - 8083:80
+    networks:
+      - backtier
+  catalogapi:
+  # the catalog API
+    container_name: webshop.catalog
+    image: georgiatechlibrary/webshopcatalogapi
+    restart: unless-stopped
+    ports:
+        - 8084:80
     networks:
         - backtier
-  customer:
-  #the customer api
-    build:
-      context: .
-      dockerfile: Webshop.Customer.Api/Dockerfile
-    image: georgiatechlibrary/webshopcustomerapi
+  customerapi:
+  # the customer API
+    container_name: webshop.customer
+    image: georgiatechlibrary/webshoporderapi
+    restart: unless-stopped
     ports:
-      - "8083:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development 
-    networks:
-        - backtier 
-  help:
-  #the help web page
-    build:
-      context: .
-      dockerfile: Webshop.Help/Dockerfile
-    image: georgiatechlibrary/webshophelp
-    ports:
-        - "8081:8080"
-    environment:
-        - ASPNETCORE_ENVIRONMENT=Development
+        - 8085:80
     networks:
         - backtier
   orderapi:
-  #the order api
-    build:
-      context: .
-      dockerfile: Webshop.Order.Api/Dockerfile
-    image: georgiatechlibrary/webshoporderapi
+  # the order API
+    container_name: webshop.order
+    image: georgiatechlibrary/webshopcatalogapi
+    restart: unless-stopped
     ports:
-      - "8084:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    networks:
-        - backtier
-  paymentapi:
-  #the payment api
-    build:
-      context: .
-      dockerfile: Webshop.Payment.Api/Dockerfile
-    image: georgiatechlibrary/webshoppaymentapi
-    ports:
-      - "8085:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+        - 8086:80
     networks:
         - backtier
   sqlexpress:
@@ -70,7 +77,7 @@ services:
         - 1433:1433
     environment:
         - ACCEPT_EULA=Y
-        - SA_PASSWORD=WEBSHOP@password
+        - SA_PASSWORD=PSU@password
         - MSSQL_PID=Express
     volumes:
         - ./data:/var/opt/mssql/data
@@ -79,3 +86,8 @@ services:
 networks:
   # The presence of these objects is sufficient to define them
   backtier: {}
+
+
+
+
+

@@ -42,7 +42,7 @@ namespace Webshop.Catalog.Api.Controllers
             var validationResult = await validator.ValidateAsync(request);
             if (validationResult.IsValid)
             {
-                CreateProductCommand command = new CreateProductCommand(request.Name, request.SKU, request.Price, request.Currency, request.CustomerId);
+                CreateProductCommand command = new CreateProductCommand(request.Name, request.SKU, request.Price, request.Currency);
                 var commandResult = await this.dispatcher.Dispatch(command);
                 return FromResult(commandResult);
             }
