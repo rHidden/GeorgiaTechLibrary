@@ -48,7 +48,7 @@ namespace Webshop.Order.Application.Features.Commands.UpdateOrder
                         await productRepository.UpdateAsync(product);
                     }
                     order.OrderLines = orderLines;
-                    order.TotalPrice = order.OrderLines.Sum(x => x.SubTotal);
+                    order.TotalPrice = order.OrderLines.Sum(x => x.SubTotal) * (1 - order.Discount / 100.0);
                     await repository.UpdateAsync(order);
                     scope.Complete();
                     return Result.Ok();

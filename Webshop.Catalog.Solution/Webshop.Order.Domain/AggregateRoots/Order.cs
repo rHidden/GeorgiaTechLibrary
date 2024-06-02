@@ -32,7 +32,7 @@ namespace Webshop.Order.Domain.AggregateRoots
             get { return _discount; }
             set
             {
-                Ensure.That(value, nameof(Discount)).IsInRange(0, 5);
+                Ensure.That(value, nameof(Discount)).IsInRange(0, 15);
                 _discount = value;
             }
         }

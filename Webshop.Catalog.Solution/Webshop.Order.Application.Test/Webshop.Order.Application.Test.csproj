@@ -16,6 +16,7 @@
 	</PackageReference>
     <PackageReference Include="FluentValidation" Version="11.9.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnit.Analyzers" Version="3.9.0">
 		<PrivateAssets>all</PrivateAssets>
@@ -26,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Webshop.Order.Application\Webshop.Order.Application.csproj" />
+    <ProjectReference Include="..\Webshop.Order.Persistence\Webshop.Order.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>

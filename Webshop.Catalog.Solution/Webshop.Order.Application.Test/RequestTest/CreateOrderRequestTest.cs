@@ -3,9 +3,9 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using Webshop.Order.Application.Features.Requests;
 
-namespace Webshop.Order.Application.Test.RequestTests
+namespace Webshop.Order.Application.Test.RequestTest
 {
-    public class CreateOrderRequestTests
+    public class CreateOrderRequestTest
     {
         [Test]
         public void TestCreateOrderRequest_InvalidCustomerIdIsZero_ExpectFailure()
