@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <BaseOutputPath>bin</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Webshop.Application\Webshop.Application.csproj" />
     <ProjectReference Include="..\Webshop.Catalog.Domain\Webshop.Catalog.Domain.csproj" />
+    <ProjectReference Include="..\Webshop.Customer.Persistence\Webshop.Customer.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

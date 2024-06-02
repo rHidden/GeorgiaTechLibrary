@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 using Webshop.Application.Contracts;
 using Webshop.Catalog.Application.Contracts.Persistence;
 using Webshop.Catalog.Domain.AggregateRoots;
@@ -32,16 +33,26 @@ namespace Webshop.Order.Application.Features.Commands.UpdateOrder
         {
             try
             {
-                Domain.AggregateRoots.Order order = new Domain.AggregateRoots.Order(command.CustomerId);
-                order.Discount = command.Discount;
-                foreach (var orderLine in command.OrderLines)
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    Product product = await productRepository.GetById(orderLine.ProductId);
-                    order.OrderLines.Append(new OrderLine(product, orderLine.Quantity));
+                    Domain.AggregateRoots.Order order = new Domain.AggregateRoots.Order(command.CustomerId);
+                    order.Discount = command.Discount;
+                    order.Id = command.Id;
+                    List<OrderLine> orderLines = new List<OrderLine>();
+                    foreach (var orderLine in command.OrderLines)
+                    {
+                        Product product = await productRepository.GetById(orderLine.ProductId);
+                        orderLine.Quantity = orderLine.Quantity < product.AmountInStock ? orderLine.Quantity : product.AmountInStock;
+                        orderLines.Add(new OrderLine(product, orderLine.Quantity));
+                        product.AmountInStock -= orderLine.Quantity;
+                        await productRepository.UpdateAsync(product);
+                    }
+                    order.OrderLines = orderLines;
+                    order.TotalPrice = order.OrderLines.Sum(x => x.SubTotal);
+                    await repository.UpdateAsync(order);
+                    scope.Complete();
+                    return Result.Ok();
                 }
-                order.TotalPrice = order.OrderLines.Sum(x => x.SubTotal);
-                await repository.UpdateAsync(order);
-                return Result.Ok();
             }
             catch (Exception ex)
             {

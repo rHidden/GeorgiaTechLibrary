@@ -9,6 +9,10 @@ CREATE TABLE [dbo].[Customer](
 	[PostalCode] [nvarchar](50) NOT NULL,
 	[Country] [nvarchar](150) NOT NULL,
 	[Email] [nvarchar](100) NOT NULL,
+	[BuyerFlag] [bit] NOT NULL,
+	[BuyerDescription] [varchar](50) NULL,
+	[SellerFlag] [bit] NOT NULL,
+	[SellerReview] [float] NULL,
  CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

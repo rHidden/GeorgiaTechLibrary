@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Webshop.Customer.Application.Contracts.Persistence;
 using Webshop.Data.Persistence;
+using Webshop.Domain.AggregateRoots;
 
 namespace Webshop.Customer.Persistence
 {
@@ -101,5 +102,15 @@ namespace Webshop.Customer.Persistence
             }
         }
         #endregion
+
+        public Task<Seller> GetSellerById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Buyer> GetBuyerById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

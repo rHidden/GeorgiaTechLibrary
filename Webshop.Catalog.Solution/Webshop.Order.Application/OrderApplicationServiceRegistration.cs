@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Webshop.Application;
 using Webshop.Application.Contracts;
+using Webshop.Catalog.Application.Profiles;
 
 namespace Webshop.Order.Application
 {
@@ -18,6 +19,7 @@ namespace Webshop.Order.Application
             services.AddApplicationServices(); //register the general services from webshop.application
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(typeof(MappingProfile));
             services.AddScoped<IDispatcher>(sp => new Dispatcher(sp.GetService<IMediator>()));
             return services;
         }
