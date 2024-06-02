@@ -17,8 +17,8 @@ namespace Webshop.Order.Persistence
         {
             using (var connection = dataContext.CreateConnection())
             {
-                string orderCommand = $"insert into {TableName} (TotalPrice, Discount, Date, CustomerId) values " +
-                    $"(@totalPrice, @discount, @date, @customerId);" +
+                string orderCommand = $"insert into {TableName} (TotalPrice, Discount, Date, UserId) values " +
+                    $"(@totalPrice, @discount, @date, @userId);" +
                     $"SELECT CAST(SCOPE_IDENTITY() as int);";
                 string orderLineCommand = $"INSERT INTO OrderLines (ProductId, Quantity, SubTotal, OrderId) " +
                     $"VALUES (@productId, @quantity, @subTotal, @OrderId);";
@@ -50,7 +50,7 @@ namespace Webshop.Order.Persistence
         {
             using (var connection = dataContext.CreateConnection())
             {
-                string query = $"select o.Id, o.TotalPrice, o.Discount, o.Date, o.CustomerId " +
+                string query = $"select o.Id, o.TotalPrice, o.Discount, o.Date, o.UserId " +
                     $"ol.Id, ol.Quantity, ol.SubTotal, ol.ProductId from {TableName} o " +
                     $"inner join {TableNames.Order.ORDERLINETABLE} ol on ol.OrderId = o.Id";
 
@@ -75,7 +75,7 @@ namespace Webshop.Order.Persistence
         {
             using (var connection = dataContext.CreateConnection())
             {
-                string query = $"select o.Id, o.TotalPrice, o.Discount, o.Date, o.CustomerId " +
+                string query = $"select o.Id, o.TotalPrice, o.Discount, o.Date, o.UserId " +
                     $"ol.Id, ol.Quantity, ol.SubTotal, ol.ProductId from {TableName} o " +
                     $"inner join {TableNames.Order.ORDERLINETABLE} ol on ol.OrderId = o.Id " +
                     $"where id = @Id";
@@ -100,7 +100,7 @@ namespace Webshop.Order.Persistence
         {
             using (var connection = dataContext.CreateConnection())
             {
-                string command = $"update {TableName} set TotalPrice = @TotalPrice, Discount =  @discount, CustomerId = @customerId";
+                string command = $"update {TableName} set TotalPrice = @TotalPrice, Discount =  @discount, UserId = @userId";
                 string deleteOrderLinesSql = $"DELETE FROM OrderLines WHERE OrderId = @OrderId";
                 string insertOrderLineSql = $"INSERT INTO OrderLines (ProductId, Quantity, SubTotal, OrderId) " +
                     $"VALUES (@ProductId, @Quantity, @SubTotal, @OrderId);";

@@ -3,7 +3,7 @@ CREATE TABLE [dbo].[Order](
 	[TotalPrice] [float](10,2) NOT NULL,
 	[Discount] [int] NOT NULL,
 	[Date] [date] NOT NULL,
-	[CustomerId] [int] NULL,
+	[UserId] [int] NULL,
  CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -11,8 +11,8 @@ CREATE TABLE [dbo].[Order](
 )
 GO
 
-ALTER TABLE [dbo].[Order]  WITH CHECK ADD CONSTRAINT [FK_CustomerOrder] FOREIGN KEY([CustomerId])
-REFERENCES [dbo].[Customer] ([Id])
+ALTER TABLE [dbo].[Order]  WITH CHECK ADD CONSTRAINT [FK_UserOrder] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([Id])
 ON DELETE SET NULL
 GO
 

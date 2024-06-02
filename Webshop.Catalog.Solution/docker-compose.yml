@@ -50,9 +50,9 @@ services:
         - 8084:80
     networks:
         - backtier
-  customerapi:
-  # the customer API
-    container_name: webshop.customer
+  userapi:
+  # the user API
+    container_name: webshop.user
     image: georgiatechlibrary/webshoporderapi
     restart: unless-stopped
     ports:

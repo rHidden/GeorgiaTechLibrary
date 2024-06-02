@@ -37,7 +37,7 @@ namespace Webshop.Help.Pages
             CreateDatabase();
             this.connectionString = this.mainconnectionString + ";database=psuwebshop"; //make sure they are created in the right database
             CreateCategoryTable();
-            CreateCustomerTable();
+            CreateUserTable();
             CreateProductTable();
             CreateProductCategoryTable();
             TempData["errors"] = Errors;
@@ -64,9 +64,9 @@ namespace Webshop.Help.Pages
             ExecuteSQL(sql, this.connectionString);
         }
 
-        private void CreateCustomerTable()
+        private void CreateUserTable()
         {
-            string sql = "CREATE TABLE Customer(" +
+            string sql = "CREATE TABLE User(" +
             "[Id] [int] IDENTITY(1,1) NOT NULL," +
             "[Name] [nvarchar](150) NOT NULL," +
             "[Address] [nvarchar](200) NOT NULL," +
@@ -76,7 +76,7 @@ namespace Webshop.Help.Pages
             "[PostalCode] [nvarchar](50) NOT NULL," +
             "[Country] [nvarchar](150) NOT NULL," +
             "[Email] [nvarchar](100) NOT NULL," +
-            "CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED " +
+            "CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED " +
             "(" +
             "[Id] ASC" +
             ")" +

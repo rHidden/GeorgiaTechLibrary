@@ -32,7 +32,7 @@ namespace Webshop.Order.Application.Features.Commands.UpdateOrder
         {
             try
             {
-                Domain.AggregateRoots.Order order = new Domain.AggregateRoots.Order(command.CustomerId);
+                Domain.AggregateRoots.Order order = new Domain.AggregateRoots.Order(command.UserId);
                 order.Discount = command.Discount;
                 foreach (var orderLine in command.OrderLines)
                 {

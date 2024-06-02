@@ -9,9 +9,9 @@ namespace Webshop.Order.Domain.AggregateRoots
 {
     public class Order : AggregateRoot
     {
-        public Order(int customerId)
+        public Order(int userId)
         {
-            CustomerId = customerId;
+            UserId = userId;
             Date = DateTime.Now;
             OrderLines = new List<OrderLine>();
         }
@@ -20,7 +20,7 @@ namespace Webshop.Order.Domain.AggregateRoots
         public double TotalPrice { get; set; }
         public int Discount { get; set; }
         public DateTime Date { get; private set; }
-        public int CustomerId { get; private set; }
+        public int UserId { get; private set; }
         public IEnumerable<OrderLine> OrderLines { get; set; }
     }
 }

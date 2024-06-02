@@ -13,7 +13,7 @@ namespace Webshop.Order.Application.Features.Dtos
         public double TotalPrice { get; set; }
         public int Discount { get; set; }
         public DateTime Date { get; private set; }
-        public int CustomerId { get; private set; }
+        public int UserId { get; private set; }
         public IEnumerable<OrderLine> OrderLines { get; set; } = Enumerable.Empty<OrderLine>();
     }
 }

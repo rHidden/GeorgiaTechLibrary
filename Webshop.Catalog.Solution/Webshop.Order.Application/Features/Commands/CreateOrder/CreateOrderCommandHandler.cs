@@ -34,7 +34,7 @@ namespace Webshop.Order.Application.Features.Commands.CreateOrder
         {
             try
             {
-                Domain.AggregateRoots.Order newOrder = new Domain.AggregateRoots.Order(command.CustomerId);
+                Domain.AggregateRoots.Order newOrder = new Domain.AggregateRoots.Order(command.UserId);
                 newOrder.Discount = command.Discount;
                 foreach (var orderLine in command.OrderLines)
                 {

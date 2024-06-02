@@ -38,7 +38,7 @@ namespace Webshop.Order.Api.Controllers
             var validationResult = await validator.ValidateAsync(request);
             if (validationResult.IsValid)
             {
-                CreateOrderCommand command = new CreateOrderCommand(request.CustomerId, request.Discount, request.OrderLines);
+                CreateOrderCommand command = new CreateOrderCommand(request.UserId, request.Discount, request.OrderLines);
                 var commandResult = await this.dispatcher.Dispatch(command);
                 return FromResult(commandResult);
             }
@@ -57,7 +57,7 @@ namespace Webshop.Order.Api.Controllers
             var validationResult = await validator.ValidateAsync(request);
             if (validationResult.IsValid)
             {
-                UpdateOrderCommand command = new UpdateOrderCommand(request.CustomerId, request.Discount, request.OrderLines);
+                UpdateOrderCommand command = new UpdateOrderCommand(request.UserId, request.Discount, request.OrderLines);
                 var commandResult = await this.dispatcher.Dispatch(command);
                 return FromResult(commandResult);
             }
