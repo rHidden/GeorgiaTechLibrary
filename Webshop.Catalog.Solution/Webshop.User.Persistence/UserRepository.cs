@@ -67,5 +67,23 @@ namespace Webshop.User.Persistence
                 });
             }
         }
+
+        public async Task<IEnumerable<Domain.AggregateRoots.Buyer>> GetAllBuyers()
+        {
+            using (var connection = dataContext.CreateConnection())
+            {
+                string query = $"SELECT * FROM {TableName} WHERE isBuyer = 1";
+                return await connection.QueryAsync<Domain.AggregateRoots.Buyer>(query);
+            }
+        }
+
+        public async Task<IEnumerable<Domain.AggregateRoots.Seller>> GetAllSellers()
+        {
+            using (var connection = dataContext.CreateConnection())
+            {
+                string query = $"SELECT * FROM {TableName} WHERE isSeller = 1";
+                return await connection.QueryAsync<Domain.AggregateRoots.Seller>(query);
+            }
+        }
     }
 }

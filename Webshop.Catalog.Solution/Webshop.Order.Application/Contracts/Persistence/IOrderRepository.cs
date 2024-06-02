@@ -10,5 +10,6 @@ namespace Webshop.Order.Application.Contracts.Persistence
 {
     public interface IOrderRepository : IRepository<Domain.AggregateRoots.Order>
     {
+        Task<List<Domain.AggregateRoots.Order>> GetByBuyerId(int buyerId);
     }
 }

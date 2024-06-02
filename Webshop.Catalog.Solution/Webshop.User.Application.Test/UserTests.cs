@@ -78,7 +78,7 @@ namespace Webshop.User.Application.Test
         {
             //arrange
             var loggerMock = new Mock<Microsoft.Extensions.Logging.ILogger<DeleteUserCommandHandler>>();
-            var userRepositoryMock = new Mock<IUserRepository>();            
+            var userRepositoryMock = new Mock<IUserRepository>();
             DeleteUserCommand command = new DeleteUserCommand(1);
             DeleteUserCommandHandler handler = new DeleteUserCommandHandler(loggerMock.Object, userRepositoryMock.Object);
             //act

@@ -107,5 +107,14 @@ namespace Webshop.Catalog.Persistence
 
             }
         }
+
+        public async Task<List<Product>> GetBySellerId(int sellerId)
+        {
+            using (var connection = dataContext.CreateConnection())
+            {
+                string query = $"select * from {TableName} where sellerId = @sellerId";
+                return await connection.QuerySingleAsync<List<Product>>(query);
+            }
+        }
     }
 }

@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Webshop.Catalog.Domain.AggregateRoots;
 using Webshop.Data.Persistence;
 using Webshop.Order.Application.Contracts.Persistence;
+using Webshop.Order.Domain.AggregateRoots;
 
 namespace Webshop.Order.Persistence
 {
@@ -124,6 +126,15 @@ namespace Webshop.Order.Persistence
 
                     transaction.Commit();
                 }
+            }
+        }
+
+        public async Task<List<Domain.AggregateRoots.Order>> GetByBuyerId(int buyerId)
+        {
+            using (var connection = dataContext.CreateConnection())
+            {
+                string query = $"select * from {TableName} where buyerId = @buyerId";
+                return await connection.QuerySingleAsync<List<Domain.AggregateRoots.Order>>(query);
             }
         }
     }

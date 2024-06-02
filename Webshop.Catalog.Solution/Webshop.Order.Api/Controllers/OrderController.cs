@@ -12,6 +12,7 @@ using Webshop.Order.Application.Features.Commands.UpdateOrder;
 using Webshop.Order.Application.Features.Dtos;
 using Webshop.Order.Application.Features.Queries.GetOrder;
 using Webshop.Order.Application.Features.Queries.GetOrders;
+using Webshop.Order.Application.Features.Queries.GetOrdersOfBuyer;
 using Webshop.Order.Application.Features.Requests;
 
 namespace Webshop.Order.Api.Controllers
@@ -92,6 +93,14 @@ namespace Webshop.Order.Api.Controllers
             GetOrdersQuery query = new GetOrdersQuery();
             var result = await this.dispatcher.Dispatch(query);
             return FromResult<IEnumerable<OrderDto>>(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrdersOfBuyer(int buyerId)
+        {
+            GetOrdersOfBuyerQuery query = new GetOrdersOfBuyerQuery(buyerId);
+            var result = await this.dispatcher.Dispatch(query);
+            return FromResult<List<OrderDto>>(result);
         }
     }
 }

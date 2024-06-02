@@ -9,7 +9,9 @@ CREATE TABLE [dbo].[User](
 	[PostalCode] [nvarchar](50) NOT NULL,
 	[Country] [nvarchar](150) NOT NULL,
 	[Email] [nvarchar](100) NOT NULL,
-	[Role] [string](20) NOT NULL,
+	[IsBuyer] BIT NOT NULL,
+	[IsSeller] BIT NOT NULL,
+
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

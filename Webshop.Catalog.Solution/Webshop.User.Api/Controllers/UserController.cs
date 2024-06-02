@@ -13,6 +13,9 @@ using Webshop.User.Application.Features.GetUser;
 using Webshop.User.Application.Features.GetUsers;
 using Webshop.User.Application.Features.Requests;
 using Webshop.User.Application.Features.UpdateUser;
+using Webshop.User.Application.Features.GetBuyers;
+using Webshop.User.Application.Features.GetSellers;
+
 using Webshop.Domain.Common;
 
 namespace Webshop.User.Api.Controllers
@@ -32,7 +35,7 @@ namespace Webshop.User.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUsers()
         {
             GetUsersQuery query = new GetUsersQuery();
             Result<List<UserDto>> result = await this.dispatcher.Dispatch(query);
@@ -53,7 +56,7 @@ namespace Webshop.User.Api.Controllers
         {
             GetUserQuery query = new GetUserQuery(id);
             Result<UserDto> result = await this.dispatcher.Dispatch(query);
-            if(result.Success)
+            if (result.Success)
             {
                 return FromResult<UserDto>(result);
             }
@@ -65,7 +68,7 @@ namespace Webshop.User.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody]CreateUserRequest request)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
             CreateUserRequest.Validator validator = new CreateUserRequest.Validator();
             var result = validator.Validate(request);
@@ -80,7 +83,7 @@ namespace Webshop.User.Api.Controllers
             {
                 this.logger.LogError(string.Join(",", result.Errors.Select(x => x.ErrorMessage)));
                 return Error(result.Errors);
-            }            
+            }
         }
 
         [HttpDelete]
@@ -102,7 +105,7 @@ namespace Webshop.User.Api.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateUser([FromBody]UpdateUserRequest request)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
             UpdateUserRequest.Validator validator = new UpdateUserRequest.Validator();
             var result = validator.Validate(request);
@@ -118,6 +121,22 @@ namespace Webshop.User.Api.Controllers
                 this.logger.LogError(string.Join(",", result.Errors.Select(x => x.ErrorMessage)));
                 return Error(result.Errors);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllBuyers()
+        {
+            GetBuyersQuery query = new GetBuyersQuery();
+            var result = await this.dispatcher.Dispatch(query);
+            return FromResult<List<BuyerDto>>(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllSellers()
+        {
+            GetSellersQuery query = new GetSellersQuery();
+            var result = await this.dispatcher.Dispatch(query);
+            return FromResult<List<SellerDto>>(result);
         }
     }
 }

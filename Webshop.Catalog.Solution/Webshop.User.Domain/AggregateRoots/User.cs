@@ -26,5 +26,7 @@ namespace Webshop.User.Domain.AggregateRoots
         public string PostalCode { get; set; }
         public string Country { get; set; }
         public string Email { get; set; }
+        public Boolean IsBuyer { get; set; }
+        public Boolean IsSeller { get; set; }
     }
 }
