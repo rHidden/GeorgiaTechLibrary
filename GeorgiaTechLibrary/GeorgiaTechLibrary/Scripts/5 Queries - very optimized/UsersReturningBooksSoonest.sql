@@ -11,5 +11,5 @@ WHERE
 GROUP BY 
     u.SSN
 ORDER BY 
-    AvgLoanDuration DESC, 
-    u.SSN;
+    AvgLoanDuration ASC, 
+    u.SSN ASC;

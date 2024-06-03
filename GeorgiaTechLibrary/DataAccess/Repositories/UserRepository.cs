@@ -68,7 +68,7 @@ namespace DataAccess.Repositories
                 "WHERE l.LoanType = 'Book' " +
                 "AND l.ReturnDate IS NOT NULL " +
                 "GROUP BY u.SSN " +
-                "ORDER BY AvgLoanDuration DESC, u.SSN";
+                "ORDER BY AvgLoanDuration ASC, u.SSN ASC";
             using (var connection = _connectionFactory.CreateConnection())
             {
                 var avgLoanDurationSSNs = (await connection.QueryAsync<string, int, (string UserSSN, int AvgLoanDuration)>(sql, map: (userSSN, daysLate) =>
