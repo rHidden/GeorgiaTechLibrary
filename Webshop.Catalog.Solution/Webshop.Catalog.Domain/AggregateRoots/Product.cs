@@ -1,14 +1,17 @@
-﻿using System;
+﻿using EnsureThat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Webshop.Domain.AggregateRoots;
 using Webshop.Domain.Common;
 
 namespace Webshop.Catalog.Domain.AggregateRoots
 {
     public class Product : AggregateRoot
     {
+        private Seller _seller;
         public Product(string name, string sku, int price, string currency)
         {
             Name = name;
@@ -29,5 +32,14 @@ namespace Webshop.Catalog.Domain.AggregateRoots
         public int Price { get; set; } 
         public string Currency { get; set; } 
         public int MinStock { get; set; }        
+        public Seller Seller
+        {
+            get { return _seller; }
+            set
+            {
+                Ensure.That(value, nameof(Seller)).IsNotNull();
+                _seller = value;
+            }
+        }
     }
 }

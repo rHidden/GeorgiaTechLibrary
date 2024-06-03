@@ -40,6 +40,8 @@ namespace Webshop.Help.Pages
             CreateCustomerTable();
             CreateProductTable();
             CreateProductCategoryTable();
+            CreateOrderTable();
+            CreateOrderLineTable();
             TempData["errors"] = Errors;
             return Redirect("/?seed=1");
         }
@@ -66,7 +68,7 @@ namespace Webshop.Help.Pages
 
         private void CreateCustomerTable()
         {
-            string sql = "CREATE TABLE Customer(" +
+            string sql = "CREATE TABLE [dbo].[Customer](" +
             "[Id] [int] IDENTITY(1,1) NOT NULL," +
             "[Name] [nvarchar](150) NOT NULL," +
             "[Address] [nvarchar](200) NOT NULL," +
@@ -76,6 +78,10 @@ namespace Webshop.Help.Pages
             "[PostalCode] [nvarchar](50) NOT NULL," +
             "[Country] [nvarchar](150) NOT NULL," +
             "[Email] [nvarchar](100) NOT NULL," +
+            "[BuyerFlag] [bit] NOT NULL," +
+            "[BuyerDescription] [nvarchar](200) NULL," +
+            "[SellerFlag] [bit] NOT NULL," +
+            "[SellerReview] [float] NULL," +
             "CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED " +
             "(" +
             "[Id] ASC" +
@@ -95,11 +101,16 @@ namespace Webshop.Help.Pages
             "[Description] [ntext] NULL," +
             "[AmountInStock] [int] NULL," +
             "[MinStock] [int] NULL," +
+            "[SellerId] [int] NOT NULL," +
             "CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED " +
             "(" +
             "[Id] ASC" +
             ")" +
-            ")";
+            "); " +
+            "ALTER TABLE Product " +
+            "WITH CHECK ADD CONSTRAINT [FK_CustomerProduct] FOREIGN KEY([SellerId]) " +
+            "REFERENCES Customer ([Id]) " +
+            "ON DELETE CASCADE";
             ExecuteSQL(sql, this.connectionString);
         }
 
@@ -117,6 +128,49 @@ namespace Webshop.Help.Pages
             ExecuteSQL(sql, this.connectionString);
         }
 
+        private void CreateOrderTable()
+        {
+            string sql = "CREATE TABLE [dbo].[Order](" +
+            "[Id] [int] IDENTITY(1,1) NOT NULL," +
+            "[TotalPrice] [float] NOT NULL," +
+            "[Discount] [int] NOT NULL," +
+            "[Date] [date] NOT NULL," +
+            "[CustomerId] [int] NULL," +
+            "CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED " +
+            "(" +
+            "[Id] ASC" +
+            ")" +
+            "); " +
+            "ALTER TABLE [dbo].[Order] " +
+            "WITH CHECK ADD CONSTRAINT [FK_CustomerOrder] FOREIGN KEY([CustomerId]) " +
+            "REFERENCES [dbo].[Customer] ([Id]) " +
+            "ON DELETE SET NULL";
+            ExecuteSQL(sql, this.connectionString);
+        }
+
+        private void CreateOrderLineTable()
+        {
+            string sql = "CREATE TABLE [dbo].[OrderLine](" +
+            "[Id] [int] IDENTITY(1,1) NOT NULL," +
+            "[Quantity] [int] NOT NULL," +
+            "[SubTotal] [float] NOT NULL," +
+            "[ProductId] [int] NULL," +
+            "[OrderId] [int] NULL," +
+            "CONSTRAINT [PK_OrderLine] PRIMARY KEY CLUSTERED " +
+            "(" +
+            "[Id] ASC" +
+            ")" +
+            "); " +
+            "ALTER TABLE [dbo].[OrderLine] " +
+            "WITH CHECK ADD CONSTRAINT [FK_ProductOrderLine] FOREIGN KEY([ProductId]) " +
+            "REFERENCES [dbo].[Product] ([Id]) " +
+            "ON DELETE SET NULL; " +
+            "ALTER TABLE [dbo].[OrderLine] " +
+            "WITH CHECK ADD CONSTRAINT [FK_OrderOrderLine] FOREIGN KEY([OrderId]) " +
+            "REFERENCES [dbo].[Order] ([Id]) " +
+            "ON DELETE CASCADE";
+            ExecuteSQL(sql, this.connectionString);
+        }
         private void ExecuteSQL(string sql, string localConnectionString)
         {
             try

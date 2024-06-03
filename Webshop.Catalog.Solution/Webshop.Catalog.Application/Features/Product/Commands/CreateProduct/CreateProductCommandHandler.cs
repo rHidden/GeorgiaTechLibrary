@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Webshop.Application.Contracts;
 using Webshop.Catalog.Application.Contracts.Persistence;
+using Webshop.Customer.Application.Contracts.Persistence;
+using Webshop.Domain.AggregateRoots;
 using Webshop.Domain.Common;
 
 namespace Webshop.Catalog.Application.Features.Product.Commands.CreateProduct
@@ -14,11 +16,14 @@ namespace Webshop.Catalog.Application.Features.Product.Commands.CreateProduct
     public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand>
     {
         private ILogger<CreateProductCommand> logger;
-        private IProductRepository repository;
-        public CreateProductCommandHandler(ILogger<CreateProductCommand> logger, IProductRepository repository)
+        private IProductRepository productRepository;
+        private ICustomerRepository customerRepository;
+        public CreateProductCommandHandler(ILogger<CreateProductCommand> logger, IProductRepository productRepository, 
+            ICustomerRepository customerRepository)
         {
             this.logger = logger;
-            this.repository = repository;
+            this.productRepository = productRepository;
+            this.customerRepository = customerRepository;
         }
 
         public async Task<Result> Handle(CreateProductCommand command, CancellationToken cancellationToken = default)
@@ -26,7 +31,9 @@ namespace Webshop.Catalog.Application.Features.Product.Commands.CreateProduct
             try
             {
                 Domain.AggregateRoots.Product newProduct = new Domain.AggregateRoots.Product(command.Name, command.SKU, command.Price, command.Currency);
-                await this.repository.CreateAsync(newProduct);
+                Seller seller = await customerRepository.GetSellerById(command.CustomerId);
+                newProduct.Seller = seller;
+                await this.productRepository.CreateAsync(newProduct);
                 return Result.Ok();
             }
             catch(Exception ex)

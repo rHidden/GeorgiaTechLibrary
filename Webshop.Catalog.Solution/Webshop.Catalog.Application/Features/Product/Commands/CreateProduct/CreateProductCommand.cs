@@ -9,17 +9,19 @@ namespace Webshop.Catalog.Application.Features.Product.Commands.CreateProduct
 {
     public class CreateProductCommand : ICommand
     {
-        public CreateProductCommand(string name, string sKU, int price, string currency)
+        public CreateProductCommand(string name, string sKU, int price, string currency, int customerId)
         {
             Name = name;
             SKU = sKU;
             Price = price;
             Currency = currency;
+            CustomerId = customerId;
         }
 
         public string Name { get; private set; }
         public string SKU { get; private set; }
         public int Price { get; private set; }
         public string Currency { get; private set; }        
+        public int CustomerId { get; private set; }
     }
 }

@@ -2,9 +2,9 @@
 using NUnit.Framework;
 using Webshop.Order.Application.Features.Requests;
 
-namespace Webshop.Order.Application.Test.RequestTests
+namespace Webshop.Order.Application.Test.RequestTest
 {
-    public class CreateOrderLineRequestTests
+    public class CreateOrderLineRequestTest
     {
         [Test]
         public void TestCreateOrderLineRequest_InvalidQuantityIsZero_ExpectFailure()

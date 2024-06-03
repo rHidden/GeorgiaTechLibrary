@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Webshop.Data.Persistence;
 using Webshop.Order.Application.Contracts.Persistence;
+using Webshop.Order.Domain.AggregateRoots;
+using Webshop.Catalog.Domain.AggregateRoots;
 
 namespace Webshop.Order.Persistence
 {
@@ -17,20 +19,20 @@ namespace Webshop.Order.Persistence
         {
             using (var connection = dataContext.CreateConnection())
             {
-                string orderCommand = $"insert into {TableName} (TotalPrice, Discount, Date, CustomerId) values " +
+                string orderCommand = $"insert into {TableName} (TotalPrice, Discount, [Date], CustomerId) values " +
                     $"(@totalPrice, @discount, @date, @customerId);" +
                     $"SELECT CAST(SCOPE_IDENTITY() as int);";
-                string orderLineCommand = $"INSERT INTO OrderLines (ProductId, Quantity, SubTotal, OrderId) " +
+                string orderLineCommand = $"INSERT INTO {TableNames.Order.ORDERLINETABLE} (ProductId, Quantity, SubTotal, OrderId) " +
                     $"VALUES (@productId, @quantity, @subTotal, @OrderId);";
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
                 {
-                    var orderId = await connection.ExecuteAsync(orderCommand, entity);
+                    var orderId = await connection.QuerySingleAsync<int>(orderCommand, entity);
 
                     foreach (var orderLine in entity.OrderLines)
                     {
                         orderLine.OrderId = orderId;
-                        await connection.ExecuteAsync(orderLineCommand, orderLine);
+                        await connection.ExecuteAsync(orderLineCommand, new { ProductId = orderLine.Product.Id, orderLine.Quantity, orderLine.SubTotal, orderLine.OrderId});
                     }
                     transaction.Commit();
                 }
@@ -50,22 +52,25 @@ namespace Webshop.Order.Persistence
         {
             using (var connection = dataContext.CreateConnection())
             {
-                string query = $"select o.Id, o.TotalPrice, o.Discount, o.Date, o.CustomerId " +
-                    $"ol.Id, ol.Quantity, ol.SubTotal, ol.ProductId from {TableName} o " +
-                    $"inner join {TableNames.Order.ORDERLINETABLE} ol on ol.OrderId = o.Id";
+                string query = $"select o.Id, o.TotalPrice, o.Discount, o.Date, o.CustomerId, " +
+                    $"ol.Id, ol.Quantity, ol.SubTotal, p.Id, p.Name, p.SKU, p.Price, p.Currency, p.Description from {TableName} o " +
+                    $"join {TableNames.Order.ORDERLINETABLE} ol on ol.OrderId = o.Id " +
+                    $"join {TableNames.Catalog.PRODUCTTABLE} p on p.Id = ol.productId";
 
                 var orderDictionary = new Dictionary<int, Domain.AggregateRoots.Order>();
 
                 return (await connection.QueryAsync<Domain.AggregateRoots.Order, 
-                    Domain.AggregateRoots.OrderLine, Domain.AggregateRoots.Order>(query, map: (order, orderLine) =>
+                    OrderLine, Product, Domain.AggregateRoots.Order>(query, map: (order, orderLine, product) =>
                     {
                         if (!orderDictionary.TryGetValue(order.Id, out var currentOrder))
                         {
                             currentOrder = order;
                             orderDictionary.Add(currentOrder.Id, currentOrder);
                         }
+                        orderLine.Product = product;
+                        List<OrderLine> orderLines = [.. currentOrder.OrderLines, orderLine];
 
-                        currentOrder.OrderLines.Append(orderLine);
+                        currentOrder.OrderLines = orderLines;
                         return currentOrder;
                     }, splitOn: "Id")).Distinct();
             }
@@ -75,22 +80,25 @@ namespace Webshop.Order.Persistence
         {
             using (var connection = dataContext.CreateConnection())
             {
-                string query = $"select o.Id, o.TotalPrice, o.Discount, o.Date, o.CustomerId " +
-                    $"ol.Id, ol.Quantity, ol.SubTotal, ol.ProductId from {TableName} o " +
+                string query = $"select o.Id, o.TotalPrice, o.Discount, o.Date, o.CustomerId, " +
+                    $"ol.Id, ol.Quantity, ol.SubTotal, p.Id, p.Name, p.SKU, p.Price, p.Currency, p.Description from {TableName} o " +
                     $"inner join {TableNames.Order.ORDERLINETABLE} ol on ol.OrderId = o.Id " +
-                    $"where id = @Id";
+                    $"left join {TableNames.Catalog.PRODUCTTABLE} p on p.Id = ol.productId " +
+                    $"where o.Id = @Id";
                 var orderDictionary = new Dictionary<int, Domain.AggregateRoots.Order>();
 
                 return (await connection.QueryAsync<Domain.AggregateRoots.Order, 
-                    Domain.AggregateRoots.OrderLine, Domain.AggregateRoots.Order>(query, map: (order, orderLine) =>
+                    OrderLine, Product, Domain.AggregateRoots.Order>(query, map: (order, orderLine, product) =>
                     {
                         if (!orderDictionary.TryGetValue(order.Id, out var currentOrder))
                         {
                             currentOrder = order;
                             orderDictionary.Add(currentOrder.Id, currentOrder);
                         }
+                        orderLine.Product = product;
+                        List<OrderLine> orderLines = [.. currentOrder.OrderLines, orderLine];
 
-                        currentOrder.OrderLines.Append(orderLine);
+                        currentOrder.OrderLines = orderLines;
                         return currentOrder;
                     }, new { Id = id })).First(); //TODO maybe Single
             }
@@ -100,9 +108,9 @@ namespace Webshop.Order.Persistence
         {
             using (var connection = dataContext.CreateConnection())
             {
-                string command = $"update {TableName} set TotalPrice = @TotalPrice, Discount =  @discount, CustomerId = @customerId";
-                string deleteOrderLinesSql = $"DELETE FROM OrderLines WHERE OrderId = @OrderId";
-                string insertOrderLineSql = $"INSERT INTO OrderLines (ProductId, Quantity, SubTotal, OrderId) " +
+                string command = $"update {TableName} set TotalPrice = @TotalPrice, Discount =  @discount, CustomerId = @customerId where Id = @id";
+                string deleteOrderLinesSql = $"DELETE FROM {TableNames.Order.ORDERLINETABLE} WHERE OrderId = @OrderId";
+                string insertOrderLineSql = $"INSERT INTO {TableNames.Order.ORDERLINETABLE} (ProductId, Quantity, SubTotal, OrderId) " +
                     $"VALUES (@ProductId, @Quantity, @SubTotal, @OrderId);";
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
