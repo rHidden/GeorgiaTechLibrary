@@ -17,6 +17,7 @@ using Webshop.Catalog.Application.Features.Product.Queries.GetProducts;
 using Webshop.Catalog.Application.Features.Product.Requests;
 using Webshop.Catalog.Application.Features.Category.Queries.GetCategoriesForProduct;
 using Webshop.Category.Application.Features.Category.Dtos;
+using Webshop.Catalog.Application.Features.Product.Queries.GetProductsOfSeller;
 
 namespace Webshop.Catalog.Api.Controllers
 {
@@ -42,7 +43,7 @@ namespace Webshop.Catalog.Api.Controllers
             var validationResult = await validator.ValidateAsync(request);
             if (validationResult.IsValid)
             {
-                CreateProductCommand command = new CreateProductCommand(request.Name, request.SKU, request.Price, request.Currency, request.CustomerId);
+                CreateProductCommand command = new CreateProductCommand(request.Name, request.SKU, request.Price, request.Currency);
                 var commandResult = await this.dispatcher.Dispatch(command);
                 return FromResult(commandResult);
             }
@@ -115,6 +116,15 @@ namespace Webshop.Catalog.Api.Controllers
             GetCategoriesForProductQuery query = new GetCategoriesForProductQuery(id);
             var result = await this.dispatcher.Dispatch(query);
             return FromResult<IEnumerable<CategoryDto>>(result);
+        }
+
+        [HttpGet]
+        [Route("{sellerId}")]
+        public async Task<IActionResult> GetProductsOfSeller(int sellerId)
+        {
+            GetProductsOfSellerQuery query = new GetProductsOfSellerQuery(sellerId);
+            var result = await this.dispatcher.Dispatch(query);
+            return FromResult<List<ProductDto>>(result);
         }
     }
 }

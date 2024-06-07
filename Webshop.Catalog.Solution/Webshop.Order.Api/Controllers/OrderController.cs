@@ -12,6 +12,7 @@ using Webshop.Order.Application.Features.Commands.UpdateOrder;
 using Webshop.Order.Application.Features.Dtos;
 using Webshop.Order.Application.Features.Queries.GetOrder;
 using Webshop.Order.Application.Features.Queries.GetOrders;
+using Webshop.Order.Application.Features.Queries.GetOrdersOfBuyer;
 using Webshop.Order.Application.Features.Requests;
 
 namespace Webshop.Order.Api.Controllers
@@ -38,7 +39,7 @@ namespace Webshop.Order.Api.Controllers
             var validationResult = await validator.ValidateAsync(request);
             if (validationResult.IsValid)
             {
-                CreateOrderCommand command = new CreateOrderCommand(request.CustomerId, request.Discount, request.OrderLines);
+                CreateOrderCommand command = new CreateOrderCommand(request.UserId, request.Discount, request.OrderLines);
                 var commandResult = await this.dispatcher.Dispatch(command);
                 return FromResult(commandResult);
             }
@@ -57,7 +58,7 @@ namespace Webshop.Order.Api.Controllers
             var validationResult = await validator.ValidateAsync(request);
             if (validationResult.IsValid)
             {
-                UpdateOrderCommand command = new UpdateOrderCommand(id, request.CustomerId, request.Discount, request.OrderLines);
+                UpdateOrderCommand command = new UpdateOrderCommand(request.UserId, request.Discount, request.OrderLines);
                 var commandResult = await this.dispatcher.Dispatch(command);
                 return FromResult(commandResult);
             }
@@ -92,6 +93,14 @@ namespace Webshop.Order.Api.Controllers
             GetOrdersQuery query = new GetOrdersQuery();
             var result = await this.dispatcher.Dispatch(query);
             return FromResult<IEnumerable<OrderDto>>(result);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetOrdersOfBuyer(int buyerId)
+        {
+            GetOrdersOfBuyerQuery query = new GetOrdersOfBuyerQuery(buyerId);
+            var result = await this.dispatcher.Dispatch(query);
+            return FromResult<List<OrderDto>>(result);
         }
     }
 }

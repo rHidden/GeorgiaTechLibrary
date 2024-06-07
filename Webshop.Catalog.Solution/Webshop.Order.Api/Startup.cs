@@ -22,8 +22,6 @@ using Webshop.Order.Persistence;
 using Webshop.Catalog.Persistence;
 using Webshop.Data.Persistence;
 using Webshop.Catalog.Application.Contracts.Persistence;
-using Webshop.Customer.Application.Contracts.Persistence;
-using Webshop.Customer.Persistence;
 
 namespace Webshop.Order.Api
 {
@@ -55,7 +53,6 @@ namespace Webshop.Order.Api
             //add own services
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<DataContext, DataContext>();
             services.AddMediatR(Assembly.GetExecutingAssembly());
 

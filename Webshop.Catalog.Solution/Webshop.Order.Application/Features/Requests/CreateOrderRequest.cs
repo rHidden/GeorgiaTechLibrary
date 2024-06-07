@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,7 @@ namespace Webshop.Order.Application.Features.Requests
 {
     public class CreateOrderRequest
     {
-
-        public int CustomerId { get; set; }
+        public int UserId { get; set; }
         public int Discount { get; set; }
         public List<CreateOrderLineRequest> OrderLines { get; set; }
 
@@ -21,10 +20,10 @@ namespace Webshop.Order.Application.Features.Requests
         {
             public Validator()
             {
-                //CustomerId
-                RuleFor(r => r.CustomerId)
-                    .NotEmpty().WithMessage(Errors.General.ValueIsEmpty(nameof(CustomerId)).Message)
-                    .GreaterThan(0).WithMessage(Errors.General.ValueTooSmall(nameof(CustomerId), 0).Message);
+                //userId
+                RuleFor(r => r.UserId)
+                    .NotEmpty().WithMessage(Errors.General.ValueIsEmpty(nameof(UserId)).Message)
+                    .GreaterThan(0).WithMessage(Errors.General.ValueTooSmall(nameof(UserId), 0).Message);
                 //Discount
                 RuleFor(r => r.Discount)
                     .GreaterThanOrEqualTo(0).WithMessage(Errors.General.ValueTooSmall(nameof(Discount), 0).Message)

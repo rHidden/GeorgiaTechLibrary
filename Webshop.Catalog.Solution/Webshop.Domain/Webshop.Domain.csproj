@@ -8,8 +8,8 @@
     <Folder Include="Entities\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Ensure.That" Version="10.1.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Ensure.That" Version="10.1.0" />
+	</ItemGroup>
 
 </Project>

@@ -15,14 +15,14 @@ namespace Webshop.Data.Persistence
             public static string PRODUCTCATEGORYTABLE = "ProductCategory";
         }
 
-        public static class Customer
+        public static class User
         {
-            public static string CUSTOMERTABLE = "Customer";
+            public static string USERTABLE = "User";
         }
 
         public static class Order
         {
-            public static string ORDERTABLE = "[Order]";
+            public static string ORDERTABLE = "Order";
             public static string ORDERLINETABLE = "OrderLine";
         }
     }

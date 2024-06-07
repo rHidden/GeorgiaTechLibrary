@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Webshop.Application\Webshop.Application.csproj" />
+	  <ProjectReference Include="..\Webshop.User.Domain\Webshop.User.Domain.csproj" />
+	  <ProjectReference Include="..\Webshop.Catalog.Domain\Webshop.Catalog.Domain.csproj" />
+	  <ProjectReference Include="..\Webshop.Order.Domain\Webshop.Order.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

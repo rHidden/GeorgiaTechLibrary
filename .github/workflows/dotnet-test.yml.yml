@@ -1,4 +1,4 @@
-﻿name: .NET Tests
+name: .NET Tests
 
 on:
   push:
@@ -47,20 +47,25 @@ jobs:
 
     - name: Run tests and collect coverage
       run: |
+        # Create a directory for the coverage reports
+        mkdir -p coveragereport
 
         # Run all tests excluding repository tests and generate the coverage report
-        dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=../coveragereport/ /p:CoverletOutputFormat=opencover --filter "FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests"
+        dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=coveragereport/coverage.opencover.xml /p:CoverletOutputFormat=opencover --filter "FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests"
+
+        # List files in the coverage report directory for debugging
+        echo "Listing files in coveragereport directory:"
+        ls -la coveragereport
 
         # Generate the coverage report
-        reportgenerator "-reports:GeorgiaTechLibrary/coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
+        reportgenerator "-reports:coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"r
 
-    # It is not pushed to any weebsite cannot test the endpoints
-    # - name: Install Postman CLI
-    #   run: |
-    #     curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+    - name: Install Postman CLI
+      run: |
+        curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
 
-    # - name: Login to Postman CLI
-    #   run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+    - name: Login to Postman CLI
+      run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
 
-    # - name: Run API tests
-    #   run: postman collection run "23729163-05e51c4a-af3d-4cee-ad64-62ea04b07f80"
+    - name: Run API tests
+      run: postman collection run "23729163-05e51c4a-af3d-4cee-ad64-62ea04b07f80"

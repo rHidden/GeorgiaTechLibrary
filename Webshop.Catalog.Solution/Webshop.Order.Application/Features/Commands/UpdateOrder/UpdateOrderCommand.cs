@@ -10,16 +10,14 @@ namespace Webshop.Order.Application.Features.Commands.UpdateOrder
 {
     public class UpdateOrderCommand : ICommand
     {
-        public UpdateOrderCommand(int id, int customerId, int discount, IEnumerable<UpdateOrderLineRequest> orderLines)
+        public UpdateOrderCommand(int userId, int discount, IEnumerable<UpdateOrderLineRequest> orderLines)
         {
-            Id = id;
-            CustomerId = customerId;
+            UserId = userId;
             Discount = discount;
             OrderLines = orderLines;
         }
 
-        public int Id { get; private set; }
-        public int CustomerId { get; private set; }
+        public int UserId { get; private set; }
         public int Discount { get; private set; }
         public IEnumerable<UpdateOrderLineRequest> OrderLines { get; private set; }
     }
