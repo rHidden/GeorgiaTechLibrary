@@ -1,5 +1,4 @@
 /*
-Missing Index Details from SQLQuery1.sql - DESKTOP-F3GTIMV\SQLEXPRESS.GeorgiaTechLibrary (DESKTOP-F3GTIMV\Lenovo (71))
 The Query Processor estimates that implementing the following index could improve the query cost by 16.2493%.
 */
 

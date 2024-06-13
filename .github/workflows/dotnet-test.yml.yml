@@ -2,67 +2,65 @@
 
 on:
   push:
-    branches: [ master, pipeline]
+    branches: [master, pipeline]
   pull_request:
-    branches: [ master, pipeline ]
+    branches: [master, pipeline]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.0'
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "8.0"
 
-    - name: Install dotnet format
-      run: dotnet tool install -g dotnet-format
+      - name: Install dotnet format
+        run: dotnet tool install -g dotnet-format
 
-    - name: Restore dependencies
-      run: dotnet restore GeorgiaTechLibrary/GeorgiaTechLibrary.sln
+      - name: Restore dependencies
+        run: dotnet restore GeorgiaTechLibrary/GeorgiaTechLibrary.sln
 
-    - name: Format code
-      run: dotnet format GeorgiaTechLibrary/GeorgiaTechLibrary.sln
-      id: format
+      - name: Format code
+        run: dotnet format GeorgiaTechLibrary/GeorgiaTechLibrary.sln
+        id: format
 
-    - name: Check for formatting changes
-      run: |
-        if [ -n "$(git status --porcelain)" ]; then
-          echo "Code is not formatted. Please run 'dotnet format' to fix the formatting issues."
-          exit 1
-        fi
+      - name: Check for formatting changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Code is not formatted. Please run 'dotnet format' to fix the formatting issues."
+            exit 1
+          fi
 
-    - name: Build
-      run: dotnet build --configuration Release GeorgiaTechLibrary/GeorgiaTechLibrary.sln --no-restore
+      - name: Build
+        run: dotnet build --configuration Release GeorgiaTechLibrary/GeorgiaTechLibrary.sln --no-restore
 
-    - name: Run Roslyn Analyzers
-      run: dotnet build GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release
+      - name: Run Roslyn Analyzers
+        run: dotnet build GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release
 
-    - name: Install ReportGenerator
-      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+      - name: Install ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
-    - name: Run tests and collect coverage
-      run: |
+      - name: Run tests and collect coverage
+        run: |
 
-        # Run all tests excluding repository tests and generate the coverage report
-        dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=../coveragereport/ /p:CoverletOutputFormat=opencover --filter "FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests"
+          # Run all tests excluding repository tests and generate the coverage report
+          dotnet test GeorgiaTechLibrary/GeorgiaTechLibrary.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutput=../coveragereport/ /p:CoverletOutputFormat=opencover --filter "FullyQualifiedName~GeorgiaTechLibraryTest.IntegrationTests"
 
-        # Generate the coverage report
-        reportgenerator "-reports:GeorgiaTechLibrary/coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
+          # Generate the coverage report
+          reportgenerator "-reports:GeorgiaTechLibrary/coveragereport/coverage.opencover.xml" "-targetdir:coveragereport" "-reporttypes:Html"
 
-    - name: Call API endpoint
-      run: curl -X GET http://localhost:44385/api/Book
+      # It is not pushed to any weebsite cannot test the endpoints
+      # - name: Install Postman CLI
+      #   run: |
+      #     curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
 
-    - name: Install Postman CLI
-      run: |
-        curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
 
-    - name: Login to Postman CLI
-      run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
-
-    - name: Run API tests
-      run: postman collection run "23729163-05e51c4a-af3d-4cee-ad64-62ea04b07f80"
+      - name: Run API tests
+        run: postman collection run "23729163-05e51c4a-af3d-4cee-ad64-62ea04b07f80"
